@@ -17,6 +17,16 @@ public class PaymentMethod {
     private BigDecimal minAllowedAmount;
     private BigDecimal maxAllowedAmount;
     private Integer accreditationTime;
+    private List<Issuer> financialInstitutions;
+
+
+    public List<Issuer> getFinancialInstitutions() {
+        return financialInstitutions;
+    }
+
+    public void setFinancialInstitutions(List<Issuer> financialInstitutions) {
+        this.financialInstitutions = financialInstitutions;
+    }
 
     public List<String> getAdditionalInfoNeeded() {
         return additionalInfoNeeded;
@@ -84,6 +94,10 @@ public class PaymentMethod {
 
     public boolean isIdentificationNumberRequired() {
         return isAdditionalInfoNeeded("cardholder_identification_number");
+    }
+
+    public boolean isEntityTypeRequired(){
+        return isAdditionalInfoNeeded("entity_type");
     }
 
     private boolean isAdditionalInfoNeeded(String param) {

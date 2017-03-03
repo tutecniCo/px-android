@@ -13,6 +13,7 @@ import com.mercadopago.CardVaultActivity;
 import com.mercadopago.CongratsActivity;
 import com.mercadopago.CustomerCardsActivity;
 import com.mercadopago.DiscountsActivity;
+import com.mercadopago.EntityTypeActivity;
 import com.mercadopago.GuessingCardActivity;
 import com.mercadopago.InstallmentsActivity;
 import com.mercadopago.InstructionsActivity;
@@ -32,6 +33,7 @@ import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Reviewable;
@@ -39,7 +41,6 @@ import com.mercadopago.model.Token;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
-import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
@@ -82,6 +83,7 @@ public class MercadoPagoComponents {
         public static final int PAYMENT_METHODS_REQUEST_CODE = 1;
         public static final int INSTALLMENTS_REQUEST_CODE = 2;
         public static final int ISSUERS_REQUEST_CODE = 3;
+        public static final int ENTITY_TYPE_REQUEST_CODE = 4;
         public static final int PAYMENT_RESULT_REQUEST_CODE = 5;
         public static final int CALL_FOR_AUTHORIZE_REQUEST_CODE = 7;
         public static final int PENDING_REQUEST_CODE = 8;
@@ -897,6 +899,66 @@ public class MercadoPagoComponents {
                 activity.startActivityForResult(intent, ISSUERS_REQUEST_CODE);
             }
         }
+
+        public static class EntityTypeActivityBuilder {
+            private Activity activity;
+            private String merchantPublicKey;
+            private PaymentMethod paymentMethod;
+            private DecorationPreference decorationPreference;
+            private String payerAccessToken;
+            private Identification identification;
+
+            public EntityTypeActivityBuilder setActivity(Activity activity) {
+                this.activity = activity;
+                return this;
+            }
+
+            public EntityTypeActivityBuilder setIdentification(Identification identificationType) {
+                this.identification = identificationType;
+                return this;
+            }
+
+            public EntityTypeActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
+                this.merchantPublicKey = merchantPublicKey;
+                return this;
+            }
+
+            public EntityTypeActivityBuilder setPaymentMethod(PaymentMethod paymentMethod) {
+                this.paymentMethod = paymentMethod;
+                return this;
+            }
+
+
+            public EntityTypeActivityBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
+            public EntityTypeActivityBuilder setPayerAccessToken(String payerAccessToken) {
+                this.payerAccessToken = payerAccessToken;
+                return this;
+            }
+
+            public void startActivity() {
+                if (this.activity == null) throw new IllegalStateException("activity is null");
+                if (this.merchantPublicKey == null && this.payerAccessToken == null)
+                    throw new IllegalStateException("key is null");
+                if (this.paymentMethod == null)
+                    throw new IllegalStateException("payment method is null");
+                startEntityTypeActivity();
+            }
+
+            private void startEntityTypeActivity() {
+                Intent intent = new Intent(activity, EntityTypeActivity.class);
+                intent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
+                intent.putExtra("merchantPublicKey", merchantPublicKey);
+                intent.putExtra("payerAccessToken", payerAccessToken);
+                intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
+                intent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
+                activity.startActivityForResult(intent, ENTITY_TYPE_REQUEST_CODE);
+            }
+        }
+
 
         public static class InstallmentsActivityBuilder {
 

@@ -6,6 +6,7 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
@@ -45,6 +46,8 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     private Integer mMaxSavedCards;
 
     private boolean mSelectAutomatically;
+    private PaymentMethod mPaymentMethod;
+    private Identification midentification;
 
     public void initialize(boolean selectAutomatically) {
         try {
@@ -101,7 +104,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     public void initializeDiscountRow() {
-        if(viewAttached()) {
+        if (viewAttached()) {
             getView().showDiscountRow(mAmount);
         }
     }
@@ -353,6 +356,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             showMismatchingPaymentMethodError();
         } else {
             getView().selectPaymentMethod(selectedPaymentMethod);
+            this.mPaymentMethod = selectedPaymentMethod;
         }
     }
 
@@ -368,6 +372,25 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         return (mPaymentMethodSearch.getGroups() == null || mPaymentMethodSearch.getGroups().isEmpty())
                 && (mPaymentMethodSearch.getCustomSearchItems() == null || mPaymentMethodSearch.getCustomSearchItems().isEmpty());
     }
+
+    public boolean isEntityTypeStepRequired() {
+        //   return isFinancialInstitutionRequired() && isIdentificationNumberRequired() && isEntityTypeRequired();
+        return true;
+    }
+
+
+    private boolean isEntityTypeRequired() {
+        if (isPaymentMethodSelected()) {
+            return mPaymentMethod.isEntityTypeRequired();
+        }
+
+        return false;
+    }
+
+    private boolean isPaymentMethodSelected() {
+        return mPaymentMethod != null;
+    }
+
 
     private void showEmptyPaymentMethodsError() {
         String errorMessage = getResourcesProvider().getEmptyPaymentMethodsErrorMessage();
@@ -491,5 +514,17 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             limitedItems = customSearchItems;
         }
         return limitedItems;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return mPaymentMethod;
+    }
+
+    public Identification getIdentification() {
+        return midentification;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.mPaymentMethod = paymentMethod;
     }
 }

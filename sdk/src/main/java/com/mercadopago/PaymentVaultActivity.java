@@ -407,6 +407,10 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
 
     private void resolvePaymentVaultRequest(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+
+            //TODO interrumpo y agrego pedido de banco, docu y tipo de persona.
+
+
             setResult(RESULT_OK, data);
             finish();
         } else if (resultCode == RESULT_CANCELED && data != null && data.hasExtra("mercadoPagoError")) {
@@ -420,6 +424,37 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 mPaymentVaultPresenter.initializeDiscountRow();
             }
         }
+    }
+
+    @Override
+    public void showEntityTypeStep() {
+        //TODO
+        /*
+        new MercadoPagoComponents.Activities.GuessingCardActivityBuilder()
+                .setActivity(mActivity)
+                .setMerchantPublicKey(mPresenter.getPublicKey())
+                .setAmount(mPresenter.getAmount())
+                .setDecorationPreference(mDecorationPreference)
+                .setPaymentRecovery(mPresenter.getPaymentRecovery())
+                .startActivity();
+
+        ese es un ejemplo de como se levanta Guessing desde CardVault
+        básicamente tenés que hacer un TypeFlowAcitivtyBuilder() en MercadoPagoComponents
+        ahí está el builder de cada activity con los sets de la info que necesitas
+        seguramente necesites el contexto (es el setActivity), la PK, etc
+
+        */
+        new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
+                .setActivity(this)
+                .setMerchantPublicKey(mPublicKey)
+                .setPayerAccessToken(mPrivateKey)
+                .setPaymentMethod(mPaymentVaultPresenter.getPaymentMethod())
+                .setIdentification(mPaymentVaultPresenter.getIdentification())
+                .setDecorationPreference(mDecorationPreference)
+                .startActivity();
+
+        animatePaymentMethodSelection();
+
     }
 
     protected void resolveCardRequest(int resultCode, Intent data) {
@@ -481,6 +516,11 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         Intent returnIntent = new Intent();
         returnIntent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPaymentVaultPresenter.getDiscount()));
+//TODO VER ACAAAAA
+        mPaymentVaultPresenter.setPaymentMethod(paymentMethod);
+        if (mPaymentVaultPresenter.isEntityTypeStepRequired()) {
+            showEntityTypeStep();
+        }
 
         this.setResult(Activity.RESULT_OK, returnIntent);
         this.finish();
