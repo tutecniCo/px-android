@@ -32,6 +32,10 @@
     <!-- Issuers -->
     <string name="mpsdk_card_issuers_title">Which is your bank?</string>
 
+    <!-- Entity Types -->
+    <string name="mpsdk_entity_types_title">Which is your entity\'s type?</string>
+
+
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">How many installments?</string>
     <string name="mpsdk_installments_of">of</string>

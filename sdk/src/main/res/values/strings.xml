@@ -33,6 +33,9 @@
     <!-- Issuers -->
     <string name="mpsdk_card_issuers_title">¿Quién emitió tu tarjeta?</string>
 
+    <!-- Entity Types -->
+    <string name="mpsdk_entity_types_title">¿Cuál es el tipo de persona?</string>
+
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">¿En cuántas cuotas?</string>
     <string name="mpsdk_installments_of">de</string>

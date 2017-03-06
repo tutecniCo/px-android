@@ -23,6 +23,7 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
+import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.mptracker.MPTracker;
@@ -33,6 +34,7 @@ import com.mercadopago.presenters.EntityTypePresenter;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.FrontCardView;
+import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
@@ -69,7 +71,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     protected AppBarLayout mAppBar;
     protected FrameLayout mCardContainer;
     protected Toolbar mNormalToolbar;
-    protected FrontCardView mFrontCardView;
+    protected IdentificationCardView mIdentificationCardView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,14 +104,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(
                 this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
         Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
-        List<Issuer> issuers;
-        try {
-            Type listType = new TypeToken<List<Issuer>>() {
-            }.getType();
-            issuers = JsonUtil.getInstance().getGson().fromJson(this.getIntent().getStringExtra("issuers"), listType);
-        } catch (Exception ex) {
-            issuers = null;
-        }
+
 
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
@@ -246,7 +241,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     private void loadLowResViews() {
         loadToolbarArrow(mLowResToolbar);
-        mLowResTitleToolbar.setText(getString(R.string.mpsdk_card_issuers_title));
+        mLowResTitleToolbar.setText(getString(R.string.mpsdk_entity_types_title));
         if (FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
             mLowResTitleToolbar.setTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
         }
@@ -254,8 +249,24 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     private void loadNormalViews() {
         loadToolbarArrow(mNormalToolbar);
-        mNormalToolbar.setTitle(getString(R.string.mpsdk_card_issuers_title));
+        mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
         setCustomFontNormal();
+
+        mIdentificationCardView = new IdentificationCardView(mActivity);
+        //FIXME harcoded
+        IdentificationType identificationType = new IdentificationType();
+        identificationType.setId("36593292");
+        identificationType.setType("DNI");
+        identificationType.setMaxLength(8);
+        identificationType.setMinLength(8);
+        identificationType.setName("DNI");
+
+        mIdentificationCardView.setIdentificationType(identificationType);
+
+        mIdentificationCardView.inflateInParent(mCardContainer, true);
+        mIdentificationCardView.initializeControls();
+        mIdentificationCardView.draw();
+        mIdentificationCardView.show();
 
     }
 
@@ -311,7 +322,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         if (mTimerTextView != null) {
             ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
         }
-        mFrontCardView.decorateCardBorder(mDecorationPreference.getLighterColor());
+
+        mIdentificationCardView.decorateCardBorder(mDecorationPreference.getLighterColor());
     }
 
     @Override

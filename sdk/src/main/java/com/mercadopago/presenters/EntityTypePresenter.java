@@ -16,6 +16,7 @@ import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.preferences.PaymentPreference;
+import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.views.EntityTypeActivityView;
 import com.mercadopago.views.IssuersActivityView;
 
@@ -38,6 +39,7 @@ public class EntityTypePresenter {
     private Identification mIdentification;
     private List<String> mEntityTypes;
     private MercadoPagoServices mMercadoPago;
+    protected FrontCardView mFrontCardView;
 
     public EntityTypePresenter(Context context) {
         this.mContext = context;
@@ -118,7 +120,7 @@ public class EntityTypePresenter {
         return mEntityTypes != null;
     }
 
-    private void getEntityTypes(){
+    private void getEntityTypes() {
         /*
         TODO extender Presenter y usar el OnResourcesRetrievedCallback. Crear algún tipo de mapa discriminando step y site para obtener la lista.
         mView.showLoadingView();
@@ -129,13 +131,24 @@ public class EntityTypePresenter {
         list.add("Natural");
         list.add("Juridica");
         this.mEntityTypes = list;
+        resolveEntityTypes(list);
     }
 
 
     protected void resolveEntityTypes(List<String> entityTypes) {
 
+        mEntityTypes = entityTypes;
+        if (mEntityTypes.isEmpty()) {
+            mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
+                    "no entityTypes found at EntityTypesActivity");
+        } else if (mEntityTypes.size() == 1) {
+            mView.finishWithResult(entityTypes.get(0));
+        } else {
             mView.showHeader();
             mView.initializeEntityTypes(entityTypes);
+
+        }
+
 
     }
 
