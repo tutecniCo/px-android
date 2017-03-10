@@ -3,6 +3,7 @@ package com.mercadopago.uicontrollers.card;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.mercadopago.R;
+import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
+import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.ScaleUtil;
 
@@ -22,6 +26,7 @@ import com.mercadopago.util.ScaleUtil;
 public class IdentificationCardView {
 
     public static final int NORMAL_TEXT_VIEW_COLOR = R.color.mpsdk_base_text;
+    private Identification mIdentification;
 
     private Context mContext;
     private View mView;
@@ -35,10 +40,19 @@ public class IdentificationCardView {
     //Identification Info
     private String mIdentificationNumber;
     private IdentificationType mIdentificationType;
+    private String mSize;
+    private MPTextView mCardBaseTextAlpha;
 
     public IdentificationCardView(Context context) {
         this.mContext = context;
     }
+
+    public IdentificationCardView(Context context, String size, Identification identification) {
+        this.mContext = context;
+        this.mSize = size;
+        this.mIdentification = identification;
+    }
+    
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
@@ -51,9 +65,45 @@ public class IdentificationCardView {
         mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
         mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
         mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberView);
+        mCardBaseTextAlpha = (MPTextView) mView.findViewById(R.id.mpsdk_base_text_alpha);
+
+        transform();
+
+    }
+    
+
+    private void transform() {
+        if (mSize == null || mIdentification == null) return;
+        if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
+            transformView();
+            resize();
+        }
     }
 
+    private void transformView() {
 
+        mCardBaseTextAlpha.setText(mIdentification.getType());
+        mIdentificationNumber = mIdentification.getNumber();
+    }
+
+    private void resize() {
+        if (mSize == null) return;
+        if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
+            resizeCard(mCardContainer, R.dimen.mpsdk_card_size_medium_height, R.dimen.mpsdk_card_size_medium_width,
+                    CardRepresentationModes.CARD_NUMBER_SIZE_MEDIUM, CardRepresentationModes.CARD_HOLDER_NAME_SIZE_MEDIUM);
+
+
+        }
+    }
+
+    private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth, int cardNumberFontSize,
+                            int cardHolderNameFontSize) {
+        LayoutUtil.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
+        mCardBorder.setLayoutParams(mCardContainer.getLayoutParams());
+        mCardIdentificationNumberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardNumberFontSize);
+        mBaseIdNumberView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);
+
+    }
 
     public void setIdentificationNumber(String number) {
         this.mIdentificationNumber = number;

@@ -39,7 +39,7 @@ public class EntityTypePresenter {
     private Identification mIdentification;
     private List<String> mEntityTypes;
     private MercadoPagoServices mMercadoPago;
-    protected FrontCardView mFrontCardView;
+
 
     public EntityTypePresenter(Context context) {
         this.mContext = context;
@@ -72,6 +72,10 @@ public class EntityTypePresenter {
 
     public boolean isIdentificationAvailable() {
         return mIdentification != null && mPaymentMethod != null;
+    }
+
+    public Identification getIdentification() {
+        return mIdentification;
     }
 
     public String getPublicKey() {

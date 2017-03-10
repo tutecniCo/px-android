@@ -252,7 +252,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
         setCustomFontNormal();
 
-        mIdentificationCardView = new IdentificationCardView(mActivity);
+        mIdentificationCardView = new IdentificationCardView(mActivity,CardRepresentationModes.MEDIUM_SIZE, mPresenter.getIdentification());
+
         //FIXME harcoded
         IdentificationType identificationType = new IdentificationType();
         identificationType.setId("36593292");

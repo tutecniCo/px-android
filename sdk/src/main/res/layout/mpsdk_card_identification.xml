@@ -54,6 +54,7 @@
                 android:orientation="vertical">
 
                 <com.mercadopago.customviews.MPTextView
+                    android:id="@+id/mpsdk_base_text_alpha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="14dp"
