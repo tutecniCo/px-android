@@ -53,6 +53,8 @@ public class IdentificationCardView {
         mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberView);
     }
 
+
+
     public void setIdentificationNumber(String number) {
         this.mIdentificationNumber = number;
     }

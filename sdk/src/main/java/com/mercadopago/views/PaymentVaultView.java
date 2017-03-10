@@ -47,5 +47,4 @@ public interface PaymentVaultView extends MvpView {
 
     void cleanPaymentMethodOptions();
 
-    void showEntityTypeStep();
 }

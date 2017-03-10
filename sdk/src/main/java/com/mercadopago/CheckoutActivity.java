@@ -28,6 +28,7 @@ import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
@@ -531,8 +532,18 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE) {
+            resolveEntityTypeRequest(resultCode, data);
         } else {
             resolveErrorRequest(resultCode, data);
+        }
+    }
+
+    private void resolveEntityTypeRequest(int resultCode, Intent data) {
+        if (isReviewAndConfirmEnabled()) {
+            showReviewAndConfirm();
+        } else {
+            resolvePaymentDataCallback();
         }
     }
 
@@ -542,7 +553,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         } else if (resultCode == ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD) {
             changePaymentMethod();
         } else if (resultCode == ReviewAndConfirmActivity.RESULT_CANCEL_PAYMENT) {
-            if(data != null && data.getIntExtra("resultCode", 0) != 0) {
+            if (data != null && data.getIntExtra("resultCode", 0) != 0) {
                 Integer customResultCode = data.getIntExtra("resultCode", 0);
                 PaymentData paymentData = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentData"), PaymentData.class);
                 cancelCheckout(customResultCode, paymentData);
@@ -577,12 +588,12 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE.equals(mRequestedResultCode)
                 || (CallbackHolder.getInstance().hasPaymentDataCallback()
                 && !CallbackHolder.getInstance().hasPaymentCallback()
-                && !MercadoPagoCheckout.PAYMENT_RESULT_CODE.equals(mRequestedResultCode) )) {
+                && !MercadoPagoCheckout.PAYMENT_RESULT_CODE.equals(mRequestedResultCode))) {
             hasToFinishActivity = true;
         }
 
         //Deprecate
-        if(CallbackHolder.getInstance().hasPaymentDataCallback()) {
+        if (CallbackHolder.getInstance().hasPaymentDataCallback()) {
             CallbackHolder.getInstance().getPaymentDataCallback().onSuccess(paymentData, mPaymentMethodEdited);
         }
 
@@ -627,7 +638,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             mSelectedPayerCost = JsonUtil.getInstance().fromJson(data.getStringExtra("payerCost"), PayerCost.class);
             mCreatedToken = JsonUtil.getInstance().fromJson(data.getStringExtra("token"), Token.class);
             mSelectedPaymentMethod = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class);
+
             checkFlowWithPaymentMethodSelected();
+
         } else {
             if (!mPaymentMethodEditionRequested) {
                 cancelCheckout();
@@ -638,8 +651,68 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         }
     }
 
+
+    private void showEntityTypeStep() {
+        //TODO
+        /*
+        new MercadoPagoComponents.Activities.GuessingCardActivityBuilder()
+                .setActivity(mActivity)
+                .setMerchantPublicKey(mPresenter.getPublicKey())
+                .setAmount(mPresenter.getAmount())
+                .setDecorationPreference(mDecorationPreference)
+                .setPaymentRecovery(mPresenter.getPaymentRecovery())
+                .startActivity();
+
+        ese es un ejemplo de como se levanta Guessing desde CardVault
+        básicamente tenés que hacer un TypeFlowAcitivtyBuilder() en MercadoPagoComponents
+        ahí está el builder de cada activity con los sets de la info que necesitas
+        seguramente necesites el contexto (es el setActivity), la PK, etc
+
+        */
+
+        Identification id = new Identification();
+
+        id.setType("DNI");
+        id.setNumber("36329909");
+
+        new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
+                .setActivity(this)
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setPaymentMethod(mSelectedPaymentMethod)
+                .setIdentification(id)
+                .setDecorationPreference(mDecorationPreference)
+                .startActivity();
+
+        animatePaymentMethodSelection();
+
+    }
+
+    public boolean isEntityTypeStepRequired() {
+        //   return isFinancialInstitutionRequired() && isIdentificationNumberRequired() && isEntityTypeRequired();
+        return true;
+    }
+
+
+    private boolean isEntityTypeRequired() {
+        if (isPaymentMethodSelected()) {
+            return mSelectedPaymentMethod.isEntityTypeRequired();
+        }
+
+        return false;
+    }
+
+    private boolean isPaymentMethodSelected() {
+        return mSelectedPaymentMethod != null;
+    }
+
+
     private void checkFlowWithPaymentMethodSelected() {
-        if (isReviewAndConfirmEnabled()) {
+        //TODO entity_type flow here!
+
+        if (isEntityTypeStepRequired()) {
+            showEntityTypeStep();
+        }
+        else if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {
             resolvePaymentDataCallback();
@@ -1060,7 +1133,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     private void cancelCheckout() {
 
         //TODO Deprecate
-        if(CallbackHolder.getInstance().hasPaymentDataCallback()) {
+        if (CallbackHolder.getInstance().hasPaymentDataCallback()) {
             CallbackHolder.getInstance().getPaymentDataCallback().onCancel();
         } else {
             CallbackHolder.getInstance().getPaymentCallback().onCancel();

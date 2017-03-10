@@ -46,8 +46,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     private Integer mMaxSavedCards;
 
     private boolean mSelectAutomatically;
-    private PaymentMethod mPaymentMethod;
-    private Identification midentification;
 
     public void initialize(boolean selectAutomatically) {
         try {
@@ -356,7 +354,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             showMismatchingPaymentMethodError();
         } else {
             getView().selectPaymentMethod(selectedPaymentMethod);
-            this.mPaymentMethod = selectedPaymentMethod;
         }
     }
 
@@ -373,23 +370,9 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
                 && (mPaymentMethodSearch.getCustomSearchItems() == null || mPaymentMethodSearch.getCustomSearchItems().isEmpty());
     }
 
-    public boolean isEntityTypeStepRequired() {
-        //   return isFinancialInstitutionRequired() && isIdentificationNumberRequired() && isEntityTypeRequired();
-        return true;
-    }
 
 
-    private boolean isEntityTypeRequired() {
-        if (isPaymentMethodSelected()) {
-            return mPaymentMethod.isEntityTypeRequired();
-        }
 
-        return false;
-    }
-
-    private boolean isPaymentMethodSelected() {
-        return mPaymentMethod != null;
-    }
 
 
     private void showEmptyPaymentMethodsError() {
@@ -516,15 +499,5 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         return limitedItems;
     }
 
-    public PaymentMethod getPaymentMethod() {
-        return mPaymentMethod;
-    }
 
-    public Identification getIdentification() {
-        return midentification;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.mPaymentMethod = paymentMethod;
-    }
 }

@@ -905,7 +905,6 @@ public class MercadoPagoComponents {
             private String merchantPublicKey;
             private PaymentMethod paymentMethod;
             private DecorationPreference decorationPreference;
-            private String payerAccessToken;
             private Identification identification;
 
             public EntityTypeActivityBuilder setActivity(Activity activity) {
@@ -934,14 +933,10 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public EntityTypeActivityBuilder setPayerAccessToken(String payerAccessToken) {
-                this.payerAccessToken = payerAccessToken;
-                return this;
-            }
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.merchantPublicKey == null && this.payerAccessToken == null)
+                if (this.merchantPublicKey == null)
                     throw new IllegalStateException("key is null");
                 if (this.paymentMethod == null)
                     throw new IllegalStateException("payment method is null");
@@ -952,7 +947,6 @@ public class MercadoPagoComponents {
                 Intent intent = new Intent(activity, EntityTypeActivity.class);
                 intent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
                 intent.putExtra("merchantPublicKey", merchantPublicKey);
-                intent.putExtra("payerAccessToken", payerAccessToken);
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 intent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
                 activity.startActivityForResult(intent, ENTITY_TYPE_REQUEST_CODE);
