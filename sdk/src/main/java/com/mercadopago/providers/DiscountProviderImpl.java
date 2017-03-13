@@ -11,6 +11,7 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.DiscountSearch;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 
 import java.util.List;
@@ -61,6 +62,21 @@ public class DiscountProviderImpl implements DiscountsProvider {
                 .setContext(context)
                 .setPublicKey(publicKey)
                 .build();
+    }
+
+    @Override
+    public void getDiscountSearch(String amount, String payerEmail, final OnResourcesRetrievedCallback<DiscountSearch> onResourcesRetrievedCallback) {
+        mercadoPago.getDiscountSearch(amount, payerEmail, new Callback<DiscountSearch>() {
+            @Override
+            public void success(DiscountSearch discountSearch) {
+                onResourcesRetrievedCallback.onSuccess(discountSearch);
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+            }
+        });
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.mercadopago.model.Discount;
 import java.util.List;
 
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.DiscountSearch;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -25,4 +26,8 @@ public interface DiscountService {
 
     @GET("/campaigns/check_availability")
     MPCall<List<Campaign>> getCampaigns(@Query("public_key") String publicKey);
+
+    @GET("/discount_search")
+    MPCall<DiscountSearch> getDiscountSearch(@Query("public_key") String publicKey, @Query("transaction_amount") String transactionAmount, @Query("email") String payerEmail);
+
 }

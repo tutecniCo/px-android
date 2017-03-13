@@ -154,8 +154,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .build();
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .disableDiscount()
+//                .disableReviewAndConfirmScreen()
+//                .disableDiscount()
                 .disableBankDeals()
                 .build();
 
@@ -172,50 +172,52 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setPayerAccessToken("TEST-7176766875549918-111008-fa5660d2d0aa37532716eb2bf2f9089b__LB_LC__-192992930")
                 .build();
 
+        mCheckoutPreference.setId("241261708-cd353b1b-940f-493b-b960-10106a24203c");
+
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
-                .setPublicKey(mPublicKey)
+                .setPublicKey("TEST-85a140f5-10ce-4d3a-ba7a-a743e066840f")
                 .setCheckoutPreference(mCheckoutPreference)
                 .setReviewScreenPreference(reviewScreenPreference)
                 .setDecorationPreference(decorationPreference)
                 .setFlowPreference(flowPreference)
                 .setPaymentResultScreenPreference(paymentResultScreenPreference)
-                .start(new PaymentDataCallback() {
-                    @Override
-                    public void onSuccess(PaymentData paymentData, boolean paymentMethodChanged) {
-                        Log.d("log", "success");
-                        Log.d("log", paymentData.getPaymentMethod().getId());
-                        Log.d("log", "payment method changed: " + paymentMethodChanged);
-                        startAgain(paymentData);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Log.d("log", "cancel");
-                    }
-
-                    @Override
-                    public void onFailure(MercadoPagoError error) {
-                        Log.d("log", "failure");
-                    }
-                });
+//                .start(new PaymentDataCallback() {
+//                    @Override
+//                    public void onSuccess(PaymentData paymentData, boolean paymentMethodChanged) {
+//                        Log.d("log", "success");
+//                        Log.d("log", paymentData.getPaymentMethod().getId());
+//                        Log.d("log", "payment method changed: " + paymentMethodChanged);
+//                        startAgain(paymentData);
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                        Log.d("log", "cancel");
+//                    }
+//
+//                    @Override
+//                    public void onFailure(MercadoPagoError error) {
+//                        Log.d("log", "failure");
+//                    }
+//                });
 //                .startForPaymentData();
-//        .start(new PaymentCallback() {
-//            @Override
-//            public void onSuccess(Payment payment) {
-//                Log.d("log", "success");
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                Log.d("log", "cancel");
-//            }
-//
-//            @Override
-//            public void onFailure(MercadoPagoError error) {
-//
-//            }
-//        });
+        .start(new PaymentCallback() {
+            @Override
+            public void onSuccess(Payment payment) {
+                Log.d("log", "success");
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("log", "cancel");
+            }
+
+            @Override
+            public void onFailure(MercadoPagoError error) {
+
+            }
+        });
     }
 
     private void startAgain(PaymentData paymentData) {

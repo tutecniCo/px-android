@@ -2,6 +2,7 @@ package com.mercadopago.presenters;
 
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.DiscountSearch;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.providers.DiscountsProvider;
@@ -28,12 +29,17 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     private Discount mDiscount;
     private Boolean mDirectDiscountEnabled;
 
+    private DiscountSearch mDiscountSearch;
+
     @Override
     public void attachView(DiscountsActivityView discountsView) {
         this.mDiscountsView = discountsView;
     }
 
     public void initialize() {
+
+        getDiscountSearch();
+
         if (mDiscount == null) {
             initDiscountFlow();
         } else {
@@ -52,6 +58,21 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
     private Boolean isTransactionAmountValid() {
         return mTransactionAmount != null && mTransactionAmount.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    private void getDiscountSearch() {
+        getResourcesProvider().getDiscountSearch(mTransactionAmount.toString(), mPayerEmail,new OnResourcesRetrievedCallback<DiscountSearch>() {
+            @Override
+            public void onSuccess(DiscountSearch discountSearch) {
+                mDiscountSearch = discountSearch;
+//                resolveDiscountSearch();
+            }
+
+            @Override
+            public void onFailure(MercadoPagoError error) {
+                mDiscountsView.requestDiscountCode();
+            }
+        });
     }
 
     private void getDirectDiscount() {

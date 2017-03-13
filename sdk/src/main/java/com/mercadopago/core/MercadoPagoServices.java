@@ -10,6 +10,7 @@ import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardToken;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.DiscountSearch;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
@@ -175,6 +176,12 @@ public class MercadoPagoServices {
         service.getPaymentMethods(this.mPublicKey, mPrivateKey).enqueue(callback);
     }
 
+    public void getDiscountSearch(String amount, String payerEmail, final Callback<DiscountSearch> callback) {
+        MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_DISCOUNT_SEARCH", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
+        DiscountService service = getApiAryRetrofit().create(DiscountService.class);
+        service.getDiscountSearch(this.mPublicKey, amount, payerEmail).enqueue(callback);
+    }
+
     public void getDirectDiscount(String amount, String payerEmail, final Callback<Discount> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_DIRECT_DISCOUNT", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         DiscountService service = getDefaultRetrofit().create(DiscountService.class);
@@ -208,6 +215,15 @@ public class MercadoPagoServices {
 
     private Retrofit getDefaultRetrofit() {
         return getDefaultRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
+    }
+
+    private Retrofit getApiAryRetrofit() {
+        return getDefaultRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
+    }
+
+    private Retrofit getApiAryRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {
+        String baseUrl = "http://private-18d06-matiasromar.apiary-mock.com";
+        return getRetrofit(baseUrl, connectTimeout, readTimeout, writeTimeout);
     }
 
     private Retrofit getDefaultRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {
