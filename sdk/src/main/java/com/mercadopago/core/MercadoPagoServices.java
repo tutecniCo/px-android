@@ -218,7 +218,7 @@ public class MercadoPagoServices {
     }
 
     private Retrofit getApiAryRetrofit() {
-        return getDefaultRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
+        return getApiAryRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
     }
 
     private Retrofit getApiAryRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {

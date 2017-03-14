@@ -65,7 +65,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
             @Override
             public void onSuccess(DiscountSearch discountSearch) {
                 mDiscountSearch = discountSearch;
-//                resolveDiscountSearch();
+                resolveDiscountSearch();
             }
 
             @Override
@@ -73,6 +73,30 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 mDiscountsView.requestDiscountCode();
             }
         });
+    }
+
+    private void resolveDiscountSearch() {
+        if (viewAttached()) {
+
+            if (noDiscountsAvailable()) {
+                //TODO mostrar solo burbuja de agregar tarjeta
+                //TODO se puede hacer una selección automática
+//                showEmptyPaymentMethodsError();
+            } else if (isOnlyUniqueSearchSelectionAvailable() && mSelectAutomatically) {
+                selectItem(mPaymentMethodSearch.getGroups().get(0));
+            } else {
+                showAvailableOptions();
+                getView().hideProgress();
+            }
+        }
+    }
+
+    private boolean noDiscountsAvailable() {
+        return mDiscountSearch.getGroups() == null || mDiscountSearch.getGroups().isEmpty();
+    }
+
+    private boolean viewAttached() {
+        return getView() != null;
     }
 
     private void getDirectDiscount() {
