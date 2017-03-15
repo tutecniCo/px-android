@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.customviews.MPEditText;
@@ -26,6 +27,8 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Currency;
 
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.DiscountSearchItem;
+import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
@@ -39,6 +42,7 @@ import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.views.DiscountsActivityView;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 public class DiscountsActivity extends AppCompatActivity implements DiscountsActivityView, TimerObserver {
@@ -464,5 +468,10 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     @Override
     public void hideDiscountSummary() {
         mReviewDiscountSummaryContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSearchItems(List<DiscountSearchItem> discountSearchItems, OnSelectedCallback<DiscountSearchItem> paymentMethodSearchItemSelectionCallback) {
+        populateSearchList(searchItems, paymentMethodSearchItemSelectionCallback);
     }
 }

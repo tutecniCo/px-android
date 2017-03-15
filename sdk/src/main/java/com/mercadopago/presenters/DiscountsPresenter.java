@@ -1,8 +1,11 @@
 package com.mercadopago.presenters;
 
+import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.DiscountSearch;
+import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.providers.DiscountsProvider;
@@ -12,6 +15,7 @@ import java.math.BigDecimal;
 import com.mercadopago.views.DiscountsActivityView;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -82,13 +86,41 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 //TODO mostrar solo burbuja de agregar tarjeta
                 //TODO se puede hacer una selección automática
 //                showEmptyPaymentMethodsError();
-            } else if (isOnlyUniqueSearchSelectionAvailable() && mSelectAutomatically) {
-                selectItem(mPaymentMethodSearch.getGroups().get(0));
             } else {
                 showAvailableOptions();
-                getView().hideProgress();
+//                getView().hideProgress();
             }
         }
+    }
+
+    private void showAvailableOptions() {
+
+//        if (mPaymentMethodSearch.hasCustomSearchItems()) {
+//            List<CustomSearchItem> shownCustomItems;
+//            if (mMaxSavedCards != null && mMaxSavedCards > 0) {
+//                shownCustomItems = getLimitedCustomOptions(mPaymentMethodSearch.getCustomSearchItems(), mMaxSavedCards);
+//            } else {
+//                shownCustomItems = mPaymentMethodSearch.getCustomSearchItems();
+//            }
+//            getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
+//        }
+
+        if (searchItemsAvailable()) {
+            getView().showSearchItems(mDiscountSearch.getGroups(), getPaymentMethodSearchItemSelectionCallback());
+        }
+    }
+
+    private OnSelectedCallback<PaymentMethodSearchItem> getPaymentMethodSearchItemSelectionCallback() {
+        return new OnSelectedCallback<PaymentMethodSearchItem>() {
+            @Override
+            public void onSelected(PaymentMethodSearchItem item) {
+                selectItem(item);
+            }
+        };
+    }
+
+    private boolean searchItemsAvailable() {
+        return mDiscountSearch != null && mDiscountSearch.getGroups() != null && !mDiscountSearch.getGroups().isEmpty();
     }
 
     private boolean noDiscountsAvailable() {
