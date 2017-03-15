@@ -1,64 +1,52 @@
 package com.mercadopago;
 
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.google.gson.reflect.TypeToken;
-import com.mercadopago.adapters.EntityTypesAdapter;
-import com.mercadopago.adapters.IssuersAdapter;
+
+import com.mercadopago.adapters.FinancialInstitutionsAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
-import com.mercadopago.model.Identification;
-import com.mercadopago.model.IdentificationType;
-import com.mercadopago.model.Issuer;
+import com.mercadopago.model.CardInfo;
+import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
-import com.mercadopago.presenters.EntityTypePresenter;
+import com.mercadopago.presenters.FinancialInstitutionsPresenter;
 import com.mercadopago.uicontrollers.FontCache;
-import com.mercadopago.uicontrollers.card.CardRepresentationModes;
-import com.mercadopago.uicontrollers.card.FrontCardView;
-import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
-import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.views.EntityTypeActivityView;
-
+import com.mercadopago.views.FinancialInstitutionsActivityView;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Created by marlanti on 3/3/17.
+ * Created by marlanti on 3/13/17.
  */
 
-public class EntityTypeActivity extends MercadoPagoBaseActivity implements EntityTypeActivityView, TimerObserver {
+public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity implements FinancialInstitutionsActivityView, TimerObserver {
 
-    protected EntityTypePresenter mPresenter;
+    protected FinancialInstitutionsPresenter mPresenter;
     protected Activity mActivity;
 
     //View controls
-    protected EntityTypesAdapter mEntityTypesAdapter;
-    protected RecyclerView mEntityTypesRecyclerView;
+    protected FinancialInstitutionsAdapter mFinancialInstitutionsAdapter;
+    protected RecyclerView mFinancialInstitutionsRecyclerView;
     protected DecorationPreference mDecorationPreference;
     //ViewMode
     protected boolean mLowResActive;
@@ -66,18 +54,13 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     protected Toolbar mLowResToolbar;
     protected MPTextView mLowResTitleToolbar;
     protected MPTextView mTimerTextView;
-    //Normal View
-    protected CollapsingToolbarLayout mCollapsingToolbar;
-    protected AppBarLayout mAppBar;
-    protected FrameLayout mCardContainer;
-    protected Toolbar mNormalToolbar;
-    protected IdentificationCardView mIdentificationCardView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (mPresenter == null) {
-            mPresenter = new EntityTypePresenter(getBaseContext());
+            mPresenter = new FinancialInstitutionsPresenter(getBaseContext());
         }
         mPresenter.setView(this);
         mActivity = this;
@@ -85,7 +68,6 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         if (isCustomColorSet()) {
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
-        analyzeLowRes();
         setContentView();
         mPresenter.validateActivityParameters();
     }
@@ -103,29 +85,22 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
         PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(
                 this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
-        Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
+
+        List<FinancialInstitution> financialInstitutions = paymentMethod.getFinancialInstitutions();
+
 
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
         mPresenter.setPrivateKey(payerAccessToken);
-        mPresenter.setIdentification(identification);
+        mPresenter.setFinancialInstitutions(financialInstitutions);
         mPresenter.setPaymentPreference(paymentPreference);
     }
 
-    public void analyzeLowRes() {
-        if (mPresenter.isIdentificationAvailable()) {
-            this.mLowResActive = ScaleUtil.isLowRes(this);
-        } else {
-            this.mLowResActive = true;
-        }
-    }
 
     public void setContentView() {
-        if (mLowResActive) {
-            setContentViewLowRes();
-        } else {
-            setContentViewNormal();
-        }
+        MPTracker.getInstance().trackScreen("FINANCIAL_INSTITUTIONS", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
+        setContentViewLowRes();
     }
 
     @Override
@@ -137,7 +112,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         decorate();
         showTimer();
         initializeAdapter();
-        mPresenter.loadEntityTypes();
+        mPresenter.loadFinancialInstitutions();
     }
 
     private void showTimer() {
@@ -156,50 +131,36 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     private void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_entity_type_lowres);
+        setContentView(R.layout.mpsdk_activity_financial_institutions_lowres);
     }
 
-    private void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_entity_type_normal);
-    }
 
     private void initializeViews() {
-        mEntityTypesRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityIssuersView);
+        mFinancialInstitutionsRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityIssuersView);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
-        if (mLowResActive) {
-            mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
-            mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
+        mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
+        mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
 
-            if (CheckoutTimer.getInstance().isTimerEnabled()) {
-                Toolbar.LayoutParams marginParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                marginParams.setMargins(0, 0, 0, 0);
-                mLowResTitleToolbar.setLayoutParams(marginParams);
-                mLowResTitleToolbar.setTextSize(17);
-                mTimerTextView.setTextSize(15);
-            }
-
-            mLowResToolbar.setVisibility(View.VISIBLE);
-        } else {
-            mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.mpsdkCollapsingToolbar);
-            mAppBar = (AppBarLayout) findViewById(R.id.mpsdkIssuersAppBar);
-            mCardContainer = (FrameLayout) findViewById(R.id.mpsdkActivityCardContainer);
-            mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
-            mNormalToolbar.setVisibility(View.VISIBLE);
+        if (CheckoutTimer.getInstance().isTimerEnabled()) {
+            Toolbar.LayoutParams marginParams = new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            marginParams.setMargins(0, 0, 0, 0);
+            mLowResTitleToolbar.setLayoutParams(marginParams);
+            mLowResTitleToolbar.setTextSize(17);
+            mTimerTextView.setTextSize(15);
         }
+
+        mLowResToolbar.setVisibility(View.VISIBLE);
+
     }
 
     private void loadViews() {
-        if (mLowResActive) {
-            loadLowResViews();
-        } else {
-            loadNormalViews();
-        }
+        loadLowResViews();
     }
 
     private void initializeAdapter() {
-        mEntityTypesAdapter = new EntityTypesAdapter(this, getDpadSelectionCallback());
-        initializeAdapterListener(mEntityTypesAdapter, mEntityTypesRecyclerView);
+        mFinancialInstitutionsAdapter = new FinancialInstitutionsAdapter(this, getDpadSelectionCallback());
+        initializeAdapterListener(mFinancialInstitutionsAdapter, mFinancialInstitutionsRecyclerView);
     }
 
     protected OnSelectedCallback<Integer> getDpadSelectionCallback() {
@@ -224,8 +185,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     @Override
-    public void initializeEntityTypes(List<String> entityTypesList) {
-        mEntityTypesAdapter.addResults(entityTypesList);
+    public void initializeFinancialInstitutions(List<FinancialInstitution> financialInstitutions) {
+        mFinancialInstitutionsAdapter.addResults(financialInstitutions);
     }
 
     @Override
@@ -240,35 +201,12 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     private void loadLowResViews() {
         loadToolbarArrow(mLowResToolbar);
-        mLowResTitleToolbar.setText(getString(R.string.mpsdk_entity_types_title));
+        mLowResTitleToolbar.setText(getString(R.string.mpsdk_financial_institutions_title));
         if (FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
             mLowResTitleToolbar.setTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
         }
     }
 
-    private void loadNormalViews() {
-        loadToolbarArrow(mNormalToolbar);
-        mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
-        setCustomFontNormal();
-
-        mIdentificationCardView = new IdentificationCardView(mActivity,CardRepresentationModes.MEDIUM_SIZE, mPresenter.getIdentification());
-
-        //FIXME harcoded
-        IdentificationType identificationType = new IdentificationType();
-        identificationType.setId("36593292");
-        identificationType.setType("DNI");
-        identificationType.setMaxLength(8);
-        identificationType.setMinLength(8);
-        identificationType.setName("DNI");
-
-        mIdentificationCardView.setIdentificationType(identificationType);
-
-        mIdentificationCardView.inflateInParent(mCardContainer, true);
-        mIdentificationCardView.initializeControls();
-        mIdentificationCardView.draw();
-        mIdentificationCardView.show();
-
-    }
 
     private void loadToolbarArrow(Toolbar toolbar) {
         setSupportActionBar(toolbar);
@@ -287,20 +225,10 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         }
     }
 
-    private void setCustomFontNormal() {
-        if (FontCache.hasTypeface(FontCache.CUSTOM_REGULAR_FONT)) {
-            mCollapsingToolbar.setCollapsedTitleTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
-            mCollapsingToolbar.setExpandedTitleTypeface(FontCache.getTypeface(FontCache.CUSTOM_REGULAR_FONT));
-        }
-    }
 
     private void decorate() {
         if (isDecorationEnabled()) {
-            if (mLowResActive) {
-                decorateLowRes();
-            } else {
-                decorateNormal();
-            }
+            decorateLowRes();
         }
     }
 
@@ -316,50 +244,32 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         }
     }
 
-    private void decorateNormal() {
-        ColorsUtil.decorateNormalToolbar(mNormalToolbar, mDecorationPreference, mAppBar,
-                mCollapsingToolbar, getSupportActionBar(), this);
-        if (mTimerTextView != null) {
-            ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
-        }
-
-        mIdentificationCardView.decorateCardBorder(mDecorationPreference.getLighterColor());
-    }
 
     @Override
     public void showHeader() {
-        if (mLowResActive) {
-            mLowResToolbar.setVisibility(View.VISIBLE);
-        } else {
-            mNormalToolbar.setTitle(getString(R.string.mpsdk_card_issuers_title));
-            setCustomFontNormal();
-        }
+        mLowResToolbar.setVisibility(View.VISIBLE);
     }
 
     private void hideHeader() {
-        if (mLowResActive) {
-            mLowResToolbar.setVisibility(View.GONE);
-        } else {
-            mNormalToolbar.setTitle("");
-        }
+        mLowResToolbar.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoadingView() {
-        mEntityTypesRecyclerView.setVisibility(View.GONE);
+        mFinancialInstitutionsRecyclerView.setVisibility(View.GONE);
         LayoutUtil.showProgressLayout(this);
     }
 
     @Override
     public void stopLoadingView() {
-        mEntityTypesRecyclerView.setVisibility(View.VISIBLE);
+        mFinancialInstitutionsRecyclerView.setVisibility(View.VISIBLE);
         LayoutUtil.showRegularLayout(this);
     }
 
     @Override
-    public void finishWithResult(String entityType) {
+    public void finishWithResult(FinancialInstitution financialInstitution) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("entityType", entityType);
+        returnIntent.putExtra("financialInstitution", JsonUtil.getInstance().toJson(financialInstitution));
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_hold, R.anim.mpsdk_hold);
@@ -367,6 +277,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     @Override
     public void onBackPressed() {
+        MPTracker.getInstance().trackEvent("FINANCIAL_INSTITUTIONS", "BACK_PRESSED", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);

@@ -510,6 +510,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
         mIdentificationCardView.inflateInParent(mIdentificationCardContainer, true);
         mIdentificationCardView.initializeControls();
         mIdentificationCardView.hide();
+
     }
 
     private void loadToolbarArrow(Toolbar toolbar) {

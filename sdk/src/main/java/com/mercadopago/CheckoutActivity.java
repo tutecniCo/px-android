@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.FrameLayout;
 
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.callbacks.CallbackHolder;
@@ -28,6 +29,7 @@ import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
@@ -49,6 +51,7 @@ import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
+import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
@@ -106,6 +109,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected PaymentMethod mSelectedPaymentMethod;
     protected Issuer mSelectedIssuer;
     protected PayerCost mSelectedPayerCost;
+    protected FinancialInstitution mSelectedFinancialInstitution;
+    protected String mSelectedEntityType;
     protected Token mCreatedToken;
     protected Payment mCreatedPayment;
 
@@ -150,6 +155,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             }
             setContentView(R.layout.mpsdk_activity_checkout);
             mActivity = this;
+
             try {
                 validateActivityParameters();
                 onValidStart();
@@ -532,6 +538,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.FINANCIAL_INSTITUTIONS_REQUEST_CODE) {
+            resolveFinancialInstitutionsRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE) {
             resolveEntityTypeRequest(resultCode, data);
         } else {
@@ -539,11 +547,31 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         }
     }
 
+    private void resolveFinancialInstitutionsRequest(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+
+            this.mSelectedFinancialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
+
+            if(isEntityTypeStepRequired()){
+                showEntityTypeStep();
+            }
+            else if (isReviewAndConfirmEnabled()) {
+                showReviewAndConfirm();
+            } else {
+                resolvePaymentDataCallback();
+            }
+        }
+    }
+
     private void resolveEntityTypeRequest(int resultCode, Intent data) {
-        if (isReviewAndConfirmEnabled()) {
-            showReviewAndConfirm();
-        } else {
-            resolvePaymentDataCallback();
+        this.mSelectedEntityType = data.getStringExtra("entityType");
+
+        if (resultCode == RESULT_OK) {
+            if (isReviewAndConfirmEnabled()) {
+                showReviewAndConfirm();
+            } else {
+                resolvePaymentDataCallback();
+            }
         }
     }
 
@@ -651,6 +679,26 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         }
     }
 
+    private void showFinancialInstitutionsStep() {
+
+        new MercadoPagoComponents.Activities.FinancialInstitutionsActivityBuilder()
+                .setActivity(this)
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setPaymentMethod(mSelectedPaymentMethod)
+                .setDecorationPreference(mDecorationPreference)
+                .startActivity();
+
+        animatePaymentMethodSelection();
+
+    }
+
+    private void showIdentificationStep() {
+        /**
+         * TODO hacer una activity y presenter nuevos y sacar todo el procedimiento de GuessingCardActivity (Como void setIdentificationTypeListeners(), void setIdentificationNumberListeners();)
+         */
+        animatePaymentMethodSelection();
+
+    }
 
     private void showEntityTypeStep() {
         //TODO
@@ -688,8 +736,17 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     public boolean isEntityTypeStepRequired() {
-        //   return isFinancialInstitutionRequired() && isIdentificationNumberRequired() && isEntityTypeRequired();
-        return true;
+        return isEntityTypeRequired();
+    }
+
+    //   return isFinancialInstitutionRequired() && isIdentificationNumberRequired() && isEntityTypeRequired();
+
+    public boolean isFinancialInstitutionsStepRequired() {
+
+        if (isPaymentMethodSelected()) {
+            return mSelectedPaymentMethod.isFinancialInstitutionsRequired();
+        }
+        return false;
     }
 
 
@@ -709,15 +766,18 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     private void checkFlowWithPaymentMethodSelected() {
         //TODO entity_type flow here!
 
-        if (isEntityTypeStepRequired()) {
+        if (isFinancialInstitutionsStepRequired()) {
+            showFinancialInstitutionsStep();
+        } else if (isEntityTypeStepRequired()) {
+            //showIdentificationStep();
             showEntityTypeStep();
-        }
-        else if (isReviewAndConfirmEnabled()) {
+        } else if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {
             resolvePaymentDataCallback();
         }
     }
+
 
     private void showReviewAndConfirm() {
         MPTracker.getInstance().trackScreen("REVIEW_AND_CONFIRM", "3", mMerchantPublicKey, mCheckoutPreference.getSite().getId(), BuildConfig.VERSION_NAME, this);

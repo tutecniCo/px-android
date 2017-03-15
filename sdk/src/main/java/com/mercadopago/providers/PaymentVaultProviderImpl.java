@@ -104,6 +104,7 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
         List<String> excludedPaymentTypes = paymentPreference == null ? null : paymentPreference.getExcludedPaymentTypes();
         List<String> excludedPaymentMethodIds = paymentPreference == null ? null : paymentPreference.getExcludedPaymentMethodIds();
 
+
         mercadoPago.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethodIds, payer, site, new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {

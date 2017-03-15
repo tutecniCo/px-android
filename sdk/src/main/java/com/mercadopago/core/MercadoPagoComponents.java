@@ -14,6 +14,7 @@ import com.mercadopago.CongratsActivity;
 import com.mercadopago.CustomerCardsActivity;
 import com.mercadopago.DiscountsActivity;
 import com.mercadopago.EntityTypeActivity;
+import com.mercadopago.FinancialInstitutionsActivity;
 import com.mercadopago.GuessingCardActivity;
 import com.mercadopago.InstallmentsActivity;
 import com.mercadopago.InstructionsActivity;
@@ -85,6 +86,7 @@ public class MercadoPagoComponents {
         public static final int ISSUERS_REQUEST_CODE = 3;
         public static final int ENTITY_TYPE_REQUEST_CODE = 4;
         public static final int PAYMENT_RESULT_REQUEST_CODE = 5;
+        public static final int FINANCIAL_INSTITUTIONS_REQUEST_CODE = 6;
         public static final int CALL_FOR_AUTHORIZE_REQUEST_CODE = 7;
         public static final int PENDING_REQUEST_CODE = 8;
         public static final int REJECTION_REQUEST_CODE = 9;
@@ -950,6 +952,51 @@ public class MercadoPagoComponents {
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 intent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
                 activity.startActivityForResult(intent, ENTITY_TYPE_REQUEST_CODE);
+            }
+        }
+        public static class FinancialInstitutionsActivityBuilder {
+            private Activity activity;
+            private String merchantPublicKey;
+            private PaymentMethod paymentMethod;
+            private DecorationPreference decorationPreference;
+
+            public FinancialInstitutionsActivityBuilder setActivity(Activity activity) {
+                this.activity = activity;
+                return this;
+            }
+
+            public FinancialInstitutionsActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
+                this.merchantPublicKey = merchantPublicKey;
+                return this;
+            }
+
+            public FinancialInstitutionsActivityBuilder setPaymentMethod(PaymentMethod paymentMethod) {
+                this.paymentMethod = paymentMethod;
+                return this;
+            }
+
+
+            public FinancialInstitutionsActivityBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
+
+            public void startActivity() {
+                if (this.activity == null) throw new IllegalStateException("activity is null");
+                if (this.merchantPublicKey == null)
+                    throw new IllegalStateException("key is null");
+                if (this.paymentMethod == null)
+                    throw new IllegalStateException("payment method is null");
+                startFinancialInstitutionsActivity();
+            }
+
+            private void startFinancialInstitutionsActivity() {
+                Intent intent = new Intent(activity, FinancialInstitutionsActivity.class);
+                intent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
+                intent.putExtra("merchantPublicKey", merchantPublicKey);
+                intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
+                activity.startActivityForResult(intent, FINANCIAL_INSTITUTIONS_REQUEST_CODE);
             }
         }
 

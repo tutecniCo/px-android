@@ -17,14 +17,14 @@ public class PaymentMethod {
     private BigDecimal minAllowedAmount;
     private BigDecimal maxAllowedAmount;
     private Integer accreditationTime;
-    private List<Issuer> financialInstitutions;
+    private List<FinancialInstitution> financialInstitutions;
 
 
-    public List<Issuer> getFinancialInstitutions() {
+    public List<FinancialInstitution> getFinancialInstitutions() {
         return financialInstitutions;
     }
 
-    public void setFinancialInstitutions(List<Issuer> financialInstitutions) {
+    public void setFinancialInstitutions(List<FinancialInstitution> financialInstitutions) {
         this.financialInstitutions = financialInstitutions;
     }
 
@@ -98,6 +98,10 @@ public class PaymentMethod {
 
     public boolean isEntityTypeRequired(){
         return isAdditionalInfoNeeded("entity_type");
+    }
+
+    public boolean isFinancialInstitutionsRequired(){
+        return !financialInstitutions.isEmpty();
     }
 
     private boolean isAdditionalInfoNeeded(String param) {
