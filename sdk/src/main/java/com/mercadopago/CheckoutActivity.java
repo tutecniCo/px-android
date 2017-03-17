@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.FrameLayout;
 
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.callbacks.CallbackHolder;
@@ -20,7 +19,6 @@ import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.core.MercadoPagoServices;
-import com.mercadopago.core.MerchantServer;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
 import com.mercadopago.exceptions.ExceptionHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -31,6 +29,7 @@ import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.Identification;
+import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
@@ -51,7 +50,6 @@ import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
@@ -111,6 +109,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected PayerCost mSelectedPayerCost;
     protected FinancialInstitution mSelectedFinancialInstitution;
     protected String mSelectedEntityType;
+    protected Identification mSelectedIdentification;
+    protected IdentificationType mSelectedIdentificationType;
     protected Token mCreatedToken;
     protected Payment mCreatedPayment;
 
@@ -141,6 +141,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected Boolean mHasDirectDiscount = false;
     protected Boolean mHasCodeDiscount = false;
     protected Boolean mDirectDiscountEnabled = true;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -540,7 +542,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             resolveReviewAndConfirmRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.FINANCIAL_INSTITUTIONS_REQUEST_CODE) {
             resolveFinancialInstitutionsRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE) {
+        }else if (requestCode == MercadoPagoComponents.Activities.IDENTIFICATION_REQUEST_CODE) {
+            resolveIdentificationRequest(resultCode, data);
+        }
+        else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE) {
             resolveEntityTypeRequest(resultCode, data);
         } else {
             resolveErrorRequest(resultCode, data);
@@ -551,6 +556,23 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (resultCode == RESULT_OK) {
 
             this.mSelectedFinancialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
+
+            if(isEntityTypeStepRequired()){
+                showEntityTypeStep();
+            }
+            else if (isReviewAndConfirmEnabled()) {
+                showReviewAndConfirm();
+            } else {
+                resolvePaymentDataCallback();
+            }
+        }
+    }
+
+    private void resolveIdentificationRequest(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+
+            this.mSelectedIdentification = JsonUtil.getInstance().fromJson(data.getStringExtra("identification"), Identification.class);
+            this.mSelectedIdentificationType = JsonUtil.getInstance().fromJson(data.getStringExtra("identificationType"), IdentificationType.class);
 
             if(isEntityTypeStepRequired()){
                 showEntityTypeStep();
@@ -693,9 +715,13 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void showIdentificationStep() {
-        /**
-         * TODO hacer una activity y presenter nuevos y sacar todo el procedimiento de GuessingCardActivity (Como void setIdentificationTypeListeners(), void setIdentificationNumberListeners();)
-         */
+
+        new MercadoPagoComponents.Activities.IdentificationActivityBuilder()
+                .setActivity(this)
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setDecorationPreference(mDecorationPreference)
+                .startActivity();
+
         animatePaymentMethodSelection();
 
     }
@@ -769,8 +795,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (isFinancialInstitutionsStepRequired()) {
             showFinancialInstitutionsStep();
         } else if (isEntityTypeStepRequired()) {
-            //showIdentificationStep();
-            showEntityTypeStep();
+            showIdentificationStep();
         } else if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {

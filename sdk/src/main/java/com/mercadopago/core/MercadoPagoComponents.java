@@ -16,6 +16,7 @@ import com.mercadopago.DiscountsActivity;
 import com.mercadopago.EntityTypeActivity;
 import com.mercadopago.FinancialInstitutionsActivity;
 import com.mercadopago.GuessingCardActivity;
+import com.mercadopago.IdentificationActivity;
 import com.mercadopago.InstallmentsActivity;
 import com.mercadopago.InstructionsActivity;
 import com.mercadopago.IssuersActivity;
@@ -92,7 +93,6 @@ public class MercadoPagoComponents {
         public static final int REJECTION_REQUEST_CODE = 9;
         public static final int PAYMENT_VAULT_REQUEST_CODE = 10;
         public static final int BANK_DEALS_REQUEST_CODE = 11;
-        public static final int CHECKOUT_REQUEST_CODE = 12;
         public static final int GUESSING_CARD_REQUEST_CODE = 13;
         public static final int INSTRUCTIONS_REQUEST_CODE = 14;
         public static final int CARD_VAULT_REQUEST_CODE = 15;
@@ -101,6 +101,8 @@ public class MercadoPagoComponents {
         public static final int SECURITY_CODE_REQUEST_CODE = 18;
         public static final int DISCOUNTS_REQUEST_CODE = 19;
         public static final int REVIEW_AND_CONFIRM_REQUEST_CODE = 20;
+        public static final int IDENTIFICATION_REQUEST_CODE = 21;
+
 
         public static class PaymentVaultActivityBuilder {
 
@@ -954,6 +956,47 @@ public class MercadoPagoComponents {
                 activity.startActivityForResult(intent, ENTITY_TYPE_REQUEST_CODE);
             }
         }
+
+        public static class IdentificationActivityBuilder {
+            private Activity activity;
+            private String merchantPublicKey;
+            private DecorationPreference decorationPreference;
+
+            public IdentificationActivityBuilder setActivity(Activity activity) {
+                this.activity = activity;
+                return this;
+            }
+
+
+
+            public IdentificationActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
+                this.merchantPublicKey = merchantPublicKey;
+                return this;
+            }
+
+
+
+            public IdentificationActivityBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
+
+            public void startActivity() {
+                if (this.activity == null) throw new IllegalStateException("activity is null");
+                if (this.merchantPublicKey == null)
+                    throw new IllegalStateException("key is null");
+                startEntityTypeActivity();
+            }
+
+            private void startEntityTypeActivity() {
+                Intent intent = new Intent(activity, IdentificationActivity.class);
+                intent.putExtra("merchantPublicKey", merchantPublicKey);
+                intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
+                activity.startActivityForResult(intent, IDENTIFICATION_REQUEST_CODE);
+            }
+        }
+
         public static class FinancialInstitutionsActivityBuilder {
             private Activity activity;
             private String merchantPublicKey;

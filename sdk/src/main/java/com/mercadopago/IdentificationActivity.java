@@ -143,7 +143,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     private void getActivityParameters() {
 
         String publicKey = getIntent().getStringExtra("merchantPublicKey");
-        String privateKey = getIntent().getStringExtra("payerAccessToken");
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
 
 

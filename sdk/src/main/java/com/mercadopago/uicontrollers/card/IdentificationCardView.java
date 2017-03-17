@@ -43,6 +43,7 @@ public class IdentificationCardView {
     private IdentificationType mIdentificationType;
     private String mSize;
     private MPTextView mCardBaseTextAlpha;
+    private ImageView mIcon;
 
     public IdentificationCardView(Context context) {
         this.mContext = context;
@@ -67,6 +68,7 @@ public class IdentificationCardView {
         mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
         mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberView);
         mCardBaseTextAlpha = (MPTextView) mView.findViewById(R.id.mpsdk_base_text_alpha);
+        mIcon = (ImageView) mView.findViewById(R.id.mpsdk_id_picture);
 
         transform();
 
@@ -106,8 +108,10 @@ public class IdentificationCardView {
         mCardBorder.getLayoutParams().width =  R.dimen.mpsdk_card_border_size_medium_width;*/
 
         mCardBorder.getLayoutParams().height =  400;
-        mCardBorder.getLayoutParams().width =  640;
-
+        mCardBorder.getLayoutParams().width =  670;
+        mIcon.getLayoutParams().height = 150;
+        mIcon.getLayoutParams().width = 150;
+        mIcon.requestLayout();
         mCardBorder.requestLayout();
 
         mBaseIdNumberView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);
