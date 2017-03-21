@@ -3,16 +3,15 @@ package com.mercadopago.uicontrollers.card;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.mercadopago.R;
-import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -54,7 +53,7 @@ public class IdentificationCardView {
         this.mSize = size;
         this.mIdentification = identification;
     }
-    
+
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
@@ -73,7 +72,7 @@ public class IdentificationCardView {
         transform();
 
     }
-    
+
 
     private void transform() {
         if (mSize == null || mIdentification == null) return;
@@ -107,11 +106,15 @@ public class IdentificationCardView {
         /*mCardBorder.getLayoutParams().height =  R.dimen.mpsdk_card_border_size_medium_height;
         mCardBorder.getLayoutParams().width =  R.dimen.mpsdk_card_border_size_medium_width;*/
 
-        mCardBorder.getLayoutParams().height =  400;
-        mCardBorder.getLayoutParams().width =  670;
+        mCardBorder.getLayoutParams().height = 400;
+        mCardBorder.getLayoutParams().width = 670;
         mIcon.getLayoutParams().height = 150;
         mIcon.getLayoutParams().width = 150;
+        ViewGroup.LayoutParams params = mIcon.getLayoutParams();
+
+
         mIcon.requestLayout();
+
         mCardBorder.requestLayout();
 
         mBaseIdNumberView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);

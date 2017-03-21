@@ -13,6 +13,7 @@ import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.core.MercadoPagoServices;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
+import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.preferences.PaymentPreference;
@@ -34,11 +35,9 @@ public class EntityTypePresenter {
     //Activity parameters
     private String mPublicKey;
     private PaymentMethod mPaymentMethod;
-    private PaymentPreference mPaymentPreference;
-    private String mPrivateKey;
     private Identification mIdentification;
     private List<String> mEntityTypes;
-    private MercadoPagoServices mMercadoPago;
+    private IdentificationType mIdentificationType;
 
 
     public EntityTypePresenter(Context context) {
@@ -57,14 +56,6 @@ public class EntityTypePresenter {
         this.mPublicKey = publicKey;
     }
 
-    public void setPrivateKey(String privateKey) {
-        this.mPrivateKey = privateKey;
-    }
-
-
-    public void setPaymentPreference(PaymentPreference paymentPreference) {
-        this.mPaymentPreference = paymentPreference;
-    }
 
     private void setFailureRecovery(FailureRecovery failureRecovery) {
         this.mFailureRecovery = failureRecovery;
@@ -76,6 +67,10 @@ public class EntityTypePresenter {
 
     public Identification getIdentification() {
         return mIdentification;
+    }
+
+    public IdentificationType getIdentificationType() {
+        return mIdentificationType;
     }
 
     public String getPublicKey() {
@@ -104,13 +99,6 @@ public class EntityTypePresenter {
         }
     }
 
-    public void initializeMercadoPago() {
-        mMercadoPago = new MercadoPagoServices.Builder()
-                .setContext(mContext)
-                .setPublicKey(mPublicKey)
-                .setPrivateKey(mPrivateKey)
-                .build();
-    }
 
     public void loadEntityTypes() {
         if (wereEntityTypesSet()) {
@@ -125,11 +113,7 @@ public class EntityTypePresenter {
     }
 
     private void getEntityTypes() {
-        /*
-        TODO extender Presenter y usar el OnResourcesRetrievedCallback. Crear algún tipo de mapa discriminando step y site para obtener la lista.
-        mView.showLoadingView();
-        mView.stopLoadingView();
-        */
+
 
         List<String> list = new ArrayList<>();
         list.add("Natural");
@@ -168,5 +152,9 @@ public class EntityTypePresenter {
 
     public void setIdentification(Identification identification) {
         this.mIdentification = identification;
+    }
+
+    public void setIdentificationType(IdentificationType identificationType) {
+        this.mIdentificationType = identificationType;
     }
 }

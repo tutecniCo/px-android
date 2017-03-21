@@ -558,7 +558,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             this.mSelectedFinancialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
 
             if(isEntityTypeStepRequired()){
-                showEntityTypeStep();
+                showIdentificationStep();
             }
             else if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
@@ -727,33 +727,31 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void showEntityTypeStep() {
-        //TODO
+
+        //FIXME harcoded
+
         /*
-        new MercadoPagoComponents.Activities.GuessingCardActivityBuilder()
-                .setActivity(mActivity)
-                .setMerchantPublicKey(mPresenter.getPublicKey())
-                .setAmount(mPresenter.getAmount())
-                .setDecorationPreference(mDecorationPreference)
-                .setPaymentRecovery(mPresenter.getPaymentRecovery())
-                .startActivity();
-
-        ese es un ejemplo de como se levanta Guessing desde CardVault
-        básicamente tenés que hacer un TypeFlowAcitivtyBuilder() en MercadoPagoComponents
-        ahí está el builder de cada activity con los sets de la info que necesitas
-        seguramente necesites el contexto (es el setActivity), la PK, etc
-
-        */
 
         Identification id = new Identification();
 
         id.setType("DNI");
-        id.setNumber("36329909");
+        id.setNumber("36329909");*/
+
+
+        /*
+        IdentificationType identificationType = new IdentificationType();
+        identificationType.setId("36329909");
+        identificationType.setType("DNI");
+        identificationType.setMaxLength(8);
+        identificationType.setMinLength(8);
+        identificationType.setName("DNI");*/
 
         new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
                 .setPaymentMethod(mSelectedPaymentMethod)
-                .setIdentification(id)
+                .setIdentification(mSelectedIdentification)
+                .setIdentificationType(mSelectedIdentificationType)
                 .setDecorationPreference(mDecorationPreference)
                 .startActivity();
 
@@ -765,7 +763,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         return isEntityTypeRequired();
     }
 
-    //   return isFinancialInstitutionRequired() && isIdentificationNumberRequired() && isEntityTypeRequired();
 
     public boolean isFinancialInstitutionsStepRequired() {
 

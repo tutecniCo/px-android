@@ -1,6 +1,7 @@
 package com.mercadopago.presenters;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
@@ -100,6 +101,9 @@ public class IdentificationPresenter {
         if (mPublicKey == null) {
             return;
         }
+        if(mMercadoPago != null){
+            return;
+        }
         mMercadoPago = new MercadoPagoServices.Builder()
                 .setContext(mContext)
                 .setPublicKey(mPublicKey)
@@ -113,15 +117,20 @@ public class IdentificationPresenter {
         mView.setIdentificationTypeListeners();
         mView.setIdentificationNumberListeners();
         mView.setNextButtonListeners();
+        mView.setBackButtonListeners();
     }
 
 
 
     public void loadIdentificationTypes() {
+        if(mMercadoPago==null){
+            initializeMercadoPago();
+        }
         getIdentificationTypesAsync();
     }
 
     private void getIdentificationTypesAsync() {
+
         mMercadoPago.getIdentificationTypes(new Callback<List<IdentificationType>>() {
             @Override
             public void success(List<IdentificationType> identificationTypes) {
@@ -132,6 +141,7 @@ public class IdentificationPresenter {
                     mIdentificationType = identificationTypes.get(0);
                     mView.initializeIdentificationTypes(identificationTypes);
                     mIdentificationTypes = identificationTypes;
+                    mView.showInputContainer();
                 }
             }
 
@@ -148,6 +158,9 @@ public class IdentificationPresenter {
         });
     }
 
+    public boolean checkIsEmptyOrValidIdentificationNumber() {
+        return TextUtils.isEmpty(mIdentificationNumber) || validateIdentificationNumber();
+    }
 
     public void saveIdentificationNumber(String identificationNumber) {
         this.mIdentificationNumber = identificationNumber;

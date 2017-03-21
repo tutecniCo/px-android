@@ -1,7 +1,6 @@
 package com.mercadopago;
 
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.EntityTypesAdapter;
-import com.mercadopago.adapters.IssuersAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
@@ -24,16 +21,13 @@ import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
-import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.EntityTypePresenter;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
-import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ColorsUtil;
@@ -44,7 +38,6 @@ import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.EntityTypeActivityView;
 
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -97,19 +90,17 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     private void getActivityParameters() {
 
         String publicKey = getIntent().getStringExtra("merchantPublicKey");
-        String payerAccessToken = getIntent().getStringExtra("payerAccessToken");
-        PaymentPreference paymentPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentPreference"), PaymentPreference.class);
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
 
         PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(
                 this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
         Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
+        IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
 
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
-        mPresenter.setPrivateKey(payerAccessToken);
         mPresenter.setIdentification(identification);
-        mPresenter.setPaymentPreference(paymentPreference);
+        mPresenter.setIdentificationType(identificationType);
     }
 
     public void analyzeLowRes() {
@@ -130,7 +121,6 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     @Override
     public void onValidStart() {
-        mPresenter.initializeMercadoPago();
         initializeViews();
         loadViews();
         hideHeader();
@@ -251,17 +241,10 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
         setCustomFontNormal();
 
-        mIdentificationCardView = new IdentificationCardView(mActivity,CardRepresentationModes.MEDIUM_SIZE, mPresenter.getIdentification());
+        mIdentificationCardView = new IdentificationCardView(mActivity, CardRepresentationModes.MEDIUM_SIZE, mPresenter.getIdentification());
 
-        //FIXME harcoded
-        IdentificationType identificationType = new IdentificationType();
-        identificationType.setId("36593292");
-        identificationType.setType("DNI");
-        identificationType.setMaxLength(8);
-        identificationType.setMinLength(8);
-        identificationType.setName("DNI");
 
-        mIdentificationCardView.setIdentificationType(identificationType);
+        mIdentificationCardView.setIdentificationType(mPresenter.getIdentificationType());
 
         mIdentificationCardView.inflateInParent(mCardContainer, true);
         mIdentificationCardView.initializeControls();
@@ -331,7 +314,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         if (mLowResActive) {
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
-            mNormalToolbar.setTitle(getString(R.string.mpsdk_card_issuers_title));
+            mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
             setCustomFontNormal();
         }
     }

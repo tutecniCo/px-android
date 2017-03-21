@@ -36,6 +36,7 @@ import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Identification;
+import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Reviewable;
@@ -910,14 +911,15 @@ public class MercadoPagoComponents {
             private PaymentMethod paymentMethod;
             private DecorationPreference decorationPreference;
             private Identification identification;
+            private IdentificationType identificationType;
 
             public EntityTypeActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
                 return this;
             }
 
-            public EntityTypeActivityBuilder setIdentification(Identification identificationType) {
-                this.identification = identificationType;
+            public EntityTypeActivityBuilder setIdentification(Identification identification) {
+                this.identification = identification;
                 return this;
             }
 
@@ -953,7 +955,13 @@ public class MercadoPagoComponents {
                 intent.putExtra("merchantPublicKey", merchantPublicKey);
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 intent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
+                intent.putExtra("identificationType", JsonUtil.getInstance().toJson(identificationType));
                 activity.startActivityForResult(intent, ENTITY_TYPE_REQUEST_CODE);
+            }
+
+            public EntityTypeActivityBuilder setIdentificationType(IdentificationType identificationType) {
+                this.identificationType = identificationType;
+                return this;
             }
         }
 
@@ -986,10 +994,10 @@ public class MercadoPagoComponents {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("key is null");
-                startEntityTypeActivity();
+                startIdentificationActivity();
             }
 
-            private void startEntityTypeActivity() {
+            private void startIdentificationActivity() {
                 Intent intent = new Intent(activity, IdentificationActivity.class);
                 intent.putExtra("merchantPublicKey", merchantPublicKey);
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));

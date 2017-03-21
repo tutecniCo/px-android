@@ -14,8 +14,8 @@ import com.mercadopago.examples.R;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.model.Token;
+import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 

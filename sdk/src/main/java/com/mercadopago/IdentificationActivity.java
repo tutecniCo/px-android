@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
@@ -93,8 +94,12 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     //Input Views
     private FrameLayout mNextButton;
     private TextView mNextButtonText;
+    private FrameLayout mBackButton;
+    private FrameLayout mBackInactiveButton;
+    private TextView mBackInactiveButtonText;
+    private TextView mBackButtonText;
     private ProgressBar mProgressBar;
-    private LinearLayout mInputContainer;
+    private FrameLayout mInputContainer;
     private Spinner mIdentificationTypeSpinner;
     private LinearLayout mIdentificationTypeContainer;
     private LinearLayout mButtonContainer;
@@ -147,9 +152,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
 
         Identification identification = new Identification();
-
-        mPresenter.loadIdentificationTypes();
         mPresenter.setPublicKey(publicKey);
+        mPresenter.loadIdentificationTypes();
         mPresenter.setIdentification(identification);
 
     }
@@ -213,26 +217,49 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     }
 
     private void setContentViewLowRes() {
-        setContentView(R.layout.mpsdk_activity_form_card_lowres);
+        setContentView(R.layout.mpsdk_activity_identification_lowres);
     }
 
     private void setContentViewNormal() {
-        setContentView(R.layout.mpsdk_activity_form_card_normal);
+        setContentView(R.layout.mpsdk_activity_identification_normal);
     }
+
+    private void disableBackInputButton() {
+        mBackButton.setVisibility(View.GONE);
+        mBackInactiveButton.setVisibility(View.VISIBLE);
+    }
+
+    private void enableBackInputButton() {
+        mBackButton.setVisibility(View.VISIBLE);
+        mBackInactiveButton.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void setNextButtonListeners() {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 validateCurrentEditText();
+
             }
         });
     }
 
+    @Override
+    public void setBackButtonListeners() {
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //TODO
+            }
+        });
+    }
 
     @Override
     public void onInvalidStart(String message) {
+
         finish();
     }
 
@@ -270,10 +297,14 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationTypeContainer = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationTypeContainer);
         mIdentificationTypeSpinner = (Spinner) findViewById(R.id.mpsdkCardIdentificationType);
         mIdentificationNumberEditText = (MPEditText) findViewById(R.id.mpsdkCardIdentificationNumber);
-        mInputContainer = (LinearLayout) findViewById(R.id.mpsdkInputContainer);
+        mInputContainer = (FrameLayout) findViewById(R.id.mpsdkInputContainer);
         mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
         mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
         mNextButtonText = (TextView) findViewById(R.id.mpsdkNextButtonText);
+        mBackButton = (FrameLayout) findViewById(R.id.mpsdkBackButton);
+        mBackButtonText = (TextView) findViewById(R.id.mpsdkBackButtonText);
+        mBackInactiveButton = (FrameLayout) findViewById(R.id.mpsdkBackInactiveButton);
+        mBackInactiveButtonText = (TextView) findViewById(R.id.mpsdkBackInactiveButtonText);
         mButtonContainer = (LinearLayout) findViewById(R.id.mpsdkButtonContainer);
         mCardIdentificationInput = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationInput);
         mErrorContainer = (FrameLayout) findViewById(R.id.mpsdkErrorContainer);
@@ -288,9 +319,10 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void showInputContainer() {
-        mIdentificationTypeContainer.setVisibility(View.GONE);
+        mIdentificationTypeContainer.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
         mInputContainer.setVisibility(View.VISIBLE);
+        requestIdentificationFocus();
     }
 
     private void loadViews() {
@@ -361,6 +393,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             ColorsUtil.decorateTextView(mDecorationPreference, mTimerTextView, this);
         }
         mNextButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
+        mBackButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
+        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.mpsdk_warm_grey));
     }
 
     private void decorateNormal() {
@@ -371,6 +405,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationCardView.decorateCardBorder(mDecorationPreference.getLighterColor());
         mCardBackground.setBackgroundColor(mDecorationPreference.getLighterColor());
         mNextButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
+        mBackButtonText.setTextColor(mDecorationPreference.getDarkFontColor(this));
+        mBackInactiveButtonText.setTextColor(ContextCompat.getColor(this, R.color.mpsdk_warm_grey));
     }
 
 
@@ -477,6 +513,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     public void initializeIdentificationTypes(List<IdentificationType> identificationTypes) {
         mIdentificationTypeSpinner.setAdapter(new IdentificationTypesAdapter(this, identificationTypes));
         mIdentificationTypeContainer.setVisibility(View.VISIBLE);
+
         if (cardViewsActive()) {
             mIdentificationCardView.setIdentificationType(identificationTypes.get(0));
         }
@@ -546,6 +583,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         MPTracker.getInstance().trackScreen("IDENTIFICATION_NUMBER", "2", mPresenter.getPublicKey(),
                 BuildConfig.VERSION_NAME, this);
         openKeyboard(mIdentificationNumberEditText);
+        enableBackInputButton();
         if (mLowResActive) {
             mLowResTitleToolbar.setText(getResources().getString(R.string.mpsdk_form_identification_title));
         }

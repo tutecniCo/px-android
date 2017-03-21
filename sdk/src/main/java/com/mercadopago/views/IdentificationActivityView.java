@@ -28,6 +28,7 @@ public interface IdentificationActivityView {
     void onInvalidStart(String message);
     void onValidStart();
     void showInputContainer();
+    void setBackButtonListeners();
     void initializeTitle();
     void setSoftInputMode();
     void finishWithResult(IdentificationType identificationType, Identification identification);
