@@ -5,6 +5,7 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.DiscountSearch;
+import com.mercadopago.model.DiscountSearchItem;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
@@ -41,7 +42,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     public void initialize() {
-
+        //TODO ordenar
         getDiscountSearch();
 
         if (mDiscount == null) {
@@ -106,17 +107,27 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 //        }
 
         if (searchItemsAvailable()) {
-            getView().showSearchItems(mDiscountSearch.getGroups(), getPaymentMethodSearchItemSelectionCallback());
+            getView().showSearchItems(mDiscountSearch.getGroups(), getDiscountSearchItemSelectionCallback());
         }
     }
 
-    private OnSelectedCallback<PaymentMethodSearchItem> getPaymentMethodSearchItemSelectionCallback() {
-        return new OnSelectedCallback<PaymentMethodSearchItem>() {
+    private OnSelectedCallback<DiscountSearchItem> getDiscountSearchItemSelectionCallback() {
+        return new OnSelectedCallback<DiscountSearchItem>() {
             @Override
-            public void onSelected(PaymentMethodSearchItem item) {
+            public void onSelected(DiscountSearchItem item) {
                 selectItem(item);
             }
         };
+    }
+
+    private void selectItem(DiscountSearchItem item) {
+//        if (item.hasChildren()) {
+//            getView().restartWithSelectedItem(item);
+//        } else if (item.isPaymentType()) {
+//            startNextStepForPaymentType(item);
+//        } else if (item.isPaymentMethod()) {
+//            resolvePaymentMethodSelection(item);
+//        }
     }
 
     private boolean searchItemsAvailable() {

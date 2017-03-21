@@ -5,6 +5,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -19,11 +21,14 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mercadopago.adapters.DiscountSearchItemAdapter;
+import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.decorations.GridSpacingItemDecoration;
 import com.mercadopago.model.Currency;
 
 import com.mercadopago.model.Discount;
@@ -35,15 +40,24 @@ import com.mercadopago.preferences.DecorationPreference;
 
 import com.mercadopago.presenters.DiscountsPresenter;
 import com.mercadopago.providers.DiscountProviderImpl;
+import com.mercadopago.uicontrollers.discounts.DiscountSearchOption;
+import com.mercadopago.uicontrollers.discounts.DiscountSearchViewController;
+import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchOption;
+import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.DiscountsActivityView;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.mercadopago.PaymentVaultActivity.COLUMNS;
+import static com.mercadopago.PaymentVaultActivity.COLUMN_SPACING_DP_VALUE;
 
 public class DiscountsActivity extends AppCompatActivity implements DiscountsActivityView, TimerObserver {
 
@@ -77,6 +91,11 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected Toolbar mToolbar;
 
     protected DiscountsPresenter mPresenter;
+
+    protected RecyclerView mSearchItemsRecyclerView;
+
+    public static final int COLUMN_SPACING_DP_VALUE = 20;
+    public static final int COLUMNS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -471,7 +490,38 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     }
 
     @Override
-    public void showSearchItems(List<DiscountSearchItem> discountSearchItems, OnSelectedCallback<DiscountSearchItem> paymentMethodSearchItemSelectionCallback) {
-        populateSearchList(searchItems, paymentMethodSearchItemSelectionCallback);
+    public void showSearchItems(List<DiscountSearchItem> discountSearchItems, OnSelectedCallback<DiscountSearchItem> discountSearchItemSelectionCallback) {
+        populateSearchList(discountSearchItems, discountSearchItemSelectionCallback);
+    }
+
+    protected void populateSearchList(List<DiscountSearchItem> items, OnSelectedCallback<DiscountSearchItem> onSelectedCallback) {
+        DiscountSearchItemAdapter adapter = (DiscountSearchItemAdapter) mSearchItemsRecyclerView.getAdapter();
+        List<DiscountSearchViewController> customViewControllers = createSearchItemsViewControllers(items, onSelectedCallback);
+        adapter.addItems(customViewControllers);
+        adapter.notifyItemInserted();
+    }
+
+    private List<DiscountSearchViewController> createSearchItemsViewControllers(List<DiscountSearchItem> items, final OnSelectedCallback<DiscountSearchItem> onSelectedCallback) {
+        List<DiscountSearchViewController> customViewControllers = new ArrayList<>();
+        for (final DiscountSearchItem item : items) {
+            DiscountSearchViewController viewController = new DiscountSearchOption(this, item, mDecorationPreference);
+            viewController.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onSelectedCallback.onSelected(item);
+                }
+            });
+            customViewControllers.add(viewController);
+        }
+        return customViewControllers;
+    }
+
+    protected void initializePaymentOptionsRecyclerView() {
+        int columns = COLUMNS;
+        mSearchItemsRecyclerView = (RecyclerView) findViewById(R.id.mpsdkGroupsList);
+        mSearchItemsRecyclerView.setLayoutManager(new GridLayoutManager(this, columns));
+        mSearchItemsRecyclerView.addItemDecoration(new GridSpacingItemDecoration(columns, ScaleUtil.getPxFromDp(COLUMN_SPACING_DP_VALUE, this), true));
+        DiscountSearchItemAdapter groupsAdapter = new DiscountSearchItemAdapter();
+        mSearchItemsRecyclerView.setAdapter(groupsAdapter);
     }
 }
