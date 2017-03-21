@@ -3,10 +3,8 @@ package com.mercadopago.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.mercadopago.model.Discount;
 import com.mercadopago.uicontrollers.CustomViewController;
 import com.mercadopago.uicontrollers.discounts.DiscountSearchViewController;
-import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
 
 import java.util.ArrayList;
 import java.util.List;

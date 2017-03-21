@@ -36,28 +36,21 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
     private DiscountSearch mDiscountSearch;
 
-    @Override
-    public void attachView(DiscountsActivityView discountsView) {
-        this.mDiscountsView = discountsView;
-    }
+//    @Override
+//    public void attachView(DiscountsActivityView discountsView) {
+//        this.mDiscountsView = discountsView;
+//    }
 
     public void initialize() {
-        //TODO ordenar
         getDiscountSearch();
-
-        if (mDiscount == null) {
-            initDiscountFlow();
-        } else {
-            mDiscountsView.drawSummary();
-        }
     }
 
     private void initDiscountFlow() {
         if (mDirectDiscountEnabled && isTransactionAmountValid()) {
-            mDiscountsView.hideDiscountSummary();
+            getView().hideDiscountSummary();
             getDirectDiscount();
         } else {
-            mDiscountsView.requestDiscountCode();
+            getView().requestDiscountCode();
         }
     }
 
@@ -75,7 +68,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
             @Override
             public void onFailure(MercadoPagoError error) {
-                mDiscountsView.requestDiscountCode();
+                getView().requestDiscountCode();
             }
         });
     }

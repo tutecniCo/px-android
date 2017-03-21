@@ -72,8 +72,6 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     //View
     protected ProgressBar mProgressBar;
     protected FrameLayout mReviewDiscountSummaryContainer;
-    protected FrameLayout mNextButton;
-    protected FrameLayout mBackButton;
     protected FrameLayout mErrorContainer;
     protected FrameLayout mDiscountBackground;
     protected LinearLayout mDiscountCodeContainer;
@@ -83,10 +81,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected MPTextView mReviewSummaryDiscountAmount;
     protected MPTextView mReviewSummaryTotalAmount;
     protected MPTextView mErrorTextView;
-    protected TextView mNextButtonText;
-    protected TextView mBackButtonText;
     protected ImageView mCloseImage;
-    protected MPEditText mDiscountCodeEditText;
     protected ScrollView mScrollView;
     protected Toolbar mToolbar;
 
@@ -160,71 +155,28 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mReviewDiscountSummaryContainer = (FrameLayout) findViewById(R.id.mpsdkReviewDiscountSummaryContainer);
         mDiscountBackground = (FrameLayout) findViewById(R.id.mpsdkDiscountBackground);
         mDiscountCodeContainer = (LinearLayout) findViewById(R.id.mpsdkDiscountCodeContainer);
+        mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
+        mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
         //Review discount summary
         mReviewSummaryTitle = (MPTextView) findViewById(R.id.mpsdkReviewSummaryTitle);
         mReviewSummaryProductAmount = (MPTextView) findViewById(R.id.mpsdkReviewSummaryProductsAmount);
         mReviewSummaryDiscountAmount = (MPTextView) findViewById(R.id.mpsdkReviewSummaryDiscountsAmount);
         mReviewSummaryTotalAmount = (MPTextView) findViewById(R.id.mpsdkReviewSummaryTotalAmount);
-
-        //Discount code input
-        mDiscountCodeEditText = (MPEditText) findViewById(R.id.mpsdkDiscountCode);
-        mDiscountCodeEditText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
-
-        mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
-        mBackButton = (FrameLayout) findViewById(R.id.mpsdkBackButton);
-        mNextButtonText = (MPTextView) findViewById(R.id.mpsdkNextButtonText);
-        mBackButtonText = (MPTextView) findViewById(R.id.mpsdkBackButtonText);
-
         mCloseImage = (ImageView) findViewById(R.id.mpsdkCloseImage);
-        mErrorContainer = (FrameLayout) findViewById(R.id.mpsdkErrorContainer);
-        mErrorTextView = (MPTextView) findViewById(R.id.mpsdkErrorTextView);
-        mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
-        mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
-        mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
         setListeners();
         fullScrollDown();
         initializeToolbar();
+
+        initializeDiscountOptionsRecyclerView();
     }
 
     private void setListeners() {
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CharSequence discountCode = mDiscountCodeEditText.getText();
-                mPresenter.validateDiscountCodeInput(discountCode.toString());
-            }
-        });
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         mCloseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finishWithResult();
-            }
-        });
-
-        mDiscountCodeEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-                //Nothing to do
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                clearErrorView();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                //Nothing to do
             }
         });
     }
@@ -516,11 +468,13 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         return customViewControllers;
     }
 
-    protected void initializePaymentOptionsRecyclerView() {
+    protected void initializeDiscountOptionsRecyclerView() {
         int columns = COLUMNS;
+
         mSearchItemsRecyclerView = (RecyclerView) findViewById(R.id.mpsdkGroupsList);
         mSearchItemsRecyclerView.setLayoutManager(new GridLayoutManager(this, columns));
         mSearchItemsRecyclerView.addItemDecoration(new GridSpacingItemDecoration(columns, ScaleUtil.getPxFromDp(COLUMN_SPACING_DP_VALUE, this), true));
+
         DiscountSearchItemAdapter groupsAdapter = new DiscountSearchItemAdapter();
         mSearchItemsRecyclerView.setAdapter(groupsAdapter);
     }
