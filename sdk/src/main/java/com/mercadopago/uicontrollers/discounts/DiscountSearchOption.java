@@ -2,6 +2,7 @@ package com.mercadopago.uicontrollers.discounts;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.DiscountSearchItem;
 import com.mercadopago.preferences.DecorationPreference;
+import com.mercadopago.util.CurrenciesUtil;
+
+import java.math.BigDecimal;
 
 /**
  * Created by mromar on 3/21/17.
@@ -54,7 +58,6 @@ public class DiscountSearchOption implements DiscountSearchViewController {
         mDescription = (MPTextView) mView.findViewById(R.id.mpsdkDescription);
         mComment = (MPTextView) mView.findViewById(R.id.mpsdkComment);
         mIcon = (ImageView) mView.findViewById(R.id.mpsdkImage);
-
     }
 
     public void draw() {
@@ -65,28 +68,18 @@ public class DiscountSearchOption implements DiscountSearchViewController {
             mDescription.setVisibility(View.GONE);
         }
 
-        int resourceId = 0;
+        if (mItem.hasCouponAmount()) {
+            StringBuilder discountText = new StringBuilder();
+            Spanned spannedDiscountText;
 
-        Boolean needsTint = itemNeedsTint(mItem);
-        String imageId;
-//        if(needsTint) {
-//            imageId = TO_TINT_IMAGES_PREFIX + mItem.getId();
-//        } else {
-//            imageId = mItem.getId();
-//        }
+            discountText.append("Descuento ");
+            discountText.append(CurrenciesUtil.formatNumber(mItem.getCouponAmount(), mItem.getCurrency()));
 
-//        if (mItem.isIconRecommended()) {
-//            resourceId = MercadoPagoUtil.getPaymentMethodSearchItemIcon(mContext, imageId);
-//        }
+            spannedDiscountText = CurrenciesUtil.formatCurrencyInText(mItem.getCouponAmount(),
+                    mItem.getCurrency(), discountText.toString(), false, true);
 
-//        if (resourceId != 0) {
-//            mIcon.setImageResource(resourceId);
-//        } else {
-//            mIcon.setVisibility(View.GONE);
-//        }
-
-        if(needsTint) {
-            mIcon.setColorFilter(mDecorationPreference.getBaseColor(), PorterDuff.Mode.MULTIPLY);
+            mComment.setText(spannedDiscountText);
+            mComment.setTextColor(mContext.getResources().getColor(R.color.mpsdk_color_payer_costs_no_rate));
         }
     }
 
@@ -103,6 +96,12 @@ public class DiscountSearchOption implements DiscountSearchViewController {
         if (mView != null) {
             mView.setOnClickListener(listener);
         }
+    }
+
+    private Spanned getFormattedAmount(BigDecimal amount, String currencyId) {
+        String originalNumber = CurrenciesUtil.formatNumber(amount, currencyId);
+        Spanned amountText = CurrenciesUtil.formatCurrencyInText(amount, currencyId, originalNumber, false, true);
+        return amountText;
     }
 }
 

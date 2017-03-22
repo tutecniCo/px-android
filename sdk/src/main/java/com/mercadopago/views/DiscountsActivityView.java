@@ -26,9 +26,9 @@ public interface DiscountsActivityView extends MvpView {
 
     void clearErrorView();
 
-    void showProgressBar();
+    void showProgress();
 
-    void hideProgressBar();
+    void hideProgress();
 
     void showEmptyDiscountCodeError();
 

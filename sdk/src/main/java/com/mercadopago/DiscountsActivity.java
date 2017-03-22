@@ -157,6 +157,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mDiscountCodeContainer = (LinearLayout) findViewById(R.id.mpsdkDiscountCodeContainer);
         mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
+        mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
 
         //Review discount summary
         mReviewSummaryTitle = (MPTextView) findViewById(R.id.mpsdkReviewSummaryTitle);
@@ -368,12 +369,12 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     }
 
     @Override
-    public void showProgressBar() {
+    public void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideProgressBar() {
+    public void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
     }
 

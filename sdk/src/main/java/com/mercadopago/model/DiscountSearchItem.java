@@ -19,6 +19,7 @@ public class DiscountSearchItem {
     private Long id;
     private String type;
     private String description;
+    private String currencyId;
     private BigDecimal couponAmount;
 
     public Long getId() {
@@ -37,6 +38,10 @@ public class DiscountSearchItem {
         return couponAmount;
     }
 
+    public String getCurrency() {
+        return currencyId;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -53,8 +58,16 @@ public class DiscountSearchItem {
         this.couponAmount = couponAmount;
     }
 
+    public void setCurrency(String currency) {
+        this.currencyId = currency;
+    }
+
     public Boolean hasDescription() {
         return !isEmpty(this.description);
+    }
+
+    public Boolean hasCouponAmount() {
+        return couponAmount != null && couponAmount.compareTo(BigDecimal.ZERO) > 0;
     }
 
     public boolean isGroup() {
@@ -65,7 +78,7 @@ public class DiscountSearchItem {
         return type != null && type.equals(TYPE_DISCOUNT);
     }
 
-    public boolean isDiscountCard() {
+    public boolean isDiscountCardType() {
         return type != null && type.equals(TYPE_DISCOUNT_CARD);
     }
 }

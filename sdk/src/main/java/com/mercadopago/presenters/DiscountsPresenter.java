@@ -2,22 +2,17 @@ package com.mercadopago.presenters;
 
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.DiscountSearch;
 import com.mercadopago.model.DiscountSearchItem;
-import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.providers.DiscountsProvider;
-import com.mercadopago.views.DiscountsView;
-
-import java.math.BigDecimal;
-import com.mercadopago.views.DiscountsActivityView;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+
+import com.mercadopago.views.DiscountsActivityView;
 
 /**
  * Created by mromar on 11/29/16.
@@ -35,11 +30,6 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     private Boolean mDirectDiscountEnabled;
 
     private DiscountSearch mDiscountSearch;
-
-//    @Override
-//    public void attachView(DiscountsActivityView discountsView) {
-//        this.mDiscountsView = discountsView;
-//    }
 
     public void initialize() {
         getDiscountSearch();
@@ -59,6 +49,8 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void getDiscountSearch() {
+        getView().showProgress();
+
         getResourcesProvider().getDiscountSearch(mTransactionAmount.toString(), mPayerEmail,new OnResourcesRetrievedCallback<DiscountSearch>() {
             @Override
             public void onSuccess(DiscountSearch discountSearch) {
@@ -82,7 +74,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 //                showEmptyPaymentMethodsError();
             } else {
                 showAvailableOptions();
-//                getView().hideProgress();
+                getView().hideProgress();
             }
         }
     }
@@ -114,13 +106,28 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void selectItem(DiscountSearchItem item) {
-//        if (item.hasChildren()) {
-//            getView().restartWithSelectedItem(item);
-//        } else if (item.isPaymentType()) {
-//            startNextStepForPaymentType(item);
-//        } else if (item.isPaymentMethod()) {
-//            resolvePaymentMethodSelection(item);
-//        }
+        if (item.isDiscountType()) {
+            resolveDiscountType(item);
+        } else if (item.isDiscountCardType()) {
+            resolveDiscountCardType(item);
+        }
+    }
+
+    private void resolveDiscountType(DiscountSearchItem item) {
+
+        List<Discount> discounts = mDiscountSearch.getDiscounts();
+
+        for (Discount discount : discounts) {
+            if (discount.getId().equals(item.getId())) {
+                mDiscount = discount;
+            }
+        }
+
+        getView().drawSummary();
+    }
+
+    private void resolveDiscountCardType(DiscountSearchItem item) {
+        getView().drawSummary();
     }
 
     private boolean searchItemsAvailable() {
@@ -151,14 +158,14 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void getCodeDiscount(final String discountCode) {
-        mDiscountsView.showProgressBar();
+        mDiscountsView.showProgress();
 
         getResourcesProvider().getCodeDiscount(mTransactionAmount.toString(), mPayerEmail, discountCode, new OnResourcesRetrievedCallback<Discount>() {
             @Override
             public void onSuccess(Discount discount) {
                 mDiscountsView.setSoftInputModeSummary();
                 mDiscountsView.hideKeyboard();
-                mDiscountsView.hideProgressBar();
+                mDiscountsView.hideProgress();
 
                 mDiscount = discount;
                 mDiscount.setCouponCode(discountCode);
@@ -167,7 +174,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
             @Override
             public void onFailure(MercadoPagoError error) {
-                mDiscountsView.hideProgressBar();
+                mDiscountsView.hideProgress();
                 if(error.isApiException()) {
                     String errorMessage = getResourcesProvider().getApiErrorMessage(error.getApiException().getError());
                     mDiscountsView.showCodeInputError(errorMessage);

@@ -6,7 +6,7 @@
     android:id="@+id/mpsdkReviewDiscountSummaryContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
+    android:visibility="gone"
     android:background="@color/mpsdk_background_blue">
 
     <ImageView

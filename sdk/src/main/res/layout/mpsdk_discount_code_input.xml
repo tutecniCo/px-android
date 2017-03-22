@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mpsdkDiscountCodeContainer"
     android:layout_width="match_parent"
@@ -58,9 +57,18 @@
                     android:src="@drawable/mpsdk_discount_off"/>
             </FrameLayout>
 
+            <ProgressBar
+                android:id="@+id/mpsdkProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:gravity="center" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/mpsdkGroupsList"
                 android:fitsSystemWindows="true"
+                android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/mpsdk_white"
