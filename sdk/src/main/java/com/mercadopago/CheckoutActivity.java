@@ -557,10 +557,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
 
             this.mSelectedFinancialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
 
-            if(isEntityTypeStepRequired()){
-                showIdentificationStep();
-            }
-            else if (isReviewAndConfirmEnabled()) {
+            if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
             } else {
                 resolvePaymentDataCallback();
@@ -590,7 +587,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (resultCode == RESULT_OK) {
             this.mSelectedEntityType = data.getStringExtra("entityType");
 
-            if (isReviewAndConfirmEnabled()) {
+            if(isFinancialInstitutionsStepRequired()){
+                showFinancialInstitutionsStep();
+            }
+            else if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
             } else {
                 resolvePaymentDataCallback();
@@ -790,12 +790,15 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     private void checkFlowWithPaymentMethodSelected() {
         //TODO entity_type flow here!
 
-        if (isFinancialInstitutionsStepRequired()) {
-            showFinancialInstitutionsStep();
-        } else if (isEntityTypeStepRequired()) {
+        if (isEntityTypeStepRequired()) {
             showIdentificationStep();
+
+        } else if (isFinancialInstitutionsStepRequired()) {
+            showFinancialInstitutionsStep();
+
         } else if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
+
         } else {
             resolvePaymentDataCallback();
         }
