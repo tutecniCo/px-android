@@ -29,8 +29,8 @@
     <dimen name="mpsdk_card_size_big_width">234dp</dimen>
     <dimen name="mpsdk_card_size_medium_height">121dp</dimen>
     <dimen name="mpsdk_card_size_medium_width">186dp</dimen>
-    <dimen name="mpsdk_id_card_size_medium_height">111dp</dimen>
-    <dimen name="mpsdk_id_card_size_medium_width">176dp</dimen>
+    <dimen name="mpsdk_id_card_size_medium_height">109dp</dimen>
+    <dimen name="mpsdk_id_card_size_medium_width">174dp</dimen>
     <dimen name="mpsdk_id_card_border_size_medium_height">122dp</dimen>
     <dimen name="mpsdk_id_card_border_size_medium_width">187dp</dimen>
 

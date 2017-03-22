@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
@@ -42,7 +41,7 @@ public class IdentificationCardView {
     private IdentificationType mIdentificationType;
     private String mSize;
     private MPTextView mCardBaseTextAlpha;
-    private ImageView mIcon;
+    private MPTextView mCardTypeId;
 
     public IdentificationCardView(Context context) {
         this.mContext = context;
@@ -56,70 +55,50 @@ public class IdentificationCardView {
 
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
-        mView = LayoutInflater.from(mContext)
-                .inflate(R.layout.mpsdk_card_identification, parent, attachToRoot);
+
+        if(mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)){
+            mView = LayoutInflater.from(mContext)
+                    .inflate(R.layout.mpsdk_card_identification_medium_size, parent, attachToRoot);
+        }else{
+            mView = LayoutInflater.from(mContext)
+                    .inflate(R.layout.mpsdk_card_identification, parent, attachToRoot);
+        }
+
+
         return mView;
     }
 
     public void initializeControls() {
-        mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
-        mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
-        mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
-        mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberView);
-        mCardBaseTextAlpha = (MPTextView) mView.findViewById(R.id.mpsdk_base_text_alpha);
-        mIcon = (ImageView) mView.findViewById(R.id.mpsdk_id_picture);
-
-        transform();
-
-    }
-
-
-    private void transform() {
-        if (mSize == null || mIdentification == null) return;
-        if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
+        if(mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)){
+            
+            mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
+            mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
+            mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
+            mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdk_id_number);
+            mCardTypeId = (MPTextView) mView.findViewById(R.id.mpsdk_type_id);
+            
             transformView();
-            resize();
+
+        }else{
+            mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
+            mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
+            mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
+            mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberView);
+            mCardBaseTextAlpha = (MPTextView) mView.findViewById(R.id.mpsdk_base_text_alpha);
         }
+        
     }
+
 
     private void transformView() {
 
-        mCardBaseTextAlpha.setText(mIdentification.getType());
-        mIdentificationNumber = mIdentification.getNumber();
-    }
-
-    private void resize() {
-        if (mSize == null) return;
+        if (mSize == null || mIdentification == null) return;
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
-            resizeCard(mCardContainer, R.dimen.mpsdk_id_card_size_medium_height, R.dimen.mpsdk_id_card_size_medium_width,
-                    CardRepresentationModes.CARD_NUMBER_SIZE_MEDIUM, CardRepresentationModes.CARD_HOLDER_NAME_SIZE_MEDIUM);
-
-
+            mCardTypeId.setText(mIdentification.getType());
+            mIdentificationNumber = mIdentification.getNumber();
         }
     }
 
-    private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth, int cardNumberFontSize,
-                            int cardHolderNameFontSize) {
-
-        LayoutUtil.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
-        mCardIdentificationNumberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardNumberFontSize);
-        /*mCardBorder.getLayoutParams().height =  R.dimen.mpsdk_card_border_size_medium_height;
-        mCardBorder.getLayoutParams().width =  R.dimen.mpsdk_card_border_size_medium_width;*/
-
-        mCardBorder.getLayoutParams().height = 400;
-        mCardBorder.getLayoutParams().width = 670;
-        mIcon.getLayoutParams().height = 150;
-        mIcon.getLayoutParams().width = 150;
-        ViewGroup.LayoutParams params = mIcon.getLayoutParams();
-
-
-        mIcon.requestLayout();
-
-        mCardBorder.requestLayout();
-
-        mBaseIdNumberView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);
-
-    }
 
     public void setIdentificationNumber(String number) {
         this.mIdentificationNumber = number;

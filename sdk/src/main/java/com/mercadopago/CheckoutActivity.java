@@ -586,9 +586,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void resolveEntityTypeRequest(int resultCode, Intent data) {
-        this.mSelectedEntityType = data.getStringExtra("entityType");
 
         if (resultCode == RESULT_OK) {
+            this.mSelectedEntityType = data.getStringExtra("entityType");
+
             if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
             } else {

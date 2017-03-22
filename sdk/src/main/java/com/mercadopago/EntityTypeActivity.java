@@ -26,6 +26,8 @@ import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.EntityTypePresenter;
+import com.mercadopago.providers.EntityTypeProvider;
+import com.mercadopago.providers.EntityTypeProviderImpl;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.IdentificationCardView;
@@ -72,7 +74,11 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         if (mPresenter == null) {
             mPresenter = new EntityTypePresenter(getBaseContext());
         }
-        mPresenter.setView(this);
+
+        mPresenter.attachView(this);
+        EntityTypeProviderImpl resourcesProvider = new EntityTypeProviderImpl(this);
+        mPresenter.attachResourcesProvider(resourcesProvider);
+
         mActivity = this;
         getActivityParameters();
         if (isCustomColorSet()) {
@@ -169,6 +175,13 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
                 mTimerTextView.setTextSize(15);
             }
 
+            mLowResToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
             mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.mpsdkCollapsingToolbar);
@@ -176,6 +189,13 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
             mCardContainer = (FrameLayout) findViewById(R.id.mpsdkActivityCardContainer);
             mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
             mNormalToolbar.setVisibility(View.VISIBLE);
+
+            mNormalToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
     }
 

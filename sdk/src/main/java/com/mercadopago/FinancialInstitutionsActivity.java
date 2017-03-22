@@ -140,6 +140,14 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
         mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
+
+        mLowResToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
 
         if (CheckoutTimer.getInstance().isTimerEnabled()) {

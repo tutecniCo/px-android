@@ -16,7 +16,9 @@ import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.preferences.PaymentPreference;
+import com.mercadopago.providers.EntityTypeProvider;
 import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.views.EntityTypeActivityView;
 import com.mercadopago.views.IssuersActivityView;
@@ -25,9 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntityTypePresenter {
+public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,EntityTypeProvider>{
 
-    private EntityTypeActivityView mView;
     private Context mContext;
     private FailureRecovery mFailureRecovery;
 
@@ -44,9 +45,6 @@ public class EntityTypePresenter {
         this.mContext = context;
     }
 
-    public void setView(EntityTypeActivityView view) {
-        this.mView = view;
-    }
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.mPaymentMethod = paymentMethod;
@@ -81,24 +79,20 @@ public class EntityTypePresenter {
         return this.mPaymentMethod;
     }
 
-    public Integer getIdentificationLength() {
-        return mIdentification.getNumber().length();
-    }
 
     public void validateActivityParameters() throws IllegalStateException {
         if (mPaymentMethod == null) {
-            mView.onInvalidStart("payment method is null");
+            getView().onInvalidStart("payment method is null");
         } else if (mIdentification == null) {
             if (mPublicKey == null) {
-                mView.onInvalidStart("public key not set");
+                getView().onInvalidStart("public key not set");
             } else {
-                mView.onValidStart();
+                getView().onValidStart();
             }
         } else {
-            mView.onValidStart();
+            getView().onValidStart();
         }
     }
-
 
     public void loadEntityTypes() {
         if (wereEntityTypesSet()) {
@@ -113,31 +107,22 @@ public class EntityTypePresenter {
     }
 
     private void getEntityTypes() {
-
-
-        List<String> list = new ArrayList<>();
-        list.add("Natural");
-        list.add("Juridica");
-        this.mEntityTypes = list;
-        resolveEntityTypes(list);
+        this.mEntityTypes = getResourcesProvider().getEntityTypes();;
+        resolveEntityTypes(mEntityTypes);
     }
-
 
     protected void resolveEntityTypes(List<String> entityTypes) {
 
         mEntityTypes = entityTypes;
         if (mEntityTypes.isEmpty()) {
-            mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
+            getView().startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                     "no entityTypes found at EntityTypesActivity");
         } else if (mEntityTypes.size() == 1) {
-            mView.finishWithResult(entityTypes.get(0));
+            getView().finishWithResult(entityTypes.get(0));
         } else {
-            mView.showHeader();
-            mView.initializeEntityTypes(entityTypes);
-
+            getView().showHeader();
+            getView().initializeEntityTypes(entityTypes);
         }
-
-
     }
 
     public void recoverFromFailure() {
@@ -147,7 +132,7 @@ public class EntityTypePresenter {
     }
 
     public void onItemSelected(int position) {
-        mView.finishWithResult(mEntityTypes.get(position));
+        getView().finishWithResult(mEntityTypes.get(position));
     }
 
     public void setIdentification(Identification identification) {

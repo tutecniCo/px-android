@@ -289,10 +289,23 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkLowResToolbar);
             mLowResTitleToolbar = (MPTextView) findViewById(R.id.mpsdkTitle);
             mLowResToolbar.setVisibility(View.VISIBLE);
+            mLowResToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+
         } else {
             mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkTransparentToolbar);
             mCardBackground = (FrameLayout) findViewById(R.id.mpsdkCardBackground);
             mIdentificationCardContainer = (FrameLayout) findViewById(R.id.mpsdkIdentificationCardContainer);
+            mNormalToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
         mIdentificationTypeContainer = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationTypeContainer);
         mIdentificationTypeSpinner = (Spinner) findViewById(R.id.mpsdkCardIdentificationType);
