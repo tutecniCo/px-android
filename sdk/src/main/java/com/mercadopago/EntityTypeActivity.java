@@ -22,6 +22,7 @@ import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.Site;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
@@ -102,7 +103,9 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
                 this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
         Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
         IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
+        Site site = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("site"), Site.class);;
 
+        mPresenter.setmSite(site);
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
         mPresenter.setIdentification(identification);

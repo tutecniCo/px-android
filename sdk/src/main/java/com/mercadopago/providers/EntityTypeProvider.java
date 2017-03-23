@@ -1,7 +1,7 @@
 package com.mercadopago.providers;
 
+import com.mercadopago.model.Site;
 import com.mercadopago.mvp.ResourcesProvider;
-import com.mercadopago.util.StepManagerUtil;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
  */
 
 public interface EntityTypeProvider extends ResourcesProvider {
-    List<String> getEntityTypes();
+    List<String> getEntityTypesBySite(Site site);
 }

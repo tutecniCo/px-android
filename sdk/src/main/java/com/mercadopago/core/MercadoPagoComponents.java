@@ -912,6 +912,7 @@ public class MercadoPagoComponents {
             private DecorationPreference decorationPreference;
             private Identification identification;
             private IdentificationType identificationType;
+            private Site site;
 
             public EntityTypeActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
@@ -946,6 +947,8 @@ public class MercadoPagoComponents {
                     throw new IllegalStateException("key is null");
                 if (this.paymentMethod == null)
                     throw new IllegalStateException("payment method is null");
+                if (this.site == null)
+                    throw new IllegalStateException("site is null");
                 startEntityTypeActivity();
             }
 
@@ -956,11 +959,18 @@ public class MercadoPagoComponents {
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 intent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
                 intent.putExtra("identificationType", JsonUtil.getInstance().toJson(identificationType));
+                intent.putExtra("site", JsonUtil.getInstance().toJson(site));
+
                 activity.startActivityForResult(intent, ENTITY_TYPE_REQUEST_CODE);
             }
 
             public EntityTypeActivityBuilder setIdentificationType(IdentificationType identificationType) {
                 this.identificationType = identificationType;
+                return this;
+            }
+
+            public EntityTypeActivityBuilder setSite(Site site) {
+                this.site = site;
                 return this;
             }
         }

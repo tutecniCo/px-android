@@ -2,14 +2,13 @@ package com.mercadopago.providers;
 
 import android.content.Context;
 
-import com.mercadopago.R;
-import com.mercadopago.util.StepManagerUtil;
+import com.mercadopago.model.Site;
+import com.mercadopago.util.EntityTypesUtil;
+import com.mercadopago.util.SitesUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marlanti on 3/21/17.
@@ -24,11 +23,10 @@ public class EntityTypeProviderImpl implements EntityTypeProvider{
     }
 
     //TODO ojo se debería contemplar en el  strings.xml por país. Esto está ok?
-    @Override
-    public List<String> getEntityTypes() {
-        List<String> entityTypes = new ArrayList<>();
-        Collections.addAll(entityTypes, mContext.getResources().getStringArray(R.array.entity_types_array));
 
-        return entityTypes;
+    @Override
+    public List<String> getEntityTypesBySite(Site site) {
+
+        return EntityTypesUtil.getEntityTypesBySite(site.getId(),mContext);
     }
 }

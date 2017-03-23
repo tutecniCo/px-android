@@ -41,6 +41,7 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.PaymentResultAction;
+import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.CheckoutPreference;
@@ -747,6 +748,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         identificationType.setMinLength(8);
         identificationType.setName("DNI");*/
 
+        Site site = mCheckoutPreference.getSite();
+
         new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
@@ -754,6 +757,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
                 .setIdentification(mSelectedIdentification)
                 .setIdentificationType(mSelectedIdentificationType)
                 .setDecorationPreference(mDecorationPreference)
+                .setSite(site)
                 .startActivity();
 
         animatePaymentMethodSelection();

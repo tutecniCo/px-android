@@ -35,6 +35,11 @@
     <!-- Entity Types -->
     <string name="mpsdk_entity_types_title">Which is your entity\'s type?</string>
 
+    <string-array name="entity_types_default_array">
+        <item>Natural</item>
+        <item>Legal</item>
+    </string-array>
+
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">Which is your bank?</string>
 

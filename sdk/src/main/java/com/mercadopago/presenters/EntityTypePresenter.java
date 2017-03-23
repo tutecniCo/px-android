@@ -16,6 +16,7 @@ import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.EntityTypeProvider;
@@ -39,6 +40,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
     private Identification mIdentification;
     private List<String> mEntityTypes;
     private IdentificationType mIdentificationType;
+    private Site mSite;
 
 
     public EntityTypePresenter(Context context) {
@@ -86,6 +88,8 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
         } else if (mIdentification == null) {
             if (mPublicKey == null) {
                 getView().onInvalidStart("public key not set");
+            }else if(mSite == null){
+                getView().onInvalidStart("site not set");
             } else {
                 getView().onValidStart();
             }
@@ -107,14 +111,14 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
     }
 
     private void getEntityTypes() {
-        this.mEntityTypes = getResourcesProvider().getEntityTypes();;
+        this.mEntityTypes = getResourcesProvider().getEntityTypesBySite(mSite);
         resolveEntityTypes(mEntityTypes);
     }
 
     protected void resolveEntityTypes(List<String> entityTypes) {
 
         mEntityTypes = entityTypes;
-        if (mEntityTypes.isEmpty()) {
+        if (mEntityTypes==null || mEntityTypes.isEmpty()) {
             getView().startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                     "no entityTypes found at EntityTypesActivity");
         } else if (mEntityTypes.size() == 1) {
@@ -141,5 +145,9 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
 
     public void setIdentificationType(IdentificationType identificationType) {
         this.mIdentificationType = identificationType;
+    }
+
+    public void setmSite(Site mSite) {
+        this.mSite = mSite;
     }
 }

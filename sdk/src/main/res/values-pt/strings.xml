@@ -34,7 +34,8 @@
 
     <!-- Entity Types -->
     <string name="mpsdk_entity_types_title">Qual é o tipo de pessoa?</string>
-    <string-array name="entity_types_array">
+
+    <string-array name="entity_types_mlb_array">
         <item>Física</item>
         <item>Jurídica</item>
     </string-array>
