@@ -1,8 +1,10 @@
 package com.mercadopago.util;
 
+import com.mercadopago.R;
 import com.mercadopago.model.Site;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ import java.util.Map;
  */
 
 public class StepManagerUtil {
+
 
 
     public enum SiteId{

@@ -73,7 +73,6 @@ public class IdentificationCardView {
             
             mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
             mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
-            mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
             mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdk_id_number);
             mCardTypeId = (MPTextView) mView.findViewById(R.id.mpsdk_type_id);
             
@@ -96,6 +95,7 @@ public class IdentificationCardView {
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
             mCardTypeId.setText(mIdentification.getType());
             mIdentificationNumber = mIdentification.getNumber();
+            mCardIdentificationNumberTextView.setText(mIdentificationNumber);
         }
     }
 
@@ -109,17 +109,20 @@ public class IdentificationCardView {
     }
 
     public void draw() {
-        if (mIdentificationNumber == null || mIdentificationNumber.length() == 0) {
-            mCardIdentificationNumberTextView.setVisibility(View.INVISIBLE);
-            mBaseIdNumberView.setVisibility(View.VISIBLE);
-        } else {
-            mBaseIdNumberView.setVisibility(View.INVISIBLE);
-            mCardIdentificationNumberTextView.setVisibility(View.VISIBLE);
-            int color = NORMAL_TEXT_VIEW_COLOR;
-            String number = MPCardMaskUtil.buildIdentificationNumberWithMask(mIdentificationNumber, mIdentificationType);
-            mCardIdentificationNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
-            mCardIdentificationNumberTextView.setText(number);
+        if(mSize==null || !mSize.equals(CardRepresentationModes.MEDIUM_SIZE)){
+            if (mIdentificationNumber == null || mIdentificationNumber.length() == 0) {
+                mCardIdentificationNumberTextView.setVisibility(View.INVISIBLE);
+                mBaseIdNumberView.setVisibility(View.VISIBLE);
+            } else {
+                mBaseIdNumberView.setVisibility(View.INVISIBLE);
+                mCardIdentificationNumberTextView.setVisibility(View.VISIBLE);
+                int color = NORMAL_TEXT_VIEW_COLOR;
+                String number = MPCardMaskUtil.buildIdentificationNumberWithMask(mIdentificationNumber, mIdentificationType);
+                mCardIdentificationNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
+                mCardIdentificationNumberTextView.setText(number);
+            }
         }
+
     }
 
     public void show() {
