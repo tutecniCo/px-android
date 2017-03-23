@@ -5,6 +5,7 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.DiscountSearch;
 import com.mercadopago.model.DiscountSearchItem;
+import com.mercadopago.model.DiscountCard;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.providers.DiscountsProvider;
@@ -114,7 +115,6 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void resolveDiscountType(DiscountSearchItem item) {
-
         List<Discount> discounts = mDiscountSearch.getDiscounts();
 
         for (Discount discount : discounts) {
@@ -122,11 +122,17 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 mDiscount = discount;
             }
         }
-
         getView().drawSummary();
     }
 
     private void resolveDiscountCardType(DiscountSearchItem item) {
+        List<DiscountCard> discountsCards = mDiscountSearch.getDiscountsCards();
+
+        for (DiscountCard discountCard : discountsCards) {
+            if (discountCard.getDiscount().getId().equals(item.getId())) {
+                mDiscount = discountCard.getDiscount();
+            }
+        }
         getView().drawSummary();
     }
 

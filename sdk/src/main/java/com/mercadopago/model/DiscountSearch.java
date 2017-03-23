@@ -1,7 +1,5 @@
 package com.mercadopago.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
@@ -14,14 +12,18 @@ public class DiscountSearch {
 
     private List<Discount> discounts;
 
-    private List<DiscountsCards> discountsCards;
+    private List<DiscountCard> discountsCards;
 
     public List<DiscountSearchItem> getGroups() {
-        return groups;
+        return this.groups;
     }
 
     public List<Discount> getDiscounts() {
-        return discounts;
+        return this.discounts;
+    }
+
+    public List<DiscountCard> getDiscountsCards() {
+        return this.discountsCards;
     }
 
 
