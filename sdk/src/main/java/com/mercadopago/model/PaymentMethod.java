@@ -176,4 +176,8 @@ public class PaymentMethod {
     public Integer getAccreditationTime() {
         return accreditationTime;
     }
+
+    public boolean isAdditionalInfoNeeded() {
+        return (additionalInfoNeeded != null) && (additionalInfoNeeded.size() > 0);
+    }
 }

@@ -96,6 +96,7 @@ public class IdentificationCardView {
             mCardTypeId.setText(mIdentification.getType());
             mIdentificationNumber = mIdentification.getNumber();
             mCardIdentificationNumberTextView.setText(mIdentificationNumber);
+            decorateIdentificationNumberTextView();
         }
     }
 
@@ -116,13 +117,17 @@ public class IdentificationCardView {
             } else {
                 mBaseIdNumberView.setVisibility(View.INVISIBLE);
                 mCardIdentificationNumberTextView.setVisibility(View.VISIBLE);
-                int color = NORMAL_TEXT_VIEW_COLOR;
-                String number = MPCardMaskUtil.buildIdentificationNumberWithMask(mIdentificationNumber, mIdentificationType);
-                mCardIdentificationNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
-                mCardIdentificationNumberTextView.setText(number);
+                decorateIdentificationNumberTextView();
             }
         }
 
+    }
+
+    private void decorateIdentificationNumberTextView() {
+        int color = NORMAL_TEXT_VIEW_COLOR;
+        String number = MPCardMaskUtil.buildIdentificationNumberWithMask(mIdentificationNumber, mIdentificationType);
+        mCardIdentificationNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
+        mCardIdentificationNumberTextView.setText(number);
     }
 
     public void show() {

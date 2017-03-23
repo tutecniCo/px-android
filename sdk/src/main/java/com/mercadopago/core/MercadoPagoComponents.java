@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.DrawableRes;
 
+import com.mercadopago.AdditionalStepVaultActivity;
 import com.mercadopago.BankDealsActivity;
 import com.mercadopago.CallForAuthorizeActivity;
 import com.mercadopago.CardVaultActivity;
@@ -103,6 +104,7 @@ public class MercadoPagoComponents {
         public static final int DISCOUNTS_REQUEST_CODE = 19;
         public static final int REVIEW_AND_CONFIRM_REQUEST_CODE = 20;
         public static final int IDENTIFICATION_REQUEST_CODE = 21;
+        public static final int ADDITIONAL_VAULT_REQUEST_CODE = 22;
 
 
         public static class PaymentVaultActivityBuilder {
@@ -904,6 +906,63 @@ public class MercadoPagoComponents {
                 activity.startActivityForResult(intent, ISSUERS_REQUEST_CODE);
             }
         }
+
+        public static class AdditionalStepVaultActivityBuilder {
+            private Activity activity;
+            private String merchantPublicKey;
+            private PaymentMethod paymentMethod;
+            private DecorationPreference decorationPreference;
+            private Site site;
+
+            public AdditionalStepVaultActivityBuilder setActivity(Activity activity) {
+                this.activity = activity;
+                return this;
+            }
+
+            public AdditionalStepVaultActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
+                this.merchantPublicKey = merchantPublicKey;
+                return this;
+            }
+
+            public AdditionalStepVaultActivityBuilder setPaymentMethod(PaymentMethod paymentMethod) {
+                this.paymentMethod = paymentMethod;
+                return this;
+            }
+
+
+            public AdditionalStepVaultActivityBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
+            public AdditionalStepVaultActivityBuilder setSite(Site site) {
+                this.site = site;
+                return this;
+            }
+
+            public void startActivity() {
+                if (this.activity == null) throw new IllegalStateException("activity is null");
+                if (this.merchantPublicKey == null)
+                    throw new IllegalStateException("key is null");
+                if (this.paymentMethod == null)
+                    throw new IllegalStateException("payment method is null");
+                if (this.site == null)
+                    throw new IllegalStateException("site is null");
+                startAdditionalStepVaultActivity();
+            }
+
+            private void startAdditionalStepVaultActivity() {
+                Intent intent = new Intent(activity, AdditionalStepVaultActivity.class);
+                intent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
+                intent.putExtra("merchantPublicKey", merchantPublicKey);
+                intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
+                intent.putExtra("site", JsonUtil.getInstance().toJson(site));
+
+                activity.startActivityForResult(intent, ADDITIONAL_VAULT_REQUEST_CODE);
+            }
+
+        }
+
 
         public static class EntityTypeActivityBuilder {
             private Activity activity;

@@ -108,10 +108,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected PaymentMethod mSelectedPaymentMethod;
     protected Issuer mSelectedIssuer;
     protected PayerCost mSelectedPayerCost;
-    protected FinancialInstitution mSelectedFinancialInstitution;
-    protected String mSelectedEntityType;
-    protected Identification mSelectedIdentification;
-    protected IdentificationType mSelectedIdentificationType;
     protected Token mCreatedToken;
     protected Payment mCreatedPayment;
 
@@ -543,25 +539,21 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.FINANCIAL_INSTITUTIONS_REQUEST_CODE) {
-            resolveFinancialInstitutionsRequest(resultCode, data);
-        }else if (requestCode == MercadoPagoComponents.Activities.IDENTIFICATION_REQUEST_CODE) {
-            resolveIdentificationRequest(resultCode, data);
-        }
-        else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE) {
-            resolveEntityTypeRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.ADDITIONAL_VAULT_REQUEST_CODE) {
+            resolveAdditionalVaultRequest(resultCode, data);
         } else {
             resolveErrorRequest(resultCode, data);
         }
     }
 
-    private void resolveFinancialInstitutionsRequest(int resultCode, Intent data) {
+    private void resolveAdditionalVaultRequest(int resultCode, Intent data) {
+
         if (resultCode == RESULT_OK) {
 
-            this.mSelectedFinancialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
-
+            //TODO
             if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
+
             } else {
                 resolvePaymentDataCallback();
             }
@@ -569,66 +561,13 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             cancelCheckout();
         } else if (resultCode == RESULT_CANCELED) {
             mPaymentMethodEdited = true;
-//            mPaymentMethodEditionRequested = true;
             animateBackToPaymentMethodSelection();
             startPaymentVaultActivity();
         } else {
             animateBackToPaymentMethodSelection();
             startPaymentVaultActivity();
         }
-    }
 
-    private void resolveIdentificationRequest(int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-
-            this.mSelectedIdentification = JsonUtil.getInstance().fromJson(data.getStringExtra("identification"), Identification.class);
-            this.mSelectedIdentificationType = JsonUtil.getInstance().fromJson(data.getStringExtra("identificationType"), IdentificationType.class);
-
-            if(isEntityTypeStepRequired()){
-                showEntityTypeStep();
-            }
-            else if (isReviewAndConfirmEnabled()) {
-                showReviewAndConfirm();
-            } else {
-                resolvePaymentDataCallback();
-            }
-        } else if (resultCode == RESULT_CANCELED && isUniquePaymentMethod()) {
-            cancelCheckout();
-        } else if (resultCode == RESULT_CANCELED) {
-            mPaymentMethodEdited = true;
-//            mPaymentMethodEditionRequested = true;
-            animateBackToPaymentMethodSelection();
-            startPaymentVaultActivity();
-        } else {
-            animateBackToPaymentMethodSelection();
-            startPaymentVaultActivity();
-        }
-    }
-
-    private void resolveEntityTypeRequest(int resultCode, Intent data) {
-
-        if (resultCode == RESULT_OK) {
-            this.mSelectedEntityType = data.getStringExtra("entityType");
-
-            if(isFinancialInstitutionsStepRequired()){
-                showFinancialInstitutionsStep();
-            }
-            else if (isReviewAndConfirmEnabled()) {
-                showReviewAndConfirm();
-            } else {
-                resolvePaymentDataCallback();
-            }
-        } else if (resultCode == RESULT_CANCELED && isUniquePaymentMethod()) {
-            cancelCheckout();
-        } else if (resultCode == RESULT_CANCELED) {
-            mPaymentMethodEdited = true;
-//            mPaymentMethodEditionRequested = true;
-            animateBackToPaymentMethodSelection();
-            startPaymentVaultActivity();
-        } else {
-            animateBackToPaymentMethodSelection();
-            startPaymentVaultActivity();
-        }
     }
 
     private void resolveReviewAndConfirmRequest(int resultCode, Intent data) {
@@ -735,59 +674,36 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         }
     }
 
-    private void showFinancialInstitutionsStep() {
 
-        new MercadoPagoComponents.Activities.FinancialInstitutionsActivityBuilder()
-                .setActivity(this)
-                .setMerchantPublicKey(mMerchantPublicKey)
-                .setPaymentMethod(mSelectedPaymentMethod)
-                .setDecorationPreference(mDecorationPreference)
-                .startActivity();
 
-        animatePaymentMethodSelection();
 
+
+
+
+
+
+    private void checkFlowWithPaymentMethodSelected() {
+        //TODO entity_type flow here!
+
+        if(isAdditionalStepRequired()){
+            startAdditionalStepVault();
+
+        }
+        else if (isReviewAndConfirmEnabled()) {
+            showReviewAndConfirm();
+
+        } else {
+            resolvePaymentDataCallback();
+        }
     }
 
-    private void showIdentificationStep() {
-
-        new MercadoPagoComponents.Activities.IdentificationActivityBuilder()
-                .setActivity(this)
-                .setMerchantPublicKey(mMerchantPublicKey)
-                .setDecorationPreference(mDecorationPreference)
-                .startActivity();
-
-        animatePaymentMethodSelection();
-
-    }
-
-    private void showEntityTypeStep() {
-
-        //FIXME harcoded
-
-        /*
-
-        Identification id = new Identification();
-
-        id.setType("DNI");
-        id.setNumber("36329909");*/
-
-
-        /*
-        IdentificationType identificationType = new IdentificationType();
-        identificationType.setId("36329909");
-        identificationType.setType("DNI");
-        identificationType.setMaxLength(8);
-        identificationType.setMinLength(8);
-        identificationType.setName("DNI");*/
-
+    private void startAdditionalStepVault() {
         Site site = mCheckoutPreference.getSite();
 
-        new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
+        new MercadoPagoComponents.Activities.AdditionalStepVaultActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
                 .setPaymentMethod(mSelectedPaymentMethod)
-                .setIdentification(mSelectedIdentification)
-                .setIdentificationType(mSelectedIdentificationType)
                 .setDecorationPreference(mDecorationPreference)
                 .setSite(site)
                 .startActivity();
@@ -796,48 +712,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
 
     }
 
-    public boolean isEntityTypeStepRequired() {
-        return isEntityTypeRequired();
-    }
-
-
-    public boolean isFinancialInstitutionsStepRequired() {
-
-        if (isPaymentMethodSelected()) {
-            return mSelectedPaymentMethod.isFinancialInstitutionsRequired();
-        }
-        return false;
-    }
-
-
-    private boolean isEntityTypeRequired() {
-        if (isPaymentMethodSelected()) {
-            return mSelectedPaymentMethod.isEntityTypeRequired();
-        }
-
-        return false;
-    }
-
-    private boolean isPaymentMethodSelected() {
-        return mSelectedPaymentMethod != null;
-    }
-
-
-    private void checkFlowWithPaymentMethodSelected() {
-        //TODO entity_type flow here!
-
-        if (isEntityTypeStepRequired()) {
-            showIdentificationStep();
-
-        } else if (isFinancialInstitutionsStepRequired()) {
-            showFinancialInstitutionsStep();
-
-        } else if (isReviewAndConfirmEnabled()) {
-            showReviewAndConfirm();
-
-        } else {
-            resolvePaymentDataCallback();
-        }
+    private boolean isAdditionalStepRequired() {
+        return mSelectedPaymentMethod.isAdditionalInfoNeeded();
     }
 
 
