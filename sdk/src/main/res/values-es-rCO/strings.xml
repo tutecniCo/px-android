@@ -7,11 +7,10 @@
 
     <!-- Entity Types -->
     <string name="mpsdk_entity_types_title">¿Cuál es el tipo de persona?</string>
-    <string-array name="entity_types_array">
+    <string-array name="entity_types_mco_array">
         <item>Natural</item>
         <item>Jurídica</item>
     </string-array>
-
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">¿Cuál es tu banco?</string>
 

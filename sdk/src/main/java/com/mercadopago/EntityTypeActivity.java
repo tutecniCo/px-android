@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import com.mercadopago.adapters.EntityTypesAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
+import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
@@ -103,7 +104,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
                 this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
         Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
         IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
-        Site site = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("site"), Site.class);;
+        Site site = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("site"), Site.class);
+        ;
 
         mPresenter.setmSite(site);
         mPresenter.setPaymentMethod(paymentMethod);
@@ -390,6 +392,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
                 finish();
             }
         }
+
     }
 
     @Override

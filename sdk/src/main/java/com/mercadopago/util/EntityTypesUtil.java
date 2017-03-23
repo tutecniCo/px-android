@@ -18,6 +18,7 @@ import java.util.Map;
 
 public class EntityTypesUtil {
 
+    private static final String DEFAULT_SITE = "DEFAULT";
     private static Map<String,Integer> entityTypesResourceids;
 
     public static List<String> getEntityTypesBySite(String siteId, Context context) {
@@ -37,7 +38,7 @@ public class EntityTypesUtil {
         Integer resourceId = entityTypesResourceids.get(siteId);
 
         if(resourceId==null){
-            resourceId = R.array.entity_types_default_array;
+            resourceId = entityTypesResourceids.get(DEFAULT_SITE);
         }
 
         return resourceId;
@@ -47,7 +48,9 @@ public class EntityTypesUtil {
 
         if (entityTypesResourceids==null || entityTypesResourceids.isEmpty()){
             entityTypesResourceids = new HashMap<>();
-            entityTypesResourceids.put(SitesUtil.MCO, R.array.entity_types_array);
+            entityTypesResourceids.put(SitesUtil.MCO, R.array.entity_types_mco_array);
+            entityTypesResourceids.put(SitesUtil.MLB, R.array.entity_types_mlb_array);
+            entityTypesResourceids.put(DEFAULT_SITE, R.array.entity_types_default_array);
         }
     }
 

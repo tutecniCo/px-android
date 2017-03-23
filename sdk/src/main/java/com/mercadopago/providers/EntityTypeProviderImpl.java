@@ -22,8 +22,6 @@ public class EntityTypeProviderImpl implements EntityTypeProvider{
         this.mContext = context;
     }
 
-    //TODO ojo se debería contemplar en el  strings.xml por país. Esto está ok?
-
     @Override
     public List<String> getEntityTypesBySite(Site site) {
 
