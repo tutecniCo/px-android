@@ -129,10 +129,11 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     public void onDiscountReceived(Discount discount) {
         setDiscount(discount);
 
-        getView().cleanPaymentMethodOptions();
-
         initializeDiscountRow();
-        initPaymentVaultFlow();
+
+        //TODO hay que recargar los payments methods
+//        getView().cleanPaymentMethodOptions();
+//        initPaymentVaultFlow();
     }
 
     private void validateParameters() throws IllegalStateException {

@@ -463,10 +463,10 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
 
     protected void resolveDiscountRequest(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (mPaymentVaultPresenter.getDiscount() == null) {
+//            if (mPaymentVaultPresenter.getDiscount() == null) {
                 Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
                 mPaymentVaultPresenter.onDiscountReceived(discount);
-            }
+//            }
         }
     }
 

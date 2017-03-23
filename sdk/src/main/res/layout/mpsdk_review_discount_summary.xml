@@ -146,5 +146,27 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        <FrameLayout
+            android:id="@+id/mpsdkConfirmDiscountButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="14dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/mpsdk_confirm_button_stroke">
+
+            <com.mercadopago.customviews.MPTextView
+                android:id="@+id/mpsdkConfirmDiscountButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Confirmar"
+                android:textAllCaps="false"
+                android:textSize="20dp" />
+        </FrameLayout>
     </LinearLayout>
 </FrameLayout>

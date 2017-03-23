@@ -13,7 +13,10 @@ import com.mercadopago.providers.DiscountsProvider;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.DiscountsActivityView;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by mromar on 11/29/16.
@@ -81,20 +84,11 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void showAvailableOptions() {
-
-//        if (mPaymentMethodSearch.hasCustomSearchItems()) {
-//            List<CustomSearchItem> shownCustomItems;
-//            if (mMaxSavedCards != null && mMaxSavedCards > 0) {
-//                shownCustomItems = getLimitedCustomOptions(mPaymentMethodSearch.getCustomSearchItems(), mMaxSavedCards);
-//            } else {
-//                shownCustomItems = mPaymentMethodSearch.getCustomSearchItems();
-//            }
-//            getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
-//        }
-
         if (searchItemsAvailable()) {
             getView().showSearchItems(mDiscountSearch.getGroups(), getDiscountSearchItemSelectionCallback());
         }
+
+
     }
 
     private OnSelectedCallback<DiscountSearchItem> getDiscountSearchItemSelectionCallback() {
@@ -122,7 +116,16 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 mDiscount = discount;
             }
         }
-        getView().drawSummary();
+
+        if (mDiscount != null && isCouponDiscount()) {
+            getView().requestDiscountCode();
+        } else {
+            getView().drawSummary();
+        }
+    }
+
+    private Boolean isCouponDiscount() {
+        return !isEmpty(mDiscount.getCouponCode());
     }
 
     private void resolveDiscountCardType(DiscountSearchItem item) {

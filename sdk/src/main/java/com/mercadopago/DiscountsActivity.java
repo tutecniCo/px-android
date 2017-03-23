@@ -74,12 +74,15 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected FrameLayout mReviewDiscountSummaryContainer;
     protected FrameLayout mErrorContainer;
     protected FrameLayout mDiscountBackground;
+    protected FrameLayout mConfirmDiscountButton;
     protected LinearLayout mDiscountCodeContainer;
     protected LinearLayout mDiscountLinearLayout;
+    protected LinearLayout mDiscountSearchSelection;
     protected MPTextView mReviewSummaryTitle;
     protected MPTextView mReviewSummaryProductAmount;
     protected MPTextView mReviewSummaryDiscountAmount;
     protected MPTextView mReviewSummaryTotalAmount;
+    protected MPTextView mConfirmDiscountButtonText;
     protected MPTextView mErrorTextView;
     protected ImageView mCloseImage;
     protected ScrollView mScrollView;
@@ -154,9 +157,12 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mDiscountLinearLayout = (LinearLayout) findViewById(R.id.mpsdkDiscountLinearLayout);
         mReviewDiscountSummaryContainer = (FrameLayout) findViewById(R.id.mpsdkReviewDiscountSummaryContainer);
         mDiscountBackground = (FrameLayout) findViewById(R.id.mpsdkDiscountBackground);
+        mConfirmDiscountButton = (FrameLayout) findViewById(R.id.mpsdkConfirmDiscountButton);
         mDiscountCodeContainer = (LinearLayout) findViewById(R.id.mpsdkDiscountCodeContainer);
+        mDiscountSearchSelection = (LinearLayout) findViewById(R.id.mpsdkDiscountSearchSelection);
         mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
+        mConfirmDiscountButtonText = (MPTextView) findViewById(R.id.mpsdkConfirmDiscountButtonText);
         mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
 
         //Review discount summary
@@ -175,6 +181,13 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
 
     private void setListeners() {
         mCloseImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishWithCancelResult();
+            }
+        });
+
+        mConfirmDiscountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finishWithResult();
