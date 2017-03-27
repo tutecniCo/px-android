@@ -51,7 +51,6 @@ public enum AdditionalStepVaultStateMachine {
     FINANCIAL_INSTITUTIONS {
         @Override
         public AdditionalStepVaultStateMachine onBackPressed(AdditionalStepVaultActivityView mView) {
-            //FIXME ver que entities se abra con id seteado del paso anterior y sino ver de ponerle el mSelectedTypeId, mSelectedIdNumber. Pero debería funcionar pq actualmente se hace eso.
             mView.startEntityTypeStep();
             return ENTITY_TYPES;
         }

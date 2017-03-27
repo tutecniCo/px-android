@@ -252,7 +252,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //TODO
+                onBackPressed();
             }
         });
     }

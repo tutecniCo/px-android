@@ -682,7 +682,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
 
 
     private void checkFlowWithPaymentMethodSelected() {
-        //TODO entity_type flow here!
 
         if(isAdditionalStepRequired()){
             startAdditionalStepVault();
