@@ -24,4 +24,6 @@ public interface DiscountsProvider extends ResourcesProvider {
     String getApiErrorMessage(String error);
 
     String getStandardErrorMessage();
+
+    String getInvalidDiscountCodeErrorMessage();
 }

@@ -194,6 +194,11 @@ public class DiscountProviderImpl implements DiscountsProvider {
         return context.getString(R.string.mpsdk_standard_error_message);
     }
 
+    @Override
+    public String getInvalidDiscountCodeErrorMessage() {
+        return context.getString(R.string.mpsdk_invalid_code);
+    }
+
     private boolean isMerchantServerDiscountsAvailable() {
         return !TextUtil.isEmpty(getMerchantServerDiscountUrl()) && !TextUtil.isEmpty(merchantGetDiscountUri);
     }

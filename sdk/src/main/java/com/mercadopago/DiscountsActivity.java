@@ -88,6 +88,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected MPTextView mErrorTextView;
     protected MPTextView mNextButtonText;
     protected MPTextView mBackButtonText;
+    protected MPEditText mDiscountCodeEditText;
     protected ImageView mCloseImage;
     protected ScrollView mScrollView;
     protected Toolbar mToolbar;
@@ -176,13 +177,21 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mReviewSummaryTotalAmount = (MPTextView) findViewById(R.id.mpsdkReviewSummaryTotalAmount);
         mCloseImage = (ImageView) findViewById(R.id.mpsdkCloseImage);
 
+        //Discount code input
+        mDiscountCodeEditText = (MPEditText) findViewById(R.id.mpsdkDiscountCode);
+        mDiscountCodeEditText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+
+        mErrorContainer = (FrameLayout) findViewById(R.id.mpsdkErrorContainer);
+        mErrorTextView = (MPTextView) findViewById(R.id.mpsdkErrorTextView);
+
         mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
         mBackButton = (FrameLayout) findViewById(R.id.mpsdkBackButton);
         mNextButtonText = (MPTextView) findViewById(R.id.mpsdkNextButtonText);
         mBackButtonText = (MPTextView) findViewById(R.id.mpsdkBackButtonText);
 
         setListeners();
-        fullScrollDown();
+        //TODO agregar cuando levanto pantalla de ingreso de código
+//        fullScrollDown();
         initializeToolbar();
 
         initializeDiscountOptionsRecyclerView();
@@ -218,6 +227,22 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
             }
         });
 
+        mDiscountCodeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                //Nothing to do
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                clearErrorView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                //Nothing to do
+            }
+        });
     }
 
     private void initializeToolbar() {

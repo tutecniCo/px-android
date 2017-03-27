@@ -172,11 +172,11 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setPayerAccessToken("TEST-7176766875549918-111008-fa5660d2d0aa37532716eb2bf2f9089b__LB_LC__-192992930")
                 .build();
 
-        mCheckoutPreference.setId("241261708-cd353b1b-940f-493b-b960-10106a24203c");
+        mCheckoutPreference.setId("236387490-8cc00347-60c4-4524-b9bf-ff6c14126551");
 
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
-                .setPublicKey("TEST-85a140f5-10ce-4d3a-ba7a-a743e066840f")
+                .setPublicKey("TEST-bbc4bfb5-b57b-48cc-9cc5-a3e3d5f1f5e1")
                 .setCheckoutPreference(mCheckoutPreference)
                 .setReviewScreenPreference(reviewScreenPreference)
                 .setDecorationPreference(decorationPreference)

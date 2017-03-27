@@ -50,7 +50,11 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void getDiscountSearch() {
+//        getView().hideDiscountSummary();
+//        getView().hideDiscountSearchSelection();
+//        getView().requestDiscountCode();
         getView().showProgress();
+
 
         getResourcesProvider().getDiscountSearch(mTransactionAmount.toString(), mPayerEmail,new OnResourcesRetrievedCallback<DiscountSearch>() {
             @Override
@@ -141,6 +145,8 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
                 mDiscount = discountCard.getDiscount();
             }
         }
+
+        getView().hideDiscountSearchSelection();
         getView().drawSummary();
     }
 
@@ -172,42 +178,22 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void getCodeDiscount(final String discountCode) {
-        mDiscountsView.showProgress();
-
-        getResourcesProvider().getCodeDiscount(mTransactionAmount.toString(), mPayerEmail, discountCode, new OnResourcesRetrievedCallback<Discount>() {
-            @Override
-            public void onSuccess(Discount discount) {
-                mDiscountsView.setSoftInputModeSummary();
-                mDiscountsView.hideKeyboard();
-                mDiscountsView.hideProgress();
-
-                mDiscount = discount;
-                mDiscount.setCouponCode(discountCode);
-                mDiscountsView.drawSummary();
-            }
-
-            @Override
-            public void onFailure(MercadoPagoError error) {
-                mDiscountsView.hideProgress();
-                if(error.isApiException()) {
-                    String errorMessage = getResourcesProvider().getApiErrorMessage(error.getApiException().getError());
-                    mDiscountsView.showCodeInputError(errorMessage);
-                } else {
-                    mDiscountsView.showCodeInputError(getResourcesProvider().getStandardErrorMessage());
-                }
-            }
-        });
+        if (mDiscount != null && mDiscount.getCouponCode().equals(discountCode)) {
+            getView().drawSummary();
+        } else {
+            getView().showCodeInputError(getResourcesProvider().getInvalidDiscountCodeErrorMessage());
+        }
     }
 
     public void validateDiscountCodeInput(String discountCode) {
         if (isTransactionAmountValid()) {
             if (isEmpty(discountCode)) {
-                mDiscountsView.showEmptyDiscountCodeError();
+                getView().showEmptyDiscountCodeError();
             } else {
                 getCodeDiscount(discountCode);
             }
         } else {
-            mDiscountsView.finishWithCancelResult();
+            getView().finishWithCancelResult();
         }
     }
 
