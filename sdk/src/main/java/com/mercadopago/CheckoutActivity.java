@@ -550,7 +550,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
 
         if (resultCode == RESULT_OK) {
 
-            //TODO
             if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
 

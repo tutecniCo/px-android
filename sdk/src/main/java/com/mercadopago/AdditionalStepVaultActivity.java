@@ -41,6 +41,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         mPresenter.attachResourcesProvider(new AdditionalStepVaultProviderImpl());
         mPresenter.validateActivityParameters();
 
+
     }
 
     private void createPresenter() {
@@ -131,8 +132,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
             mPresenter.checkFlowWithFinancialInstitutionSelected();
 
         } else if (resultCode == RESULT_CANCELED) {
-            //TODO
-            finishWithCancel();
+            mPresenter.onBackPressed();
         }
     }
 
@@ -156,8 +156,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
             mPresenter.checkFlowWithIdentificationSelected();
 
         } else if (resultCode == RESULT_CANCELED) {
-            //TODO
-            finishWithCancel();
+            mPresenter.onBackPressed();
         }
     }
 
@@ -169,12 +168,12 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
             mPresenter.checkFlowWithEntityTypeSelected();
 
         } else if (resultCode == RESULT_CANCELED) {
-            //TODO
-            finishWithCancel();
+            mPresenter.onBackPressed();
         }
     }
 
-    private void finishWithCancel() {
+    @Override
+    public void finishWithCancel() {
         setResult(RESULT_CANCELED);
         this.finish();
     }

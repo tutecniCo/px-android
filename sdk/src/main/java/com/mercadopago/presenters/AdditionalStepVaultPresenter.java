@@ -4,6 +4,7 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
+import com.mercadopago.statemachines.AdditionalStepVaultStateMachine;
 import com.mercadopago.views.AdditionalStepVaultActivityView;
 
 /**
@@ -16,6 +17,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     private Site mSite;
     private PaymentMethod mPaymentMethod;
     private String mPublicKey;
+    private AdditionalStepVaultStateMachine state;
 
 
     public void setSite(Site mSite) {
@@ -47,12 +49,16 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
         //TODO agregar ifIdentificationRequired para MLU
 
         if (isEntityTypeStepRequired()) {
-            getView().startIdentificationStep();
+            state = AdditionalStepVaultStateMachine.IDENTIFICATION;
+            state.onInit(getView());
+
 
         } else if (isFinancialInstitutionsStepRequired()) {
-            getView().startFinancialInstitutionsStep();
+            state = AdditionalStepVaultStateMachine.FINANCIAL_INSTITUTIONS;
+            state.onInit(getView());
 
-        }else{
+
+        } else {
             getView().onInvalidStart("No additional step found");
         }
 
@@ -101,8 +107,9 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     public void checkFlowWithIdentificationSelected() {
 
         if (isEntityTypeStepRequired()) {
-            getView().startEntityTypeStep();
-        }else{
+            state = state.onNextStep(getView());
+
+        } else {
             //TODO
             getView().finishWithResult();
         }
@@ -110,14 +117,19 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
 
     public void checkFlowWithEntityTypeSelected() {
         if (isFinancialInstitutionsStepRequired()) {
-            getView().startFinancialInstitutionsStep();
+            state = state.onNextStep(getView());
+
         } else {
-           //TODO
+            //TODO
             getView().finishWithResult();
         }
     }
 
     public void checkFlowWithFinancialInstitutionSelected() {
         getView().finishWithResult();
+    }
+
+    public void onBackPressed() {
+        state = state.onBackPressed(getView());
     }
 }

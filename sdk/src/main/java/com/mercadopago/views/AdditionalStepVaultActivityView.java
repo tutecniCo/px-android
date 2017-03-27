@@ -13,4 +13,5 @@ public interface AdditionalStepVaultActivityView extends MvpView{
     void startIdentificationStep();
     void startFinancialInstitutionsStep();
     void finishWithResult();
+    void finishWithCancel();
 }
