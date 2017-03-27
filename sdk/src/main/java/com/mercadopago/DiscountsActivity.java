@@ -75,6 +75,8 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected FrameLayout mErrorContainer;
     protected FrameLayout mDiscountBackground;
     protected FrameLayout mConfirmDiscountButton;
+    protected FrameLayout mNextButton;
+    protected FrameLayout mBackButton;
     protected LinearLayout mDiscountCodeContainer;
     protected LinearLayout mDiscountLinearLayout;
     protected LinearLayout mDiscountSearchSelection;
@@ -84,6 +86,8 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected MPTextView mReviewSummaryTotalAmount;
     protected MPTextView mConfirmDiscountButtonText;
     protected MPTextView mErrorTextView;
+    protected MPTextView mNextButtonText;
+    protected MPTextView mBackButtonText;
     protected ImageView mCloseImage;
     protected ScrollView mScrollView;
     protected Toolbar mToolbar;
@@ -172,6 +176,11 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mReviewSummaryTotalAmount = (MPTextView) findViewById(R.id.mpsdkReviewSummaryTotalAmount);
         mCloseImage = (ImageView) findViewById(R.id.mpsdkCloseImage);
 
+        mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
+        mBackButton = (FrameLayout) findViewById(R.id.mpsdkBackButton);
+        mNextButtonText = (MPTextView) findViewById(R.id.mpsdkNextButtonText);
+        mBackButtonText = (MPTextView) findViewById(R.id.mpsdkBackButtonText);
+
         setListeners();
         fullScrollDown();
         initializeToolbar();
@@ -193,6 +202,22 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
                 finishWithResult();
             }
         });
+
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CharSequence discountCode = mDiscountCodeEditText.getText();
+                mPresenter.validateDiscountCodeInput(discountCode.toString());
+            }
+        });
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     private void initializeToolbar() {
@@ -340,7 +365,9 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         MPTracker.getInstance().trackScreen("DISCOUNT_INPUT_CODE", "2", mPresenter.getPublicKey(), BuildConfig.VERSION_NAME, this);
 
         mReviewDiscountSummaryContainer.setVisibility(View.GONE);
+        mDiscountSearchSelection.setVisibility(View.GONE);
         mDiscountCodeContainer.setVisibility(View.VISIBLE);
+
         decorateDiscountCodeContainer();
         fullScrollDown();
     }
@@ -453,6 +480,11 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     @Override
     public void hideDiscountSummary() {
         mReviewDiscountSummaryContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideDiscountSearchSelection() {
+        mDiscountSearchSelection.setVisibility(View.GONE);
     }
 
     @Override

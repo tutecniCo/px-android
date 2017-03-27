@@ -13,10 +13,7 @@ import com.mercadopago.providers.DiscountsProvider;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.DiscountsActivityView;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by mromar on 11/29/16.
@@ -64,7 +61,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
             @Override
             public void onFailure(MercadoPagoError error) {
-                getView().requestDiscountCode();
+                //TODO si no hay descuentos o falla, finalizar
             }
         });
     }
@@ -87,8 +84,6 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
         if (searchItemsAvailable()) {
             getView().showSearchItems(mDiscountSearch.getGroups(), getDiscountSearchItemSelectionCallback());
         }
-
-
     }
 
     private OnSelectedCallback<DiscountSearchItem> getDiscountSearchItemSelectionCallback() {
@@ -110,12 +105,22 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
     private void resolveDiscountType(DiscountSearchItem item) {
         List<Discount> discounts = mDiscountSearch.getDiscounts();
+        List<DiscountCard> discountCards = mDiscountSearch.getDiscountsCards();
 
+        //TODO mejorar, delegar en métodos
         for (Discount discount : discounts) {
             if (discount.getId().equals(item.getId())) {
                 mDiscount = discount;
             }
         }
+
+        for (DiscountCard discountCard : discountCards) {
+            if (discountCard.getDiscount().getId().equals(item.getId())) {
+                mDiscount = discountCard.getDiscount();
+            }
+        }
+
+        getView().hideDiscountSearchSelection();
 
         if (mDiscount != null && isCouponDiscount()) {
             getView().requestDiscountCode();

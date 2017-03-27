@@ -39,4 +39,6 @@ public interface DiscountsActivityView extends MvpView {
     void hideDiscountSummary();
 
     void showSearchItems(List<DiscountSearchItem> discountSearchItems, OnSelectedCallback<DiscountSearchItem> discountSearchItemSelectionCallback);
+
+    void hideDiscountSearchSelection();
 }
