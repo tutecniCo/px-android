@@ -28,20 +28,15 @@ import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.card.CardIdentificationNumberEditTextCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
-import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.model.ApiException;
-import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
-import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.model.PaymentType;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
-import com.mercadopago.presenters.GuessingCardPresenter;
 import com.mercadopago.presenters.IdentificationPresenter;
 import com.mercadopago.uicontrollers.card.IdentificationCardView;
 import com.mercadopago.util.ApiUtil;
@@ -59,7 +54,6 @@ import java.util.List;
  */
 
 public class IdentificationActivity extends MercadoPagoBaseActivity implements IdentificationActivityView, TimerObserver {
-
 
 
     public static final String ERROR_STATE = "textview_error";

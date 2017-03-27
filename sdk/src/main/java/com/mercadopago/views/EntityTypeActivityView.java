@@ -1,7 +1,6 @@
 package com.mercadopago.views;
 
 import com.mercadopago.model.ApiException;
-import com.mercadopago.model.Issuer;
 import com.mercadopago.mvp.MvpView;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.mercadopago;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -25,7 +24,6 @@ import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Instruction;
 import com.mercadopago.model.InstructionActionInfo;
 import com.mercadopago.model.InstructionReference;
-import com.mercadopago.model.Payment;
 import com.mercadopago.model.Instructions;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
@@ -42,8 +40,6 @@ import com.mercadopago.util.ScaleUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.Mac;
 
 public class InstructionsActivity extends MercadoPagoBaseActivity {
 

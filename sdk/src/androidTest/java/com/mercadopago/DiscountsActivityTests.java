@@ -1,14 +1,11 @@
 package com.mercadopago;
 
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Looper;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.text.Spanned;
 
-import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Currency;
 import com.mercadopago.model.Discount;
 import com.mercadopago.test.FakeAPI;
@@ -20,19 +17,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
 
 import java.math.BigDecimal;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by mromar on 1/13/17.

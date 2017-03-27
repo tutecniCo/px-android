@@ -2,7 +2,6 @@ package com.mercadopago.views;
 
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.FinancialInstitution;
-import com.mercadopago.model.Issuer;
 
 import java.util.List;
 

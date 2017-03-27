@@ -8,7 +8,6 @@ import com.mercadopago.callbacks.OnReviewChange;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.CardInfo;
-import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.PayerCost;

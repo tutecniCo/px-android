@@ -5,14 +5,12 @@ import com.mercadopago.model.Discount;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.presenters.DiscountsPresenter;
 import com.mercadopago.providers.DiscountsProvider;
-import com.mercadopago.views.DiscountsView;
 import com.mercadopago.views.DiscountsActivityView;
 
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;

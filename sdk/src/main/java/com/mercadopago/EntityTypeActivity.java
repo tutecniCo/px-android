@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 import com.mercadopago.adapters.EntityTypesAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
-import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
@@ -26,9 +25,7 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.EntityTypePresenter;
-import com.mercadopago.providers.EntityTypeProvider;
 import com.mercadopago.providers.EntityTypeProviderImpl;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
@@ -40,7 +37,6 @@ import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.views.EntityTypeActivityView;
-
 
 import java.util.List;
 

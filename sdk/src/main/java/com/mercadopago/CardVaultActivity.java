@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.reflect.TypeToken;
-import com.mercadopago.core.MercadoPago;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Card;
@@ -35,7 +34,6 @@ import com.mercadopago.views.CardVaultActivityView;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by vaserber on 10/12/16.

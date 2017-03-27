@@ -6,10 +6,8 @@ import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServices;
-import com.mercadopago.exceptions.MercadoPagoError;
-
-import com.mercadopago.core.MercadoPago;
 import com.mercadopago.core.MerchantServer;
+import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
@@ -18,9 +16,8 @@ import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
-import com.mercadopago.mvp.OnResourcesRetrievedCallback;
-import com.mercadopago.util.TextUtil;
 import com.mercadopago.preferences.PaymentPreference;
+import com.mercadopago.util.TextUtil;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -11,9 +11,7 @@ import android.widget.FrameLayout;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.model.FinancialInstitution;
-
 import com.mercadopago.uicontrollers.financialInstitutions.FinancialInstitutionsView;
-
 
 import java.util.ArrayList;
 import java.util.List;

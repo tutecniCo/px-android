@@ -7,7 +7,6 @@ import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
-import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
 import com.mercadopago.preferences.DecorationPreference;

@@ -1,13 +1,12 @@
 package com.mercadopago;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.callbacks.FailureRecovery;
@@ -27,9 +26,6 @@ import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
-import com.mercadopago.model.FinancialInstitution;
-import com.mercadopago.model.Identification;
-import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
@@ -138,7 +134,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected Boolean mHasDirectDiscount = false;
     protected Boolean mHasCodeDiscount = false;
     protected Boolean mDirectDiscountEnabled = true;
-
 
 
     @Override
@@ -674,20 +669,12 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
 
-
-
-
-
-
-
-
     private void checkFlowWithPaymentMethodSelected() {
 
-        if(isAdditionalStepRequired()){
+        if (isAdditionalStepRequired()) {
             startAdditionalStepVault();
 
-        }
-        else if (isReviewAndConfirmEnabled()) {
+        } else if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
 
         } else {

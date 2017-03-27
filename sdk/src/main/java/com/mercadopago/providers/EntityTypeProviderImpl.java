@@ -4,10 +4,7 @@ import android.content.Context;
 
 import com.mercadopago.model.Site;
 import com.mercadopago.util.EntityTypesUtil;
-import com.mercadopago.util.SitesUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

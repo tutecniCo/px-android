@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Issuer;
-import com.mercadopago.uicontrollers.issuers.IssuersViewController;
 
 /**
  * Created by marlanti on 3/3/17.

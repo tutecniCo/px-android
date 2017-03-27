@@ -9,9 +9,7 @@ import android.widget.FrameLayout;
 
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentData;
-import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.PaymentResultAction;
 import com.mercadopago.model.Site;

@@ -9,14 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.mercadopago.adapters.FinancialInstitutionsAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
-import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.mptracker.MPTracker;
@@ -32,7 +30,6 @@ import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.views.FinancialInstitutionsActivityView;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**

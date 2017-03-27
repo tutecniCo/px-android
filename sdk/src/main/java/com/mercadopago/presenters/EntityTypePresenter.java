@@ -7,24 +7,15 @@ package com.mercadopago.presenters;
 import android.content.Context;
 
 import com.mercadopago.R;
-import com.mercadopago.callbacks.Callback;
 import com.mercadopago.callbacks.FailureRecovery;
-import com.mercadopago.controllers.PaymentMethodGuessingController;
-import com.mercadopago.core.MercadoPagoServices;
-import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
-import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.EntityTypeProvider;
-import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.views.EntityTypeActivityView;
-import com.mercadopago.views.IssuersActivityView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

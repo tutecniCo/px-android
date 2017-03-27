@@ -1,10 +1,8 @@
 package com.mercadopago.util;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.mercadopago.R;
-import com.mercadopago.model.Site;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -4,7 +4,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercadopago.model.FinancialInstitution;
-import com.mercadopago.model.Issuer;
 
 /**
  * Created by marlanti on 3/13/17.

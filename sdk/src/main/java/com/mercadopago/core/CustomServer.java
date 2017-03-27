@@ -9,7 +9,6 @@ import com.mercadopago.model.Discount;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.services.CustomService;
-import com.mercadopago.services.MerchantService;
 import com.mercadopago.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
 

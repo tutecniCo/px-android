@@ -19,11 +19,10 @@ import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.PaymentVaultPresenter;
 import com.mercadopago.providers.PaymentVaultProvider;
+import com.mercadopago.utils.Discounts;
 import com.mercadopago.views.PaymentVaultView;
 
 import junit.framework.Assert;
-
-import com.mercadopago.utils.Discounts;
 
 import org.junit.Test;
 
