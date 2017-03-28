@@ -46,16 +46,15 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
 
     public void checkFlow() {
 
-        //TODO agregar ifIdentificationRequired para MLU
-
-        if (isEntityTypeStepRequired()) {
+        if (isOnlyIdentificationRequired()) {
             state = AdditionalStepVaultStateMachine.IDENTIFICATION;
-            state.onInit(getView());
-
-
+            state.onInit(this);
+        } else if (isEntityTypeStepRequired()) {
+            state = AdditionalStepVaultStateMachine.IDENTIFICATION;
+            state.onInit(this);
         } else if (isFinancialInstitutionsStepRequired()) {
             state = AdditionalStepVaultStateMachine.FINANCIAL_INSTITUTIONS;
-            state.onInit(getView());
+            state.onInit(this);
 
 
         } else {
@@ -64,6 +63,15 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
 
 
     }
+
+    private boolean isOnlyIdentificationRequired() {
+        return !isEntityTypeRequired() && !mPaymentMethod.isOnPaymentMethod() && isIdentificationRequired();
+    }
+
+    private boolean isIdentificationRequired() {
+        return mPaymentMethod.isIdentificationNumberRequired() && mPaymentMethod.isIdentificationTypeRequired();
+    }
+
 
     public boolean isEntityTypeStepRequired() {
         return isEntityTypeRequired();
@@ -105,31 +113,50 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
 
 
     public void checkFlowWithIdentificationSelected() {
-
-        if (isEntityTypeStepRequired()) {
-            state = state.onNextStep(getView());
-
-        } else {
-            //TODO
-            getView().finishWithResult();
-        }
+        state = state.onNextStep(this);
     }
 
     public void checkFlowWithEntityTypeSelected() {
-        if (isFinancialInstitutionsStepRequired()) {
-            state = state.onNextStep(getView());
-
-        } else {
-            //TODO
-            getView().finishWithResult();
-        }
+        state = state.onNextStep(this);
     }
 
     public void checkFlowWithFinancialInstitutionSelected() {
-        getView().finishWithResult();
+        state = state.onNextStep(this);
     }
 
     public void onBackPressed() {
-        state = state.onBackPressed(getView());
+        state = state.onBackPressed(this);
+    }
+
+    public void startFinancialInstitutionsStep() {
+        getView().startFinancialInstitutionsStep();
+    }
+
+    public void startEntityTypeStep() {
+        getView().startEntityTypeStep();
+    }
+
+    public void finishWithCancel() {
+        getView().finishWithCancel();
+    }
+
+    public void startIdentificationStep() {
+        getView().startIdentificationStep();
+    }
+
+    public boolean isOnlyIdentificationAndFinancialStepRequired() {
+        return isFinancialInstitutionsStepRequired() && isIdentificationRequired() && !isEntityTypeStepRequired();
+    }
+
+    public void onError(String message) {
+        getView().onError(message);
+    }
+
+    public String getInvalidAdditionalStepErrorMessage() {
+        return getResourcesProvider().getInvalidAdditionalStepErrorMessage();
+    }
+
+    public void finishWithResult() {
+        getView().finishWithResult();
     }
 }

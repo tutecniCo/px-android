@@ -12,6 +12,7 @@ import com.mercadopago.model.Site;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.AdditionalStepVaultPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
+import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.views.AdditionalStepVaultActivityView;
 
@@ -37,7 +38,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         getActivityParameters();
 
         mPresenter.attachView(this);
-        mPresenter.attachResourcesProvider(new AdditionalStepVaultProviderImpl());
+        mPresenter.attachResourcesProvider(new AdditionalStepVaultProviderImpl(this));
         mPresenter.validateActivityParameters();
 
 
@@ -196,5 +197,10 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
         }
 
+    }
+
+    @Override
+    public void onError(String message) {
+        ErrorUtil.startErrorActivity(this, message, false);
     }
 }

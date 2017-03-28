@@ -101,7 +101,7 @@ public class PaymentMethod {
     }
 
     public boolean isFinancialInstitutionsRequired(){
-        return !financialInstitutions.isEmpty();
+        return financialInstitutions!= null && !financialInstitutions.isEmpty();
     }
 
     private boolean isAdditionalInfoNeeded(String param) {
@@ -178,6 +178,10 @@ public class PaymentMethod {
     }
 
     public boolean isAdditionalInfoNeeded() {
-        return (additionalInfoNeeded != null) && (additionalInfoNeeded.size() > 0);
+        return ((additionalInfoNeeded != null) && (additionalInfoNeeded.size() > 0)) || isFinancialInstitutionsRequired();
+    }
+
+    public boolean isOnPaymentMethod() {
+        return paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card");
     }
 }
