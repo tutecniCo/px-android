@@ -12,6 +12,9 @@ public interface AdditionalStepVaultActivityView extends MvpView{
     void startEntityTypeStep();
     void startIdentificationStep();
     void startFinancialInstitutionsStep();
+    void startIdentificationStepAnimatedBack();
+    void startEntityTypeStepAnimatedBack();
+    void startFinancialInstitutionsStepAnimatedBack();
     void finishWithResult();
     void finishWithCancel();
     void onError(String message);

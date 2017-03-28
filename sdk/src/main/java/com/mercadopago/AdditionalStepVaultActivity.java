@@ -80,8 +80,23 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     }
 
 
+    @Override
     public void startEntityTypeStep() {
 
+        startEntityTypeStepComponent();
+        animateNextSelection();
+
+    }
+
+    @Override
+    public void startEntityTypeStepAnimatedBack() {
+
+        startEntityTypeStepComponent();
+        animateBackSelection();
+
+    }
+
+    private void startEntityTypeStepComponent() {
         new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getmPublicKey())
@@ -91,38 +106,64 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
                 .setDecorationPreference(mDecorationPreference)
                 .setSite(mPresenter.getSite())
                 .startActivity();
-
-        animatePaymentMethodSelection();
-
     }
 
+
+    @Override
     public void startIdentificationStep() {
+        startIdentificationStepComponent();
+        animateNextSelection();
+    }
+
+    @Override
+    public void startIdentificationStepAnimatedBack() {
+        startIdentificationStepComponent();
+        animateBackSelection();
+    }
+
+    private void startIdentificationStepComponent() {
 
         new MercadoPagoComponents.Activities.IdentificationActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getmPublicKey())
                 .setDecorationPreference(mDecorationPreference)
                 .startActivity();
+    }
 
-        animatePaymentMethodSelection();
+
+    @Override
+    public void startFinancialInstitutionsStep() {
+
+        startFinancialInstitutionsStepComponent();
+        animateNextSelection();
 
     }
 
-    public void startFinancialInstitutionsStep() {
+    @Override
+    public void startFinancialInstitutionsStepAnimatedBack() {
 
+        startFinancialInstitutionsStepComponent();
+        animateBackSelection();
+
+    }
+
+    private void startFinancialInstitutionsStepComponent() {
         new MercadoPagoComponents.Activities.FinancialInstitutionsActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getmPublicKey())
                 .setPaymentMethod(mPresenter.getmPaymentMethod())
                 .setDecorationPreference(mDecorationPreference)
                 .startActivity();
-
-        animatePaymentMethodSelection();
-
     }
 
-    private void animatePaymentMethodSelection() {
+
+
+    private void animateNextSelection() {
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
+    }
+
+    private void animateBackSelection() {
+        overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
     }
 
     private void resolveFinancialInstitutionsRequest(int resultCode, Intent data) {

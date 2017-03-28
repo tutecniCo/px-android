@@ -40,7 +40,7 @@ public enum AdditionalStepVaultStateMachine {
     ENTITY_TYPES {
         @Override
         public AdditionalStepVaultStateMachine onBackPressed(AdditionalStepVaultPresenter mPresenter) {
-            mPresenter.startIdentificationStep();
+            mPresenter.startIdentificationStepAnimatedBack();
             return IDENTIFICATION;
         }
 
@@ -69,11 +69,11 @@ public enum AdditionalStepVaultStateMachine {
         public AdditionalStepVaultStateMachine onBackPressed(AdditionalStepVaultPresenter mPresenter) {
 
             if(mPresenter.isOnlyIdentificationAndFinancialStepRequired()){
-                mPresenter.startIdentificationStep();
+                mPresenter.startIdentificationStepAnimatedBack();
                 return IDENTIFICATION;
             }
             else if(mPresenter.isEntityTypeStepRequired()){
-                mPresenter.startEntityTypeStep();
+                mPresenter.startEntityTypeStepAnimatedBack();
                 return ENTITY_TYPES;
             }
 

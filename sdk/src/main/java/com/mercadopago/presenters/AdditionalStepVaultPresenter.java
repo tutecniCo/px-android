@@ -159,4 +159,17 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     public void finishWithResult() {
         getView().finishWithResult();
     }
+
+    public void startIdentificationStepAnimatedBack() {
+        getView().startIdentificationStepAnimatedBack();
+    }
+
+    public void startEntityTypeStepAnimatedBack() {
+        getView().startEntityTypeStepAnimatedBack();
+    }
+
+    public void startFinancialInstitutionsStepAnimatedBack() {
+        getView().startFinancialInstitutionsStepAnimatedBack();
+    }
+
 }
