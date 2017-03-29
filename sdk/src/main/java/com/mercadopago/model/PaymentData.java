@@ -9,6 +9,24 @@ public class PaymentData {
     private PayerCost payerCost;
     private Token token;
     private Discount discount;
+    private Payer payer;
+    private TransactionDetails transactionDetails;
+
+    public Payer getPayer() {
+        return payer;
+    }
+
+    public void setPayer(Payer payer) {
+        this.payer = payer;
+    }
+
+    public TransactionDetails getTransactionDetails() {
+        return transactionDetails;
+    }
+
+    public void setTransactionDetails(TransactionDetails transactionDetails) {
+        this.transactionDetails = transactionDetails;
+    }
 
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;

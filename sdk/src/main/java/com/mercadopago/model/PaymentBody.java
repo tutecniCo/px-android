@@ -19,6 +19,17 @@ public class PaymentBody {
     private Payer payer;
     private Float couponAmount;
     private Integer campaignId;
+    @SerializedName("transaction_details")
+    private TransactionDetails transactionDetails;
+
+
+    public TransactionDetails getTransactionDetails() {
+        return transactionDetails;
+    }
+
+    public void setTransactionDetails(TransactionDetails transactionDetails) {
+        this.transactionDetails = transactionDetails;
+    }
 
     public void setCouponAmount(Float couponAmount) {
         this.couponAmount = couponAmount;

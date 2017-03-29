@@ -7,6 +7,15 @@ public class Payer {
     private String accessToken;
     private Identification identification;
     private String type;
+    private String entityType;
+
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
 
     public String getEmail() {
         return email;

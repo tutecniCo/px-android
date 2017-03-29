@@ -179,10 +179,13 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
     @Override
     public void finishWithResult() {
-        //TODO
+
         Intent returnIntent = new Intent();
-        /*returnIntent.putExtra("payer", payer);
-        returnIntent.putExtra("paymentData", paymentData);*/
+        returnIntent.putExtra("identification", JsonUtil.getInstance().toJson(mSelectedIdentification));
+        returnIntent.putExtra("financialInstitution", JsonUtil.getInstance().toJson(mSelectedFinancialInstitution));
+        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(mSelectedEntityType));
+
+
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_hold, R.anim.mpsdk_hold);

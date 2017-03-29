@@ -26,6 +26,9 @@ import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.FinancialInstitution;
+import com.mercadopago.model.Identification;
+import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
@@ -39,6 +42,7 @@ import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.PaymentResultAction;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
+import com.mercadopago.model.TransactionDetails;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
@@ -106,6 +110,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected PayerCost mSelectedPayerCost;
     protected Token mCreatedToken;
     protected Payment mCreatedPayment;
+    protected Payer mPayer;
 
     protected boolean mPaymentMethodEditionRequested;
 
@@ -134,6 +139,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     protected Boolean mHasDirectDiscount = false;
     protected Boolean mHasCodeDiscount = false;
     protected Boolean mDirectDiscountEnabled = true;
+    private TransactionDetails mTransactionDetails;
 
 
     @Override
@@ -163,6 +169,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         mMerchantPublicKey = this.getIntent().getStringExtra("merchantPublicKey");
         mServicePreference = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("servicePreference"), ServicePreference.class);
         mCheckoutPreference = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("checkoutPreference"), CheckoutPreference.class);
+        mPayer = mCheckoutPreference.getPayer();
         mPaymentResultScreenPreference = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("paymentResultScreenPreference"), PaymentResultScreenPreference.class);
         mPaymentDataInput = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("paymentData"), PaymentData.class);
         mCongratsDisplay = this.getIntent().getIntExtra("congratsDisplay", -1);
@@ -206,7 +213,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         mMercadoPagoServices = new MercadoPagoServices.Builder()
                 .setContext(this)
                 .setPublicKey(mMerchantPublicKey)
-                .setPrivateKey(mCheckoutPreference.getPayer().getAccessToken())
+                .setPrivateKey(mPayer.getAccessToken())
                 .setServicePreference(mServicePreference)
                 .build();
 
@@ -237,6 +244,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             @Override
             public void success(CheckoutPreference checkoutPreference) {
                 mCheckoutPreference = checkoutPreference;
+                mPayer = mCheckoutPreference.getPayer();
                 try {
                     validatePreference();
                     initializeCheckout();
@@ -278,7 +286,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
 
     protected void getPaymentMethodSearch() {
         showProgressBar();
-        mMercadoPagoServices.getPaymentMethodSearch(mCheckoutPreference.getAmount(), mCheckoutPreference.getExcludedPaymentTypes(), mCheckoutPreference.getExcludedPaymentMethods(), mCheckoutPreference.getPayer(), mCheckoutPreference.getSite(), new Callback<PaymentMethodSearch>() {
+        mMercadoPagoServices.getPaymentMethodSearch(mCheckoutPreference.getAmount(), mCheckoutPreference.getExcludedPaymentTypes(), mCheckoutPreference.getExcludedPaymentMethods(), mPayer, mCheckoutPreference.getSite(), new Callback<PaymentMethodSearch>() {
             @Override
             public void success(PaymentMethodSearch paymentMethodSearch) {
                 mPaymentMethodSearch = paymentMethodSearch;
@@ -351,7 +359,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void getDirectDiscount() {
-        mMercadoPagoServices.getDirectDiscount(mCheckoutPreference.getAmount().toString(), mCheckoutPreference.getPayer().getEmail(), new Callback<Discount>() {
+        mMercadoPagoServices.getDirectDiscount(mCheckoutPreference.getAmount().toString(), mPayer.getEmail(), new Callback<Discount>() {
             @Override
             public void success(Discount discount) {
                 mDiscount = discount;
@@ -375,7 +383,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         Map<String, Object> discountInfoMap = new HashMap<>();
         discountInfoMap.putAll(mServicePreference.getGetDiscountAdditionalInfo());
 
-        CustomServer.getDirectDiscount(mCheckoutPreference.getAmount().toString(), mCheckoutPreference.getPayer().getEmail(), this, mServicePreference.getGetMerchantDiscountBaseURL(), mServicePreference.getGetMerchantDiscountURI(), mServicePreference.getGetDiscountAdditionalInfo(), new Callback<Discount>() {
+        CustomServer.getDirectDiscount(mCheckoutPreference.getAmount().toString(), mPayer.getEmail(), this, mServicePreference.getGetMerchantDiscountBaseURL(), mServicePreference.getGetMerchantDiscountURI(), mServicePreference.getGetDiscountAdditionalInfo(), new Callback<Discount>() {
             @Override
             public void success(Discount discount) {
                 mDiscount = discount;
@@ -419,8 +427,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         new MercadoPagoComponents.Activities.PaymentVaultActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
-                .setPayerAccessToken(mCheckoutPreference.getPayer().getAccessToken())
-                .setPayerEmail(mCheckoutPreference.getPayer().getEmail())
+                .setPayerAccessToken(mPayer.getAccessToken())
+                .setPayerEmail(mPayer.getEmail())
                 .setSite(mCheckoutPreference.getSite())
                 .setAmount(mCheckoutPreference.getAmount())
                 .setPaymentMethodSearch(mPaymentMethodSearch)
@@ -545,6 +553,22 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
 
         if (resultCode == RESULT_OK) {
 
+            Identification identification = JsonUtil.getInstance().fromJson(data.getStringExtra("identification"), Identification.class);
+            FinancialInstitution financialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
+            String entityType = data.getStringExtra("entityType");
+
+            if(identification!= null){
+                mPayer.setIdentification(identification);
+            }
+            if(entityType!= null && !entityType.equals("")){
+                mPayer.setEntityType(entityType);
+            }
+            if(financialInstitution!= null){
+                mTransactionDetails = new TransactionDetails();
+                mTransactionDetails.setFinancialInstitution(financialInstitution.getId().toString());
+            }
+
+
             if (isReviewAndConfirmEnabled()) {
                 showReviewAndConfirm();
 
@@ -600,7 +624,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         paymentData.setToken(mCreatedToken);
         paymentData.setPayerCost(mSelectedPayerCost);
         paymentData.setDiscount(mDiscount);
-
+        //TODO setear los datos que faltan de mPayer y transactionDetails
+        paymentData.setPayer(mPayer);
+        paymentData.setTransactionDetails(mTransactionDetails);
         boolean hasToFinishActivity = false;
         if (MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE.equals(mRequestedResultCode)
                 || (CallbackHolder.getInstance().hasPaymentDataCallback()
@@ -734,7 +760,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private boolean isUserLogged() {
-        return mCheckoutPreference.getPayer() != null && !TextUtil.isEmpty(mCheckoutPreference.getPayer().getAccessToken());
+        return mPayer != null && !TextUtil.isEmpty(mPayer.getAccessToken());
     }
 
     private void resolvePaymentResultRequest(int resultCode, Intent data) {
@@ -788,7 +814,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
-                .setPayerAccessToken(mCheckoutPreference.getPayer().getAccessToken())
+                .setPayerAccessToken(mPayer.getAccessToken())
                 .setPaymentPreference(paymentPreference)
                 .setDecorationPreference(mDecorationPreference)
                 .setAmount(mCheckoutPreference.getAmount())
@@ -956,7 +982,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
                 .setPaymentId(payment.getId())
                 .setPaymentStatus(payment.getStatus())
                 .setPaymentStatusDetail(payment.getStatusDetail())
-                .setPayerEmail(mCheckoutPreference.getPayer().getEmail())
+                .setPayerEmail(mPayer.getEmail())
                 .setStatementDescription(payment.getStatementDescriptor())
                 .build();
     }
@@ -968,6 +994,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         paymentData.setIssuer(mSelectedIssuer);
         paymentData.setDiscount(mDiscount);
         paymentData.setToken(mCreatedToken);
+        //TODO setear los datos que faltan de mPayer y transactionDetails
+        paymentData.setPayer(mPayer);
+        paymentData.setTransactionDetails(mTransactionDetails);
         return paymentData;
     }
 
@@ -977,7 +1006,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         paymentIntent.setPublicKey(mMerchantPublicKey);
         paymentIntent.setPaymentMethodId(paymentData.getPaymentMethod().getId());
         paymentIntent.setBinaryMode(mBinaryModeEnabled);
-        Payer payer = mCheckoutPreference.getPayer();
+        //FIXME usar mPayer
+//        Payer payer = mCheckoutPreference.getPayer();
+        Payer payer = mPayer;
         if (!TextUtils.isEmpty(mCustomerId) && MercadoPagoUtil.isCard(paymentData.getPaymentMethod().getPaymentTypeId())) {
             payer.setId(mCustomerId);
         }
@@ -992,6 +1023,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         }
         if (paymentData.getIssuer() != null) {
             paymentIntent.setIssuerId(paymentData.getIssuer().getId());
+        }
+        //TODO setear a PaymentBody los datos que faltan de mPayer y transactionDetails
+        if(paymentData.getTransactionDetails() != null){
+            paymentIntent.setTransactionDetails(paymentData.getTransactionDetails());
         }
 
         mTransactionId = getTransactionID(paymentData);
