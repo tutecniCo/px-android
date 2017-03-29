@@ -3,6 +3,7 @@ package com.mercadopago.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 
 import com.google.gson.Gson;
@@ -305,9 +306,15 @@ public class MercadoPagoComponents {
             private ReviewScreenPreference reviewScreenPreference;
             private Boolean termsAndConditionsEnabled;
             private Boolean discountEnabled;
+            private String merchantPublicKey;
 
             public ReviewAndConfirmBuilder setActivity(Activity activity) {
                 this.activity = activity;
+                return this;
+            }
+
+            public ReviewAndConfirmBuilder setMerchantPublicKey(String merchantPublicKey) {
+                this.merchantPublicKey = merchantPublicKey;
                 return this;
             }
 
@@ -392,6 +399,7 @@ public class MercadoPagoComponents {
 
             private void startReviewAndConfirmActivity() {
                 Intent intent = new Intent(activity, ReviewAndConfirmActivity.class);
+                intent.putExtra("merchantPublicKey", merchantPublicKey);
                 intent.putExtra("editionEnabled", editionEnabled);
                 intent.putExtra("amount", amount.toString());
                 intent.putExtra("site", JsonUtil.getInstance().toJson(site));
@@ -1558,6 +1566,7 @@ public class MercadoPagoComponents {
             private PaymentResult paymentResult;
             private Site site;
             private BigDecimal amount;
+            private PaymentResultScreenPreference paymentResultScreenPreference;
 
             public InstructionsActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
@@ -1584,6 +1593,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public InstructionsActivityBuilder setPaymentResultScreenPreference(PaymentResultScreenPreference preference) {
+                this.paymentResultScreenPreference = preference;
+                return this;
+            }
+
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.amount == null) throw new IllegalStateException("amount is null");
@@ -1600,6 +1614,7 @@ public class MercadoPagoComponents {
                 Intent instructionIntent = new Intent(activity, InstructionsActivity.class);
                 instructionIntent.putExtra("merchantPublicKey", merchantPublicKey);
                 instructionIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
+                instructionIntent.putExtra("paymentResultScreenPreference", JsonUtil.getInstance().toJson(paymentResultScreenPreference));
                 instructionIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
                 instructionIntent.putExtra("amount", amount.toString());
 
@@ -1732,6 +1747,7 @@ public class MercadoPagoComponents {
             private String merchantPublicKey;
             private PaymentResult paymentResult;
             private Site site;
+            private PaymentResultScreenPreference paymentResultScreenPreference;
 
             public CallForAuthorizeActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
@@ -1753,6 +1769,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public CallForAuthorizeActivityBuilder setPaymentResultScreenPreference(PaymentResultScreenPreference paymentResultScreenPreference) {
+                this.paymentResultScreenPreference = paymentResultScreenPreference;
+                return this;
+            }
+
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.paymentResult == null)
@@ -1770,6 +1791,7 @@ public class MercadoPagoComponents {
                 callForAuthorizeIntent.putExtra("merchantPublicKey", merchantPublicKey);
                 callForAuthorizeIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
                 callForAuthorizeIntent.putExtra("site", JsonUtil.getInstance().toJson(site));
+                callForAuthorizeIntent.putExtra("paymentResultScreenPreference", JsonUtil.getInstance().toJson(paymentResultScreenPreference));
 
                 activity.startActivityForResult(callForAuthorizeIntent, CALL_FOR_AUTHORIZE_REQUEST_CODE);
             }
@@ -2066,7 +2088,9 @@ public class MercadoPagoComponents {
             private String confirmationMessage;
             private String productDetailText;
             private String discountDetailText;
-
+            private String customDescriptionText;
+            private Integer customTextColor;
+            private BigDecimal customAmount;
 
             public SummaryViewBuilder setContext(Context context) {
                 this.context = context;
@@ -2123,8 +2147,23 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public SummaryViewBuilder setCustomDescriptionText(String customDescriptionText) {
+                this.customDescriptionText = customDescriptionText;
+                return this;
+            }
+
+            public SummaryViewBuilder setCustomAmount(BigDecimal customAmount) {
+                this.customAmount = customAmount;
+                return this;
+            }
+
+            public SummaryViewBuilder setCustomTextColor(@ColorInt Integer customTextColor) {
+                this.customTextColor = customTextColor;
+                return this;
+            }
+
             public ReviewSummaryView build() {
-                return new ReviewSummaryView(context, confirmationMessage, productDetailText, discountDetailText, paymentMethod, payerCost, amount, discount, currencyId, decorationPreference, callback);
+                return new ReviewSummaryView(context, confirmationMessage, productDetailText, discountDetailText, paymentMethod, payerCost, amount, discount, currencyId, customDescriptionText, customAmount, customTextColor, decorationPreference, callback);
             }
         }
 

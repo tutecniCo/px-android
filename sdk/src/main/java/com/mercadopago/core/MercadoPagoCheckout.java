@@ -9,6 +9,7 @@ import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.callbacks.PaymentCallback;
 import com.mercadopago.callbacks.PaymentDataCallback;
+import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.model.Discount;
@@ -88,7 +89,8 @@ public class MercadoPagoCheckout {
 
     private void customizePaymentResultReview(PaymentResultScreenPreference paymentResultScreenPreference) {
         if (paymentResultScreenPreference != null && paymentResultScreenPreference.hasCustomCongratsReviewables()) {
-            CustomReviewablesHandler.getInstance().addCongratsReviewables(paymentResultScreenPreference.getCongratsReviewables());
+            CustomReviewablesHandler.getInstance().addCongratsReviewables(paymentResultScreenPreference.getCongratsReviewables(ContentLocation.BOTTOM), ContentLocation.BOTTOM);
+            CustomReviewablesHandler.getInstance().addCongratsReviewables(paymentResultScreenPreference.getCongratsReviewables(ContentLocation.TOP), ContentLocation.TOP);
         }
         if (paymentResultScreenPreference != null && paymentResultScreenPreference.hasCustomPendingReviewables()) {
             CustomReviewablesHandler.getInstance().addPendingReviewables(paymentResultScreenPreference.getPendingReviewables());
@@ -110,7 +112,33 @@ public class MercadoPagoCheckout {
                 && (this.servicePreference == null || !this.servicePreference.hasCreatePaymentURL())) {
             throw new IllegalStateException("Payment service or preference created with private key required to create a payment");
         }
+        if (hasTwoDiscountsSet()) {
+            throw new IllegalStateException("payment data discount and discount set");
+        }
     }
+
+    private Boolean hasTwoDiscountsSet() {
+        Boolean hasTwoDiscountsSet = false;
+
+        if ((hasPaymentDataDiscount() || hasPaymentResultDiscount()) && hasDiscount()) {
+            hasTwoDiscountsSet = true;
+        }
+
+        return hasTwoDiscountsSet;
+    }
+
+    private Boolean hasPaymentDataDiscount() {
+        return this.paymentData != null && this.paymentData.getDiscount() != null;
+    }
+
+    private Boolean hasPaymentResultDiscount() {
+        return this.paymentResult != null && this.paymentResult.getPaymentData() != null && this.paymentResult.getPaymentData().getDiscount() != null;
+    }
+
+    private Boolean hasDiscount() {
+        return this.discount != null;
+    }
+
 
     private void start(PaymentCallback paymentCallback) {
         CallbackHolder.getInstance().clean();
@@ -132,7 +160,7 @@ public class MercadoPagoCheckout {
     private void startCheckoutActivity(Integer resultCode) {
         validate(resultCode);
         Intent checkoutIntent;
-        if(context != null) {
+        if (context != null) {
             checkoutIntent = new Intent(context, CheckoutActivity.class);
         } else {
             checkoutIntent = new Intent(activity, CheckoutActivity.class);
@@ -151,7 +179,7 @@ public class MercadoPagoCheckout {
         checkoutIntent.putExtra("maxSavedCards", maxSavedCards);
         checkoutIntent.putExtra("resultCode", resultCode);
 
-        if(context != null) {
+        if (context != null) {
             context.startActivity(checkoutIntent);
         } else {
             activity.startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);

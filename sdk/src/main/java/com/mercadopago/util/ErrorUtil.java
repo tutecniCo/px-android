@@ -12,6 +12,7 @@ import com.mercadopago.exceptions.MercadoPagoError;
 public class ErrorUtil {
 
     public static final int ERROR_REQUEST_CODE = 94;
+    public static final String ERROR_EXTRA_KEY = "mercadoPagoError";
 
     public static void startErrorActivity(Activity launcherActivity, String message, boolean recoverable) {
         MercadoPagoError mercadoPagoError = new MercadoPagoError(message, recoverable);
@@ -25,7 +26,7 @@ public class ErrorUtil {
 
     public static void startErrorActivity(Activity launcherActivity, MercadoPagoError mercadoPagoError) {
         Intent intent = new Intent(launcherActivity, ErrorActivity.class);
-        intent.putExtra("mercadoPagoError", JsonUtil.getInstance().toJson(mercadoPagoError));
+        intent.putExtra(ERROR_EXTRA_KEY, JsonUtil.getInstance().toJson(mercadoPagoError));
         launcherActivity.startActivityForResult(intent, ERROR_REQUEST_CODE);
     }
 }

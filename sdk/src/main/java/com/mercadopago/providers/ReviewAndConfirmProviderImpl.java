@@ -35,9 +35,17 @@ public class ReviewAndConfirmProviderImpl implements ReviewAndConfirmProvider {
 
     @Override
     public Reviewable getSummaryReviewable(PaymentMethod paymentMethod, PayerCost payerCost, BigDecimal amount, Discount discount, Site site, DecorationPreference decorationPreference, OnConfirmPaymentCallback onConfirmPaymentCallback) {
-        String confirmationMessage = getConfirmationMessage();
+        String confirmationMessage;
+        if (this.reviewScreenPreference != null && !TextUtil.isEmpty(this.reviewScreenPreference.getConfirmText())) {
+            confirmationMessage = reviewScreenPreference.getConfirmText();
+        } else {
+            confirmationMessage = context.getString(R.string.mpsdk_confirm);
+        }
         String productDetailText = getProductDetailText();
         String discountDetailText = getDiscountDetailText(discount);
+        String customDescriptionText = getCustomDescriptionText();
+        Integer customTextColor = getCustomTextColor();
+        BigDecimal customAmount = getCustomAmount();
 
         return new MercadoPagoComponents.Views.SummaryViewBuilder()
                 .setContext(context)
@@ -49,6 +57,9 @@ public class ReviewAndConfirmProviderImpl implements ReviewAndConfirmProvider {
                 .setAmount(amount)
                 .setDiscount(discount)
                 .setCurrencyId(site.getCurrencyId())
+                .setCustomDescriptionText(customDescriptionText)
+                .setCustomAmount(customAmount)
+                .setCustomTextColor(customTextColor)
                 .setDecorationPreference(decorationPreference)
                 .setConfirmPaymentCallback(onConfirmPaymentCallback)
                 .build();
@@ -108,13 +119,7 @@ public class ReviewAndConfirmProviderImpl implements ReviewAndConfirmProvider {
 
     @Override
     public String getConfirmationMessage() {
-        String confirmationMessage;
-        if (this.reviewScreenPreference != null && !TextUtil.isEmpty(this.reviewScreenPreference.getConfirmText())) {
-            confirmationMessage = reviewScreenPreference.getConfirmText();
-        } else {
-            confirmationMessage = context.getString(R.string.mpsdk_confirm);
-        }
-        return confirmationMessage;
+        return context.getString(R.string.mpsdk_confirm);
     }
 
     @Override
@@ -151,5 +156,33 @@ public class ReviewAndConfirmProviderImpl implements ReviewAndConfirmProvider {
             }
         }
         return discountDetail;
+    }
+
+    private String getCustomDescriptionText() {
+        String customDescription = "";
+        if (this.reviewScreenPreference != null && !TextUtil.isEmpty(this.reviewScreenPreference.getSummaryCustomDescription())) {
+            customDescription = reviewScreenPreference.getSummaryCustomDescription();
+        }
+        return customDescription;
+    }
+
+    private Integer getCustomTextColor() {
+        Integer customTextColor = null;
+        if (this.reviewScreenPreference != null && this.reviewScreenPreference.getSummaryCustomTextColor() != null) {
+            customTextColor = reviewScreenPreference.getSummaryCustomTextColor();
+        }
+        return customTextColor;
+    }
+
+    private BigDecimal getCustomAmount() {
+        BigDecimal customAmount = null;
+        if (this.reviewScreenPreference != null && isCustomRowAmountValid()) {
+            customAmount = reviewScreenPreference.getSummaryCustomAmount();
+        }
+        return customAmount;
+    }
+
+    private boolean isCustomRowAmountValid() {
+        return reviewScreenPreference.getSummaryCustomAmount() != null && reviewScreenPreference.getSummaryCustomAmount().compareTo(BigDecimal.ZERO) >= 0;
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mercadopago.examples.R;
 import com.mercadopago.model.Reviewable;
@@ -49,6 +50,7 @@ public class CellphoneReview extends Reviewable {
             @Override
             public void onClick(View v) {
                 notifyChangeRequired(CELLPHONE_CHANGE);
+                Toast.makeText(mContext, "Cambiar número!", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -2,6 +2,7 @@ package com.mercadopago;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,11 +10,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.mercadopago.adapters.ReviewablesAdapter;
 import com.mercadopago.callbacks.CallbackHolder;
+import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.core.MercadoPagoComponents;
@@ -28,12 +31,14 @@ import com.mercadopago.model.Site;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.uicontrollers.discounts.DiscountRowView;
+import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,7 +65,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     protected MPTextView mExitButtonText;
     protected FrameLayout mDiscountFrameLayout;
     protected Activity mActivity;
-    protected RecyclerView mReviewables;
+    protected RecyclerView mBottomReviewables;
     protected FrameLayout mSecondaryExitButton;
     protected MPTextView mSecondaryExitTextView;
 
@@ -90,6 +95,8 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     private Site mSite;
     private BigDecimal mAmount;
     private PaymentResultScreenPreference mPaymentResultScreenPreference;
+    private ViewGroup mTitleBackground;
+    private RecyclerView mTopReviewables;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +137,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     }
 
     protected void setContentView() {
-        MPTracker.getInstance().trackScreen("CONGRATS", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
+        MPTracker.getInstance().trackScreen("RESULT", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
         setContentView(R.layout.mpsdk_activity_congrats);
     }
 
@@ -151,9 +158,11 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         mPaymentMethodImage = (ImageView) findViewById(R.id.mpsdkPaymentMethodImage);
         mExitButtonText = (MPTextView) findViewById(R.id.mpsdkExitButtonCongrats);
         mDiscountFrameLayout = (FrameLayout) findViewById(R.id.mpsdkDiscount);
-        mReviewables = (RecyclerView) findViewById(R.id.mpsdkReviewablesRecyclerView);
+        mBottomReviewables = (RecyclerView) findViewById(R.id.mpsdkReviewablesRecyclerView);
+        mTopReviewables = (RecyclerView) findViewById(R.id.mpsdkTopReviewablesRecyclerView);
         mSecondaryExitButton = (FrameLayout) findViewById(R.id.mpsdkCongratsSecondaryExitButton);
         mSecondaryExitTextView = (MPTextView) findViewById(R.id.mpsdkCongratsSecondaryExitButtonText);
+        mTitleBackground = (ViewGroup) findViewById(R.id.mpsdkTitleBackground);
 
         mDiscountFrameLayout.setVisibility(View.GONE);
         mExitButtonText.setOnClickListener(new View.OnClickListener() {
@@ -165,9 +174,13 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     }
 
     private void initializeReviewablesRecyclerView() {
-        mReviewables.setNestedScrollingEnabled(false);
-        mReviewables.setLayoutManager(new LinearLayoutManager(this));
-        mReviewables.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+        mBottomReviewables.setNestedScrollingEnabled(false);
+        mBottomReviewables.setLayoutManager(new LinearLayoutManager(this));
+        mBottomReviewables.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+
+        mTopReviewables.setNestedScrollingEnabled(false);
+        mTopReviewables.setLayoutManager(new LinearLayoutManager(this));
+        mTopReviewables.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
     }
 
     protected void onValidStart() {
@@ -177,7 +190,8 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         setPaymentEmailDescription();
         setPaymentStatementDescription();
         setDisplayTime();
-        showReviewables();
+        showBottomReviewables();
+        showTopReviewables();
     }
 
     private void initializePaymentData() {
@@ -259,6 +273,13 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
                 mSecondaryExitTextView.setVisibility(View.VISIBLE);
                 setSecondaryExitButtonListener();
             }
+            if (mPaymentResultScreenPreference.hasTitleBackgroundColor()) {
+                mTitleBackground.setBackgroundColor(mPaymentResultScreenPreference.getTitleBackgroundColor());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    int darkerTintColor = ColorsUtil.darker(mPaymentResultScreenPreference.getTitleBackgroundColor());
+                    ColorsUtil.tintStatusBar(this, darkerTintColor);
+                }
+            }
         }
     }
 
@@ -278,9 +299,9 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         mSecondaryExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 //TODO Deprecate
-                if(CallbackHolder.getInstance().hasPaymentResultCallback(CallbackHolder.CONGRATS_PAYMENT_RESULT_CALLBACK)) {
+                if (CallbackHolder.getInstance().hasPaymentResultCallback(CallbackHolder.CONGRATS_PAYMENT_RESULT_CALLBACK)) {
                     CallbackHolder.getInstance().getPaymentResultCallback(CallbackHolder.CONGRATS_PAYMENT_RESULT_CALLBACK).onResult(mPaymentResult);
                     finishWithOkResult(false);
                 } else {
@@ -314,20 +335,44 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         mExitButtonText.setText(getResources().getString(R.string.mpsdk_text_continue));
     }
 
-    public void showReviewables() {
-        List<Reviewable> customReviewables = retrieveCustomReviewables();
+    public void showBottomReviewables() {
+        List<Reviewable> customReviewables = retrieveBottomCustomReviewables();
         ReviewablesAdapter reviewablesAdapter = new ReviewablesAdapter(customReviewables);
-        mReviewables.setAdapter(reviewablesAdapter);
+        mBottomReviewables.setAdapter(reviewablesAdapter);
     }
 
-    private List<Reviewable> retrieveCustomReviewables() {
-        List<Reviewable> customReviewables = CustomReviewablesHandler.getInstance().getCongratsReviewables();
+    public void showTopReviewables() {
+        List<Reviewable> customReviewables = retrieveTopCustomReviewables();
+        ReviewablesAdapter reviewablesAdapter = new ReviewablesAdapter(customReviewables);
+        mTopReviewables.setAdapter(reviewablesAdapter);
+    }
 
-        for (Reviewable reviewable : customReviewables) {
-            reviewable.setReviewSubscriber(this);
+    private List<Reviewable> retrieveTopCustomReviewables() {
+        if (CustomReviewablesHandler.getInstance().hasCongratsReviewables(ContentLocation.TOP)) {
+            List<Reviewable> customReviewables = CustomReviewablesHandler.getInstance().getCongratsReviewables(ContentLocation.TOP);
+
+            for (Reviewable reviewable : customReviewables) {
+                reviewable.setReviewSubscriber(this);
+            }
+
+            return customReviewables;
+        } else {
+            return new ArrayList<>();
         }
+    }
 
-        return customReviewables;
+    private List<Reviewable> retrieveBottomCustomReviewables() {
+        if (CustomReviewablesHandler.getInstance().hasCongratsReviewables(ContentLocation.BOTTOM)) {
+            List<Reviewable> customReviewables = CustomReviewablesHandler.getInstance().getCongratsReviewables(ContentLocation.BOTTOM);
+
+            for (Reviewable reviewable : customReviewables) {
+                reviewable.setReviewSubscriber(this);
+            }
+
+            return customReviewables;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -339,8 +384,11 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     }
 
     @Override
-    public void changeRequired(Integer resultCode) {
+    public void changeRequired(Integer resultCode, Bundle data) {
         Intent intent = new Intent();
+        if (data != null) {
+            intent.putExtras(data);
+        }
         intent.putExtra("resultCode", resultCode);
         intent.putExtra("paymentResult", JsonUtil.getInstance().toJson(mPaymentResult));
         setResult(RESULT_OK, intent);
@@ -384,7 +432,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
 
     private void setDiscountRow() {
         if (mDiscountEnabled && mDiscount != null) {
-            showDiscountRow(mTotalAmount);
+            showDiscountRow(mAmount);
         }
     }
 
@@ -484,11 +532,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
                 Spanned spannedInstallmentsText = CurrenciesUtil.formatCurrencyInText(mTotalAmount,
                         mCurrencyId, sb.toString(), false, true);
 
-                if (mDiscount != null) {
-                    mInstallmentsDescription.setVisibility(View.GONE);
-                    mInstallmentsTotalAmountDescription.setVisibility(View.GONE);
-                }
-
+                mInstallmentsTotalAmountDescription.setVisibility(View.GONE);
                 mInstallmentsDescription.setText(spannedInstallmentsText);
                 mInterestAmountDescription.setVisibility(View.GONE);
             }

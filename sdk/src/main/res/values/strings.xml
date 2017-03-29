@@ -225,7 +225,7 @@
     <string name="mpsdk_confirm_prompt_no">No</string>
 
     <!-- Review and Confirm -->
-    <string name="mpsdk_change_payment">Cambiar pago</string>
+    <string name="mpsdk_change_payment">Cambiar medio de pago</string>
     <string name="mpsdk_review_description_card">%1$s terminada en: %2$s</string>
     <string name="mpsdk_review_off_text_default">Pagarás %1$s\n%2$s</string>
     <string name="mpsdk_review_off_text">Pagarás %1$s en un\n%2$s</string>
@@ -244,6 +244,7 @@
     <string name="mpsdk_review_summary_discount">Descuento</string>
     <string name="mpsdk_review_summary_discount_with_percent_off">Descuento %1$s%%</string>
     <string name="mpsdk_review_summary_discount_with_amount_off">Descuento</string>
+    <string name="mpsdk_ryc_account_money_description">Con dinero en cuenta</string>
 
     <!-- Discount -->
     <string name="mpsdk_discount">Descuento</string>
@@ -259,6 +260,7 @@
     <string name="mpsdk_amount_doesnt_match">Importe fuera del alcance</string>
     <string name="mpsdk_campaign_expired">La campaña expiró</string>
     <string name="mpsdk_discount_percent_off">%1$s %%</string>
+    <string name="mpsdk_percent">%</string>
     <string name="mpsdk_total">Total:</string>
     <string name="mpsdk_something_went_wrong">¡Uy! Algo salió mal…</string>
 </resources>

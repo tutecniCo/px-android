@@ -28,7 +28,7 @@ import java.util.List;
  * Created by mreverter on 2/2/17.
  */
 
-public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView, ReviewAndConfirmProvider> implements ReviewSubscriber {
+public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView, ReviewAndConfirmProvider> {
     private PaymentMethod mPaymentMethod;
     private PayerCost mPayerCost;
     private BigDecimal mAmount;
@@ -82,13 +82,13 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
         setCancelMessage();
 
         Reviewable summaryReview = getSummary();
-        summaryReview.setReviewSubscriber(this);
+        summaryReview.setReviewSubscriber(getView().getReviewSubscriber());
 
         Reviewable itemsReview = getItemsReview();
-        itemsReview.setReviewSubscriber(this);
+        itemsReview.setReviewSubscriber(getView().getReviewSubscriber());
 
         Reviewable paymentMethodReview = getPaymentMethodReview();
-        paymentMethodReview.setReviewSubscriber(this);
+        paymentMethodReview.setReviewSubscriber(getView().getReviewSubscriber());
 
         List<Reviewable> customReviewables = retrieveCustomReviewables();
 
@@ -145,7 +145,7 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
         List<Reviewable> customReviewables = CustomReviewablesHandler.getInstance().getReviewables();
 
         for (Reviewable reviewable : customReviewables) {
-            reviewable.setReviewSubscriber(this);
+            reviewable.setReviewSubscriber(getView().getReviewSubscriber());
         }
 
         return customReviewables;
@@ -209,6 +209,10 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
         this.mDiscount = discount;
     }
 
+    public Discount getDiscount() {
+        return this.mDiscount;
+    }
+
     public void setPayerCost(PayerCost mPayerCost) {
         this.mPayerCost = mPayerCost;
     }
@@ -261,36 +265,17 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
         return mDiscountEnabled;
     }
 
-    @Override
-    public void changeRequired(Reviewable reviewable) {
-        if (reviewable.getReviewableCallback() != null) {
-            PaymentData paymentData = new PaymentData();
-            paymentData.setPaymentMethod(mPaymentMethod);
-            paymentData.setPayerCost(mPayerCost);
-            paymentData.setDiscount(mDiscount);
-            paymentData.setIssuer(mIssuer);
-            paymentData.setToken(mToken);
-
-            //TODO Deprecate
-            reviewable.getReviewableCallback().onChangeRequired(paymentData);
-        }
-
-        getView().cancelPayment(false);
-    }
-
-    @Override
-    public void changeRequired(Integer resultCode) {
-        PaymentData paymentData = new PaymentData();
-        paymentData.setPaymentMethod(mPaymentMethod);
-        paymentData.setPayerCost(mPayerCost);
-        paymentData.setDiscount(mDiscount);
-        paymentData.setIssuer(mIssuer);
-        paymentData.setToken(mToken);
-
-        getView().cancelPayment(resultCode, paymentData);
-    }
-
     public List<String> getReviewOrder() {
         return reviewOrder;
+    }
+
+    public PaymentData getPaymentData() {
+        PaymentData paymentData = new PaymentData();
+        paymentData.setPaymentMethod(mPaymentMethod);
+        paymentData.setIssuer(mIssuer);
+        paymentData.setToken(mToken);
+        paymentData.setPayerCost(mPayerCost);
+        paymentData.setDiscount(mDiscount);
+        return paymentData;
     }
 }

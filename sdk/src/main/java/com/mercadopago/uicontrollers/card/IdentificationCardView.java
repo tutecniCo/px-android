@@ -3,13 +3,16 @@ package com.mercadopago.uicontrollers.card;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mercadopago.R;
+import com.mercadopago.customviews.MPAutoResizeTextView;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -31,14 +34,13 @@ public class IdentificationCardView {
     //View controls
     private FrameLayout mCardContainer;
     private ImageView mCardBorder;
-    private MPTextView mCardIdentificationNumberTextView;
+    private MPAutoResizeTextView mCardIdentificationNumberTextView;
     private MPTextView mBaseIdNumberView;
 
     //Identification Info
     private String mIdentificationNumber;
     private IdentificationType mIdentificationType;
     private String mSize;
-    private MPTextView mCardBaseTextAlpha;
     private MPTextView mCardTypeId;
 
     public IdentificationCardView(Context context) {
@@ -54,10 +56,10 @@ public class IdentificationCardView {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
 
-        if(mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)){
+        if (mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
             mView = LayoutInflater.from(mContext)
                     .inflate(R.layout.mpsdk_card_identification_medium_size, parent, attachToRoot);
-        }else{
+        } else {
             mView = LayoutInflater.from(mContext)
                     .inflate(R.layout.mpsdk_card_identification, parent, attachToRoot);
         }
@@ -67,23 +69,23 @@ public class IdentificationCardView {
     }
 
     public void initializeControls() {
-        if(mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)){
-            
+
+        if (mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
+
             mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
             mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
-            mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdk_id_number);
+            mCardIdentificationNumberTextView = (MPAutoResizeTextView) mView.findViewById(R.id.mpsdk_id_number);
             mCardTypeId = (MPTextView) mView.findViewById(R.id.mpsdk_type_id);
-            
+
             transformView();
 
-        }else{
+        } else {
             mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
             mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
             mBaseIdNumberView = (MPTextView) mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
-            mCardIdentificationNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberView);
-            mCardBaseTextAlpha = (MPTextView) mView.findViewById(R.id.mpsdk_base_text_alpha);
+            mCardIdentificationNumberTextView = (MPAutoResizeTextView) mView.findViewById(R.id.mpsdkIdNumberView);
         }
-        
+
     }
 
 
@@ -94,7 +96,9 @@ public class IdentificationCardView {
             mCardTypeId.setText(mIdentification.getType());
             mIdentificationNumber = mIdentification.getNumber();
             mCardIdentificationNumberTextView.setText(mIdentificationNumber);
+            mCardIdentificationNumberTextView.setMinTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, mContext.getResources().getDisplayMetrics()));
             decorateIdentificationNumberTextView();
+            //FIXME: Si vienen más de 10 dígitos cambio el diseño. Caso Otro con 20.
         }
     }
 
@@ -108,7 +112,7 @@ public class IdentificationCardView {
     }
 
     public void draw() {
-        if(mSize==null || !mSize.equals(CardRepresentationModes.MEDIUM_SIZE)){
+        if (mSize == null || !mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
             if (mIdentificationNumber == null || mIdentificationNumber.length() == 0) {
                 mCardIdentificationNumberTextView.setVisibility(View.INVISIBLE);
                 mBaseIdNumberView.setVisibility(View.VISIBLE);

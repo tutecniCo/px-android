@@ -101,7 +101,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
     }
 
     protected void setContentView() {
-        MPTracker.getInstance().trackScreen("REJECTED", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
+        MPTracker.getInstance().trackScreen("RESULT", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
         setContentView(R.layout.mpsdk_activity_rejection);
     }
 
@@ -124,6 +124,12 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
             }
         });
 
+        mChangePaymentMethodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickRejectionOptionButton();
+            }
+        });
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
     }
 
@@ -174,10 +180,14 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
             } else {
                 mRejectionContentText.setText(mPaymentResultScreenPreference.getRejectedContentText());
             }
-            if (mPaymentResultScreenPreference.getRejectedIconSubtext() == null) {
-                setDefaultRejectedIconSubtext();
+            if (mPaymentResultScreenPreference.isRejectedIconSubtextEnabled()) {
+                if (mPaymentResultScreenPreference.getRejectedIconSubtext() == null) {
+                    setDefaultRejectedIconSubtext();
+                } else {
+                    mIconSubtext.setText(mPaymentResultScreenPreference.getRejectedIconSubtext());
+                }
             } else {
-                mIconSubtext.setText(mPaymentResultScreenPreference.getRejectedIconSubtext());
+                hideIconSubtext();
             }
             if (mPaymentResultScreenPreference.getRejectedIconName() != null) {
                 Drawable image = ContextCompat.getDrawable(this, mPaymentResultScreenPreference.getRejectedIconName());
@@ -194,14 +204,15 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
                     mPaymentResultScreenPreference.getSecondaryRejectedExitButtonTitle() == null ||
                     (mPaymentResultScreenPreference.getSecondaryRejectedExitResultCode() == null
                             && !CallbackHolder.getInstance().hasPaymentResultCallback(CallbackHolder.REJECTED_PAYMENT_RESULT_CALLBACK))) {
-                hideChangePaymentMethodButton();
                 hideSecondaryExitButton();
             } else {
-                hideChangePaymentMethodButton();
                 mSecondaryExitTextView.setText(mPaymentResultScreenPreference.getSecondaryRejectedExitButtonTitle());
                 mSecondaryExitButton.setVisibility(View.VISIBLE);
                 mSecondaryExitTextView.setVisibility(View.VISIBLE);
                 setSecondaryExitButtonListener();
+            }
+            if (!mPaymentResultScreenPreference.isRejectionRetryEnabled()) {
+                hideChangePaymentMethodButton();
             }
         }
     }
@@ -286,6 +297,10 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
 
     private void hideContentText() {
         mRejectionContentText.setVisibility(View.GONE);
+    }
+
+    private void hideIconSubtext() {
+        mIconSubtext.setVisibility(View.GONE);
     }
 
     private void hideContentTitle() {
@@ -402,7 +417,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
         mExitButton.setText(getString(R.string.mpsdk_text_cancel_payment_and_continue));
     }
 
-    public void onClickRejectionOptionButton(View view) {
+    public void onClickRejectionOptionButton() {
         if (isPaymentStatusDetailRecoverable()) {
             MPTracker.getInstance().trackEvent("REJECTION", "RECOVER_PAYMENT", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
 

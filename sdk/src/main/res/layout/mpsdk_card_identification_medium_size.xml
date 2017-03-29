@@ -82,7 +82,7 @@
                         android:paddingEnd="2dp"
                         android:paddingRight="2dp">
 
-                        <com.mercadopago.customviews.MPTextView
+                        <com.mercadopago.customviews.MPAutoResizeTextView
                             android:id="@+id/mpsdk_id_number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -1,14 +1,18 @@
 package com.mercadopago.preferences;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.callbacks.PaymentResultCallback;
+import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.model.Reviewable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vaserber on 2/13/17.
@@ -16,6 +20,7 @@ import java.util.List;
 
 public class PaymentResultScreenPreference {
 
+    private Integer titleBackgroundColor;
     private String approvedTitle;
     private String approvedSubtitle;
     private String pendingTitle;
@@ -37,19 +42,23 @@ public class PaymentResultScreenPreference {
     private boolean enablePendingSecondaryExitButton = true;
     private boolean enableRejectedSecondaryExitButton = true;
     private boolean enablePendingContentText = true;
+    private boolean enablePendingContentTitle = true;
     private boolean enableRejectedContentText = true;
     private boolean enableRejectedContentTitle = true;
+    private boolean enableRejectedIconSubtext = true;
     private boolean enableApprovedReceipt = true;
     private boolean enableApprovedAmount = true;
     private boolean enableApprovedPaymentMethodInfo = true;
-    private transient List<Reviewable> congratsReviewables;
+    private transient Map<ContentLocation, List<Reviewable>> congratsReviewables;
     private transient List<Reviewable> pendingReviewables;
 
     private Integer secondaryRejectedExitResultCode;
     private Integer secondaryCongratsExitResultCode;
     private Integer secondaryPendingExitResultCode;
+    private Boolean rejectionRetryEnabled;
 
     private PaymentResultScreenPreference(Builder builder) {
+        this.titleBackgroundColor = builder.titleBackgroundColor;
         this.approvedTitle = builder.approvedTitle;
         this.approvedSubtitle = builder.approvedSubtitle;
         this.pendingTitle = builder.pendingTitle;
@@ -71,17 +80,25 @@ public class PaymentResultScreenPreference {
         this.rejectedContentTitle = builder.rejectedContentTitle;
         this.rejectedContentText = builder.rejectedContentText;
         this.rejectedContentTitle = builder.rejectedContentTitle;
+        this.rejectionRetryEnabled = builder.rejectionRetryEnabled;
+
         this.enableCongratsSecondaryExitButton = builder.enableCongratsSecondaryExitButton;
         this.enablePendingSecondaryExitButton = builder.enablePendingSecondaryExitButton;
         this.enableRejectedSecondaryExitButton = builder.enableRejectedSecondaryExitButton;
         this.enablePendingContentText = builder.enablePendingContentText;
+        this.enablePendingContentTitle = builder.enablePendingContentTitle;
         this.enableRejectedContentText = builder.enableRejectedContentText;
         this.enableRejectedContentTitle = builder.enableRejectedContentTitle;
+        this.enableRejectedIconSubtext = builder.enableRejectedIconSubtext;
         this.enableApprovedReceipt = builder.enableApprovedReceipt;
         this.enableApprovedAmount = builder.enableApprovedAmount;
         this.enableApprovedPaymentMethodInfo = builder.enableApprovedPaymentMethodInfo;
-        this.congratsReviewables = builder.congratsReviewables;
         this.pendingReviewables = builder.pendingReviewables;
+
+        this.congratsReviewables = new HashMap<>();
+        this.congratsReviewables.put(ContentLocation.BOTTOM, builder.bottomCongratsReviewables);
+        this.congratsReviewables.put(ContentLocation.TOP, builder.topCongratsReviewables);
+
     }
 
     public boolean hasCustomCongratsReviewables() {
@@ -92,8 +109,13 @@ public class PaymentResultScreenPreference {
         return pendingReviewables != null && !pendingReviewables.isEmpty();
     }
 
+    @Deprecated
     public List<Reviewable> getCongratsReviewables() {
-        return congratsReviewables;
+        return congratsReviewables.get(ContentLocation.BOTTOM);
+    }
+
+    public List<Reviewable> getCongratsReviewables(ContentLocation location) {
+        return congratsReviewables.get(location);
     }
 
     public List<Reviewable> getPendingReviewables() {
@@ -200,6 +222,10 @@ public class PaymentResultScreenPreference {
         return this.enablePendingContentText;
     }
 
+    public boolean isPendingContentTitleEnabled() {
+        return this.enablePendingContentTitle;
+    }
+
     public boolean isRejectedContentTextEnabled() {
         return this.enableRejectedContentText;
     }
@@ -208,18 +234,8 @@ public class PaymentResultScreenPreference {
         return this.enableRejectedContentTitle;
     }
 
-    public void addCongratsReviewable(@NonNull Reviewable reviewable) {
-        if (this.congratsReviewables == null) {
-            this.congratsReviewables = new ArrayList<>();
-        }
-        this.congratsReviewables.add(reviewable);
-    }
-
-    public void addPendingReviewable(@NonNull Reviewable reviewable) {
-        if (this.pendingReviewables == null) {
-            this.pendingReviewables = new ArrayList<>();
-        }
-        this.pendingReviewables.add(reviewable);
+    public boolean isRejectedIconSubtextEnabled() {
+        return this.enableRejectedIconSubtext;
     }
 
     public Integer getSecondaryRejectedExitResultCode() {
@@ -230,8 +246,21 @@ public class PaymentResultScreenPreference {
         return secondaryPendingExitResultCode;
     }
 
+    public boolean hasTitleBackgroundColor() {
+        return titleBackgroundColor != null;
+    }
+
+    public Integer getTitleBackgroundColor() {
+        return titleBackgroundColor;
+    }
+
+    public boolean isRejectionRetryEnabled() {
+        return rejectionRetryEnabled;
+    }
+
     public static class Builder {
 
+        private Integer titleBackgroundColor;
         private String approvedTitle;
         private String approvedSubtitle;
         private String pendingTitle;
@@ -249,16 +278,20 @@ public class PaymentResultScreenPreference {
         private String rejectedIconSubtext;
         private String rejectedContentTitle;
         private String rejectedContentText;
+        private boolean rejectionRetryEnabled = true;
         private boolean enablePendingContentText = true;
+        private boolean enablePendingContentTitle = true;
         private boolean enableRejectedContentText = true;
         private boolean enableRejectedContentTitle = true;
+        private boolean enableRejectedIconSubtext = true;
         private boolean enableCongratsSecondaryExitButton = true;
         private boolean enablePendingSecondaryExitButton = true;
         private boolean enableRejectedSecondaryExitButton = true;
         private boolean enableApprovedReceipt = true;
         private boolean enableApprovedAmount = true;
         private boolean enableApprovedPaymentMethodInfo = true;
-        private List<Reviewable> congratsReviewables;
+        private List<Reviewable> topCongratsReviewables;
+        private List<Reviewable> bottomCongratsReviewables;
         private List<Reviewable> pendingReviewables;
 
         private Integer secondaryCongratsExitResultCode;
@@ -266,7 +299,8 @@ public class PaymentResultScreenPreference {
         private Integer secondaryRejectedExitResultCode;
 
         public Builder() {
-            this.congratsReviewables = new ArrayList<>();
+            this.topCongratsReviewables = new ArrayList<>();
+            this.bottomCongratsReviewables = new ArrayList<>();
             this.pendingReviewables = new ArrayList<>();
         }
 
@@ -364,6 +398,11 @@ public class PaymentResultScreenPreference {
             return this;
         }
 
+        public Builder disablePendingContentTitle() {
+            this.enablePendingContentTitle = false;
+            return this;
+        }
+
         public Builder disableRejectedContentText() {
             this.enableRejectedContentText = false;
             return this;
@@ -374,13 +413,28 @@ public class PaymentResultScreenPreference {
             return this;
         }
 
+        public Builder disableRejectedIconSubtext() {
+            this.enableRejectedIconSubtext = false;
+            return this;
+        }
+
         public Builder setPendingHeaderIcon(@DrawableRes Integer headerIcon) {
             this.pendingIcon = headerIcon;
             return this;
         }
 
         public Builder addCongratsReviewable(Reviewable customReviewable) {
-            this.congratsReviewables.add(customReviewable);
+            addCongratsReviewable(customReviewable, ContentLocation.BOTTOM);
+            return this;
+        }
+
+
+        public Builder addCongratsReviewable(Reviewable reviewable, ContentLocation location) {
+            if (ContentLocation.BOTTOM.equals(location)) {
+                this.bottomCongratsReviewables.add(reviewable);
+            } else {
+                this.topCongratsReviewables.add(reviewable);
+            }
             return this;
         }
 
@@ -431,6 +485,16 @@ public class PaymentResultScreenPreference {
 
         public Builder setRejectedIconSubtext(String text) {
             this.rejectedIconSubtext = text;
+            return this;
+        }
+
+        public Builder disableRejectionRetry() {
+            this.rejectionRetryEnabled = false;
+            return this;
+        }
+
+        public Builder setTitleBackgroundColor(@ColorInt Integer titleBackgroundColor) {
+            this.titleBackgroundColor = titleBackgroundColor;
             return this;
         }
 
