@@ -61,7 +61,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
             @Override
             public void onFailure(MercadoPagoError error) {
-                //TODO si no hay descuentos o falla, finalizar
+                getView().finishWithCancelResult();
             }
         });
     }
@@ -70,9 +70,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
         if (viewAttached()) {
 
             if (noDiscountsAvailable()) {
-                //TODO mostrar solo burbuja de agregar tarjeta
-                //TODO se puede hacer una selección automática
-//                showEmptyPaymentMethodsError();
+                getView().finishWithCancelResult();
             } else {
                 showAvailableOptions();
                 getView().hideProgress();
