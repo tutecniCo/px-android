@@ -57,7 +57,7 @@ public class PaymentMethodSearchCustomOption implements PaymentMethodSearchViewC
         int resourceId = 0;
 
         if (!TextUtils.isEmpty(mItem.getPaymentMethodId())) {
-            resourceId = MercadoPagoUtil.getPaymentMethodSearchItemIcon(mContext, mItem.getPaymentMethodId());
+            resourceId = MercadoPagoUtil.getSearchItemIcon(mContext, mItem.getPaymentMethodId());
         }
 
         if (resourceId != 0) {

@@ -42,7 +42,7 @@ public class MercadoPagoUtil {
         return resource;
     }
 
-    public static int getPaymentMethodSearchItemIcon(Context context, String itemId) {
+    public static int getSearchItemIcon(Context context, String itemId) {
         int resource;
         if (itemId != null && context != null) {
             try {

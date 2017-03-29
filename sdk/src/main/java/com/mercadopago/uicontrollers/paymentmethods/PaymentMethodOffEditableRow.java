@@ -73,7 +73,7 @@ public class PaymentMethodOffEditableRow implements PaymentMethodViewController 
         int resourceId = 0;
 
         if (mItem.isIconRecommended()) {
-            resourceId = MercadoPagoUtil.getPaymentMethodSearchItemIcon(mContext, mItem.getId());
+            resourceId = MercadoPagoUtil.getSearchItemIcon(mContext, mItem.getId());
         }
 
         if (resourceId != 0) {

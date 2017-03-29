@@ -50,11 +50,7 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
     }
 
     private void getDiscountSearch() {
-//        getView().hideDiscountSummary();
-//        getView().hideDiscountSearchSelection();
-//        getView().requestDiscountCode();
         getView().showProgress();
-
 
         getResourcesProvider().getDiscountSearch(mTransactionAmount.toString(), mPayerEmail,new OnResourcesRetrievedCallback<DiscountSearch>() {
             @Override

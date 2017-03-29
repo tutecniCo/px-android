@@ -79,7 +79,7 @@ public class PaymentMethodSearchOption implements PaymentMethodSearchViewControl
         }
 
         if (mItem.isIconRecommended()) {
-            resourceId = MercadoPagoUtil.getPaymentMethodSearchItemIcon(mContext, imageId);
+            resourceId = MercadoPagoUtil.getSearchItemIcon(mContext, imageId);
         }
 
         if (resourceId != 0) {

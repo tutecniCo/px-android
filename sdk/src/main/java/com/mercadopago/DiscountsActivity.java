@@ -190,8 +190,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mBackButtonText = (MPTextView) findViewById(R.id.mpsdkBackButtonText);
 
         setListeners();
-        //TODO agregar cuando levanto pantalla de ingreso de código
-//        fullScrollDown();
+        fullScrollDown();
         initializeToolbar();
 
         initializeDiscountOptionsRecyclerView();

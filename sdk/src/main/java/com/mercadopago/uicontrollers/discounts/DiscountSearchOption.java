@@ -1,7 +1,6 @@
 package com.mercadopago.uicontrollers.discounts;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.DiscountSearchItem;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.CurrenciesUtil;
+import com.mercadopago.util.MercadoPagoUtil;
 
 import java.math.BigDecimal;
 
@@ -61,6 +61,8 @@ public class DiscountSearchOption implements DiscountSearchViewController {
     }
 
     public void draw() {
+        int resourceId = 0;
+
         if (mItem.hasDescription()) {
             mDescription.setVisibility(View.VISIBLE);
             mDescription.setText(mItem.getDescription());
@@ -80,6 +82,14 @@ public class DiscountSearchOption implements DiscountSearchViewController {
 
             mComment.setText(spannedDiscountText);
             mComment.setTextColor(mContext.getResources().getColor(R.color.mpsdk_color_payer_costs_no_rate));
+        }
+
+        resourceId = MercadoPagoUtil.getSearchItemIcon(mContext, mItem.getId().toString());
+
+        if (resourceId != 0) {
+            mIcon.setImageResource(resourceId);
+        } else {
+            mIcon.setVisibility(View.GONE);
         }
     }
 

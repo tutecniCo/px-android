@@ -165,11 +165,11 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setSite(Sites.ARGENTINA)
 //                .addExcludedPaymentType(PaymentTypes.ATM)
 //                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
-                .addExcludedPaymentType(PaymentTypes.CREDIT_CARD)
+//                .addExcludedPaymentType(PaymentTypes.CREDIT_CARD)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
 //                .addExcludedPaymentType(PaymentTypes.TICKET)
-                .enableAccountMoney()
-                .setPayerAccessToken("TEST-7176766875549918-111008-fa5660d2d0aa37532716eb2bf2f9089b__LB_LC__-192992930")
+//                .enableAccountMoney()
+//                .setPayerAccessToken("TEST-7176766875549918-111008-fa5660d2d0aa37532716eb2bf2f9089b__LB_LC__-192992930")
                 .build();
 
         mCheckoutPreference.setId("236387490-8cc00347-60c4-4524-b9bf-ff6c14126551");
