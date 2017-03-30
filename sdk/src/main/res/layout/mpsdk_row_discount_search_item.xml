@@ -20,11 +20,11 @@
                 android:adjustViewBounds= "true"
                 android:id="@+id/mpsdkImage"
                 android:padding="16dp"
-                android:maxWidth="80dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                tools:src="@drawable/mpsdk_bapropagos"/>
+                tools:src="@drawable/mpsdk_83"/>
         </FrameLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="3"
-                tools:text="Transferencia por Red Link"
+                tools:text="Club La Nación"
                 android:textSize="16dp"
                 android:textColor="@color/mpsdk_form_text"/>
 
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
-                tools:text="Hola, soy un comentario"
+                tools:text="Descuento $ 120"
                 android:gravity="center"
                 style="@style/mpsdk_list_label_comment"/>
         </LinearLayout>

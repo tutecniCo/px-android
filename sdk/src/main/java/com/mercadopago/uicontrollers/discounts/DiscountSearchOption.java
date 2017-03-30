@@ -5,7 +5,9 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
@@ -42,7 +44,7 @@ public class DiscountSearchOption implements DiscountSearchViewController {
 
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-                .inflate(R.layout.mpsdk_row_pm_search_item, parent, attachToRoot);
+                .inflate(R.layout.mpsdk_row_discount_search_item, parent, attachToRoot);
         if (mListener != null) {
             mView.setOnClickListener(mListener);
         }
