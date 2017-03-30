@@ -57,7 +57,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     private void startMercadoPagoCheckout() {
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
+                //.disableReviewAndConfirmScreen()
                 .disableDiscount()
                 .disableBankDeals()
                 .disableInstallmentsReviewScreen()
@@ -68,48 +68,21 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
                 .setFlowPreference(flowPreference)
-                .startForPaymentData();
-    }
-
-    private void startRyC(PaymentData paymentData) {
-
-        CellphoneReview cellphoneReview = new CellphoneReview(this, "15111111");
-
-        ReviewScreenPreference reviewScreenPreference = new ReviewScreenPreference.Builder()
-                .setTitle("Confirma tu recarga")
-                .setConfirmText("Recargar")
-                .setCancelText("Ir a Actividad")
-                .setProductDetail("Recarga de celular")
-                .addReviewable(cellphoneReview)
-                .build();
-
-        FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
-                .disableBankDeals()
-                .disableDiscount()
-                .disableInstallmentsReviewScreen()
-                .build();
-
-        new MercadoPagoCheckout.Builder()
-                .setActivity(this)
-                .setReviewScreenPreference(reviewScreenPreference)
-                .setPublicKey(mPublicKey)
-                .setCheckoutPreference(getCheckoutPreference())
-                .setFlowPreference(flowPreference)
-                .setPaymentData(paymentData)
-                .startForPaymentData();
+//                .startForPaymentData();
+                .startForPayment();
     }
 
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference.Builder()
                 .addItem(new Item("Item", BigDecimal.TEN.multiply(BigDecimal.TEN)))
-                .setSite(Sites.ARGENTINA)
-                .addExcludedPaymentType(PaymentTypes.ATM)
+                .setSite(Sites.COLOMBIA)
+                /*.addExcludedPaymentType(PaymentTypes.ATM)
                 .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
                 .addExcludedPaymentType(PaymentTypes.TICKET)
                 .enableAccountMoney()
-                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")
+                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")*/
+                .setId("242624092-e0d12cfe-779b-4b85-b3b5-2243b45334c3")
                 .build();
     }
 
@@ -128,7 +101,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
         PaymentResult paymentResult = new PaymentResult.Builder()
                 .setPaymentData(paymentData)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+                .setPaymentStatus(Payment.StatusCodes.STATUS_PENDING)
+                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_PENDING_WAITING_PAYMENT)
 //                .setPaymentStatus(Payment.StatusCodes.STATUS_PENDING)
 //                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
 //                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER)
@@ -160,12 +134,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 PaymentData paymentData = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentData"), PaymentData.class);
                 Boolean paymentMethodChanged = data.getBooleanExtra("paymentMethodChanged", false);
                 Toast.makeText(mActivity, getSuccessMessage(paymentData, paymentMethodChanged), Toast.LENGTH_SHORT).show();
-                if(!mAlreadyStartedRyC || paymentMethodChanged) {
-                    mAlreadyStartedRyC = true;
-                    startRyC(paymentData);
-                } else {
-                    startWithPaymentResult(paymentData);
-                }
+                startWithPaymentResult(paymentData);
 
 
             } else if (resultCode == RESULT_CANCELED) {

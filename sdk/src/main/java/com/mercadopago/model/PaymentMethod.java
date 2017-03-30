@@ -96,6 +96,18 @@ public class PaymentMethod {
         return isAdditionalInfoNeeded("cardholder_identification_number");
     }
 
+    public boolean isIdentificationTypeOffRequired() {
+        return isAdditionalInfoNeeded("off_identification_type");
+    }
+
+    public boolean isIdentificationNumberOffRequired() {
+        return isAdditionalInfoNeeded("off_identification_number");
+    }
+
+    public boolean isIdentificationOffRequired(){
+        return isIdentificationNumberOffRequired() && isIdentificationTypeOffRequired();
+    }
+
     public boolean isEntityTypeRequired(){
         return isAdditionalInfoNeeded("entity_type");
     }
@@ -178,7 +190,7 @@ public class PaymentMethod {
     }
 
     public boolean isAdditionalInfoNeeded() {
-        return ((additionalInfoNeeded != null) && (additionalInfoNeeded.size() > 0)) || isFinancialInstitutionsRequired();
+        return isIdentificationOffRequired() || isFinancialInstitutionsRequired() || isEntityTypeRequired();
     }
 
     public boolean isOnPaymentMethod() {

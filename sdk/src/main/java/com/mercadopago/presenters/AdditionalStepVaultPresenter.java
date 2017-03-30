@@ -69,7 +69,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     }
 
     private boolean isIdentificationRequired() {
-        return mPaymentMethod.isIdentificationNumberRequired() && mPaymentMethod.isIdentificationTypeRequired();
+        return mPaymentMethod.isIdentificationOffRequired();
     }
 
 

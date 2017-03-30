@@ -1607,10 +1607,10 @@ public class MercadoPagoComponents {
                 if (this.site == null)
                     throw new IllegalStateException("site is null");
 
-                startPaymentResultActivity();
+                startInstructionsActivity();
             }
 
-            private void startPaymentResultActivity() {
+            private void startInstructionsActivity() {
                 Intent instructionIntent = new Intent(activity, InstructionsActivity.class);
                 instructionIntent.putExtra("merchantPublicKey", merchantPublicKey);
                 instructionIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));

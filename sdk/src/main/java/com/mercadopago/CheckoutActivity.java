@@ -423,6 +423,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void startFlow() {
+        //TODO chequear como agregar los datos de PSE para wallet
         if (mPaymentDataInput != null) {
             mSelectedIssuer = mPaymentDataInput.getIssuer();
             mSelectedPayerCost = mPaymentDataInput.getPayerCost();
@@ -588,13 +589,13 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             FinancialInstitution financialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
             String entityType = data.getStringExtra("entityType");
 
-            if(identification!= null){
+            if (identification != null) {
                 mPayer.setIdentification(identification);
             }
-            if(entityType!= null && !entityType.equals("")){
+            if (entityType != null && !entityType.equals("")) {
                 mPayer.setEntityType(entityType);
             }
-            if(financialInstitution!= null){
+            if (financialInstitution != null) {
                 mTransactionDetails = new TransactionDetails();
                 mTransactionDetails.setFinancialInstitution(financialInstitution.getId().toString());
             }
@@ -653,7 +654,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         paymentData.setToken(mCreatedToken);
         paymentData.setPayerCost(mSelectedPayerCost);
         paymentData.setDiscount(mDiscount);
-        //TODO setear los datos que faltan de mPayer y transactionDetails
         paymentData.setPayer(mPayer);
         paymentData.setTransactionDetails(mTransactionDetails);
         boolean hasToFinishActivity = false;
@@ -802,8 +802,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
                 if (nextAction.equals(PaymentResultAction.SELECT_OTHER_PAYMENT_METHOD)) {
                     startPaymentVaultActivity();
                     overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
-                }
-                else if (nextAction.equals(PaymentResultAction.RECOVER_PAYMENT)) {
+                } else if (nextAction.equals(PaymentResultAction.RECOVER_PAYMENT)) {
                     createPaymentRecovery();
                     startCardVaultActivity();
                 }
@@ -1043,7 +1042,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         paymentData.setIssuer(mSelectedIssuer);
         paymentData.setDiscount(mDiscount);
         paymentData.setToken(mCreatedToken);
-        //TODO setear los datos que faltan de mPayer y transactionDetails
         paymentData.setPayer(mPayer);
         paymentData.setTransactionDetails(mTransactionDetails);
         return paymentData;
@@ -1055,8 +1053,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         paymentIntent.setPublicKey(mMerchantPublicKey);
         paymentIntent.setPaymentMethodId(paymentData.getPaymentMethod().getId());
         paymentIntent.setBinaryMode(mBinaryModeEnabled);
-        //FIXME usar mPayer
-//        Payer payer = mCheckoutPreference.getPayer();
+
         Payer payer = mPayer;
         if (!TextUtils.isEmpty(mCustomerId) && MercadoPagoUtil.isCard(paymentData.getPaymentMethod().getPaymentTypeId())) {
             payer.setId(mCustomerId);
@@ -1073,8 +1070,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (paymentData.getIssuer() != null) {
             paymentIntent.setIssuerId(paymentData.getIssuer().getId());
         }
-        //TODO setear a PaymentBody los datos que faltan de mPayer y transactionDetails
-        if(paymentData.getTransactionDetails() != null){
+        if (paymentData.getTransactionDetails() != null) {
             paymentIntent.setTransactionDetails(paymentData.getTransactionDetails());
         }
 
