@@ -39,9 +39,18 @@
     <string name="mpsdk_entity_types_title">Which is your entity\'s type?</string>
 
     <string-array name="entity_types_default_array">
-        <item>Natural</item>
-        <item>Legal</item>
+        <item>@string/entity_type_individual</item>
+        <item>@string/entity_type_association</item>
     </string-array>
+
+    <string-array name="entity_types_mco_array">
+        <item>@string/entity_type_individual</item>
+        <item>@string/entity_type_association</item>
+    </string-array>
+
+
+    <string name="entity_type_individual">Individual</string>
+    <string name="entity_type_association">Association</string>
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">Which is your bank?</string>

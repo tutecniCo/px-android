@@ -40,20 +40,17 @@
     <string name="mpsdk_entity_types_title">¿Cuál es el tipo de persona?</string>
 
     <string-array name="entity_types_default_array">
-        <item>Natural</item>
-        <item>Jurídica</item>
+        <item>@string/entity_type_individual</item>
+        <item>@string/entity_type_association</item>
     </string-array>
 
     <string-array name="entity_types_mco_array">
-        <item>Natural</item>
-        <item>Jurídica</item>
+        <item>@string/entity_type_individual</item>
+        <item>@string/entity_type_association</item>
     </string-array>
 
-    <string-array name="entity_types_mlb_array">
-        <item>Física</item>
-        <item>Jurídica</item>
-    </string-array>
-
+    <string name="entity_type_individual">Natural</string>
+    <string name="entity_type_association">Jurídica</string>
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">¿Cuál es tu banco?</string>

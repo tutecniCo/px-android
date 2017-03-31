@@ -12,6 +12,7 @@ import com.mercadopago.model.Site;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.AdditionalStepVaultPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
+import com.mercadopago.util.EntityTypesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.views.AdditionalStepVaultActivityView;
@@ -180,10 +181,12 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     @Override
     public void finishWithResult() {
 
+        String entityType = EntityTypesUtil.convertForPayment(mSelectedEntityType,this);
+
         Intent returnIntent = new Intent();
         returnIntent.putExtra("identification", JsonUtil.getInstance().toJson(mSelectedIdentification));
         returnIntent.putExtra("financialInstitution", JsonUtil.getInstance().toJson(mSelectedFinancialInstitution));
-        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(mSelectedEntityType));
+        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(entityType));
 
 
         setResult(RESULT_OK, returnIntent);
