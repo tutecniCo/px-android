@@ -173,6 +173,8 @@ public class DiscountsPresenter extends MvpPresenter<DiscountsActivityView, Disc
 
     private void getCodeDiscount(final String discountCode) {
         if (mDiscount != null && mDiscount.getCouponCode().equals(discountCode)) {
+            getView().setSoftInputModeSummary();
+            getView().hideKeyboard();
             getView().drawSummary();
         } else {
             getView().showCodeInputError(getResourcesProvider().getInvalidDiscountCodeErrorMessage());

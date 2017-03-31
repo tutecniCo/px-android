@@ -387,7 +387,6 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     @Override
     public void requestDiscountCode() {
         MPTracker.getInstance().trackScreen("DISCOUNT_INPUT_CODE", "2", mPresenter.getPublicKey(), BuildConfig.VERSION_NAME, this);
-
         mReviewDiscountSummaryContainer.setVisibility(View.GONE);
         mDiscountSearchSelection.setVisibility(View.GONE);
         mDiscountCodeContainer.setVisibility(View.VISIBLE);
