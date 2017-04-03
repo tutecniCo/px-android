@@ -261,9 +261,15 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
             @Override
             public void onClick(View view) {
                 if (mPresenter.getDiscount() == null) {
-                    onBackPressed();
+                        onBackPressed();
                 } else {
-                    finishWithResult();
+                    if (mRequestDiscountCode.getVisibility() == View.VISIBLE) {
+                        mDiscountSearchItems.setVisibility(View.VISIBLE);
+                        mDiscountSearchSelection.setVisibility(View.VISIBLE);
+                        mRequestDiscountCode.setVisibility(View.GONE);
+                    } else {
+                        finishWithResult();
+                    }
                 }
             }
         });
@@ -319,7 +325,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     public void drawSummary() {
         MPTracker.getInstance().trackScreen("DISCOUNT_SUMMARY", "2", mPresenter.getPublicKey(), BuildConfig.VERSION_NAME, this);
 
-        mDiscountCodeContainer.setVisibility(View.GONE);
+        mDiscountSearchSelection.setVisibility(View.GONE);
         mReviewDiscountSummaryContainer.setVisibility(View.VISIBLE);
 
         showSummaryTitle();
@@ -391,13 +397,11 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     @Override
     public void requestDiscountCode() {
         MPTracker.getInstance().trackScreen("DISCOUNT_INPUT_CODE", "2", mPresenter.getPublicKey(), BuildConfig.VERSION_NAME, this);
-//        mReviewDiscountSummaryContainer.setVisibility(View.GONE);
-//        mDiscountSearchSelection.setVisibility(View.GONE);
 
+        mReviewDiscountSummaryContainer.setVisibility(View.GONE);
         mDiscountSearchItems.setVisibility(View.GONE);
-
+        mDiscountSearchSelection.setVisibility(View.VISIBLE);
         mRequestDiscountCode.setVisibility(View.VISIBLE);
-//        mDiscountCodeContainer.setVisibility(View.VISIBLE);
 
         decorateDiscountCodeContainer();
         fullScrollDown();

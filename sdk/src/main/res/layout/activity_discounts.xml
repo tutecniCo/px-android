@@ -22,8 +22,6 @@
 
             <include layout="@layout/mpsdk_discount_search_selection"/>
 
-            <!--<include layout="@layout/mpsdk_discount_code_input"/>-->
-
             <include layout="@layout/mpsdk_review_discount_summary"/>
 
         </LinearLayout>
