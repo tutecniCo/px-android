@@ -80,6 +80,8 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected LinearLayout mDiscountCodeContainer;
     protected LinearLayout mDiscountLinearLayout;
     protected LinearLayout mDiscountSearchSelection;
+    protected LinearLayout mRequestDiscountCode;
+    protected LinearLayout mDiscountSearchItems;
     protected MPTextView mReviewSummaryTitle;
     protected MPTextView mReviewSummaryProductAmount;
     protected MPTextView mReviewSummaryDiscountAmount;
@@ -165,6 +167,8 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mConfirmDiscountButton = (FrameLayout) findViewById(R.id.mpsdkConfirmDiscountButton);
         mDiscountCodeContainer = (LinearLayout) findViewById(R.id.mpsdkDiscountCodeContainer);
         mDiscountSearchSelection = (LinearLayout) findViewById(R.id.mpsdkDiscountSearchSelection);
+        mRequestDiscountCode = (LinearLayout) findViewById(R.id.mpsdkRequestDiscountCode);
+        mDiscountSearchItems = (LinearLayout) findViewById(R.id.mpsdkDiscountSearchItems);
         mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
         mConfirmDiscountButtonText = (MPTextView) findViewById(R.id.mpsdkConfirmDiscountButtonText);
@@ -387,9 +391,13 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     @Override
     public void requestDiscountCode() {
         MPTracker.getInstance().trackScreen("DISCOUNT_INPUT_CODE", "2", mPresenter.getPublicKey(), BuildConfig.VERSION_NAME, this);
-        mReviewDiscountSummaryContainer.setVisibility(View.GONE);
-        mDiscountSearchSelection.setVisibility(View.GONE);
-        mDiscountCodeContainer.setVisibility(View.VISIBLE);
+//        mReviewDiscountSummaryContainer.setVisibility(View.GONE);
+//        mDiscountSearchSelection.setVisibility(View.GONE);
+
+        mDiscountSearchItems.setVisibility(View.GONE);
+
+        mRequestDiscountCode.setVisibility(View.VISIBLE);
+//        mDiscountCodeContainer.setVisibility(View.VISIBLE);
 
         decorateDiscountCodeContainer();
         fullScrollDown();

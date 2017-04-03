@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <ScrollView
         android:id="@+id/mpsdkScrollViewContainer"
@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/mpsdk_background_blue"
+                android:layout_gravity="top"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
 
                 <com.mercadopago.customviews.MPTextView
