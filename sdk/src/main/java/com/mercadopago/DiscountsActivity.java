@@ -264,6 +264,9 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
                         onBackPressed();
                 } else {
                     if (mRequestDiscountCode.getVisibility() == View.VISIBLE) {
+                        setSoftInputModeSummary();
+                        hideKeyboard();
+
                         mDiscountSearchItems.setVisibility(View.VISIBLE);
                         mDiscountSearchSelection.setVisibility(View.VISIBLE);
                         mRequestDiscountCode.setVisibility(View.GONE);
