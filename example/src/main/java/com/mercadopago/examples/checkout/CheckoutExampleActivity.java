@@ -68,28 +68,65 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
                 .setFlowPreference(flowPreference)
-//                .startForPaymentData();
-                .startForPayment();
+//                .startForPayment();
+                .startForPaymentData();
+    }
+
+    private void startRyC(PaymentData paymentData) {
+
+        CellphoneReview cellphoneReview = new CellphoneReview(this, "15111111");
+
+        ReviewScreenPreference reviewScreenPreference = new ReviewScreenPreference.Builder()
+                .setTitle("Confirma tu recarga")
+                .setConfirmText("Recargar")
+                .setCancelText("Ir a Actividad")
+                .setProductDetail("Recarga de celular")
+                .addReviewable(cellphoneReview)
+                .build();
+
+        FlowPreference flowPreference = new FlowPreference.Builder()
+                .disableReviewAndConfirmScreen()
+                .disableBankDeals()
+                .disableDiscount()
+                .disableInstallmentsReviewScreen()
+                .build();
+
+//        Map<String, String> additionalInfo = new HashMap<>();
+//        additionalInfo.put("merchant_access_token", ExamplesUtils.DUMMY_MERCHANT_ACCESS_TOKEN);
+//        ServicePreference servicePreference = new ServicePreference.Builder()
+//                .setGetCustomerURL(ExamplesUtils.DUMMY_MERCHANT_BASE_URL, ExamplesUtils.DUMMY_MERCHANT_GET_CUSTOMER_URI, additionalInfo)
+//                .build();
+
+        new MercadoPagoCheckout.Builder()
+                .setActivity(this)
+                .setReviewScreenPreference(reviewScreenPreference)
+                .setPublicKey(mPublicKey)
+                .setCheckoutPreference(getCheckoutPreference())
+//                .setServicePreference(servicePreference)
+                .setFlowPreference(flowPreference)
+                .setPaymentData(paymentData)
+                .startForPaymentData();
     }
 
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference.Builder()
                 .addItem(new Item("Item", BigDecimal.TEN.multiply(BigDecimal.TEN)))
-                .setSite(Sites.COLOMBIA)
-                /*.addExcludedPaymentType(PaymentTypes.ATM)
-                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
+                .setSite(Sites.ARGENTINA)
+//                .addExcludedPaymentType(PaymentTypes.ATM)
+//                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
-                .addExcludedPaymentType(PaymentTypes.TICKET)
-                .enableAccountMoney()
-                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")*/
-                .setId("242624092-e0d12cfe-779b-4b85-b3b5-2243b45334c3")
+//                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
+//                .addExcludedPaymentType(PaymentTypes.TICKET)
+//                .enableAccountMoney()
+//                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")
+
                 .build();
     }
 
     private String getSuccessMessage(PaymentData paymentData, boolean paymentMethodChanged) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Success! " + paymentData.getPaymentMethod().getId() + " selected. ");
-        if(paymentMethodChanged) {
+        if (paymentMethodChanged) {
             stringBuilder.append("And it has changed!");
         }
         return stringBuilder.toString();
@@ -134,7 +171,14 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 PaymentData paymentData = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentData"), PaymentData.class);
                 Boolean paymentMethodChanged = data.getBooleanExtra("paymentMethodChanged", false);
                 Toast.makeText(mActivity, getSuccessMessage(paymentData, paymentMethodChanged), Toast.LENGTH_SHORT).show();
-                startWithPaymentResult(paymentData);
+
+                if (!mAlreadyStartedRyC || paymentMethodChanged) {
+                    mAlreadyStartedRyC = true;
+                    startRyC(paymentData);
+                } else {
+                    startWithPaymentResult(paymentData);
+                }
+
 
 
             } else if (resultCode == RESULT_CANCELED) {

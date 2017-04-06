@@ -577,9 +577,8 @@ public class ReviewAndConfirmPresenterTest {
         }
 
         @Override
-        public Reviewable getItemsReviewable(String currency, List<Item> items) {
-            itemsReviewable = new ItemsMockedReviewable();
-            return itemsReviewable;
+        public Reviewable getItemsReviewable(String currency, List<Item> items, DecorationPreference decorationPreference) {
+            return new ItemsMockedReviewable();
         }
 
         @Override
@@ -587,9 +586,9 @@ public class ReviewAndConfirmPresenterTest {
             paymentMethodOnReviewable = new PaymentMethodMockedReviewable(reviewChange);
             return paymentMethodOnReviewable;
         }
-
+        
         @Override
-        public Reviewable getPaymentMethodOffReviewable(PaymentMethod paymentMethod, String extraPaymentMethodInfo, BigDecimal amount, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange reviewChange) {
+        public Reviewable getPaymentMethodOffReviewable(PaymentMethod paymentMethod, String paymentMethodCommentInfo, String paymentMethodDescriptionInfo, BigDecimal amount, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange reviewChange) {
             paymentMethodOffReviewable = new PaymentMethodMockedReviewable(reviewChange);
             return paymentMethodOffReviewable;
         }

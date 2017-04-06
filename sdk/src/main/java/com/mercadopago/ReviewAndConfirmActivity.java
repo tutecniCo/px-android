@@ -139,7 +139,8 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         PayerCost payerCost = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("payerCost"), PayerCost.class);
         Token token = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("token"), Token.class);
         PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
-        String extraPaymentMethodInfo = getIntent().getStringExtra("extraPaymentMethodInfo");
+        String paymentMethodCommentInfo = getIntent().getStringExtra("paymentMethodCommentInfo");
+        String paymentMethodDescriptionInfo = getIntent().getStringExtra("paymentMethodDescriptionInfo");
         Site site = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("site"), Site.class);
         List<Item> items;
         try {
@@ -158,7 +159,8 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         mPresenter.setPayerCost(payerCost);
         mPresenter.setToken(token);
         mPresenter.setPaymentMethod(paymentMethod);
-        mPresenter.setExtraPaymentMethodInfo(extraPaymentMethodInfo);
+        mPresenter.setPaymentMethodCommentInfo(paymentMethodCommentInfo);
+        mPresenter.setPaymentMethodDescriptionInfo(paymentMethodDescriptionInfo);
         mPresenter.setEditionEnabled(editionEnabled);
         mPresenter.setDecorationPreference(mDecorationPreference);
         mPresenter.setTermsAndConditionsEnabled(termsAndConditionsEnabled);

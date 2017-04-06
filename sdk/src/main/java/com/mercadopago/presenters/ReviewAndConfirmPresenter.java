@@ -10,7 +10,6 @@ import com.mercadopago.model.Item;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.model.ReviewSubscriber;
 import com.mercadopago.model.Reviewable;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
@@ -37,7 +36,8 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
     private Token mToken;
     private Site mSite;
     private List<Item> mItems;
-    private String mExtraPaymentMethodInfo;
+    private String mPaymentMethodCommentInfo;
+    private String mPaymentMethodDescriptionInfo;
     private DecorationPreference mDecorationPreference;
     private Boolean mEditionEnabled;
     private Boolean mDiscountEnabled;
@@ -162,7 +162,7 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
     }
 
     private Reviewable getItemsReview() {
-        Reviewable itemsReview = getResourcesProvider().getItemsReviewable(mSite.getCurrencyId(), mItems);
+        Reviewable itemsReview = getResourcesProvider().getItemsReviewable(mSite.getCurrencyId(), mItems, mDecorationPreference);
         return itemsReview;
     }
 
@@ -183,7 +183,7 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
         } else {
             finalAmount = mAmount.subtract(mDiscount.getCouponAmount());
         }
-        return getResourcesProvider().getPaymentMethodOffReviewable(mPaymentMethod, mExtraPaymentMethodInfo, finalAmount, mSite, mDecorationPreference, mEditionEnabled, new OnReviewChange() {
+        return getResourcesProvider().getPaymentMethodOffReviewable(mPaymentMethod, mPaymentMethodCommentInfo, mPaymentMethodDescriptionInfo, finalAmount, mSite, mDecorationPreference, mEditionEnabled, new OnReviewChange() {
             @Override
             public void onChangeSelected() {
                 getView().changePaymentMethod();
@@ -237,8 +237,12 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
         this.mItems = items;
     }
 
-    public void setExtraPaymentMethodInfo(String extraPaymentMethodInfo) {
-        this.mExtraPaymentMethodInfo = extraPaymentMethodInfo;
+    public void setPaymentMethodCommentInfo(String paymentMethodCommentInfo) {
+        this.mPaymentMethodCommentInfo = paymentMethodCommentInfo;
+    }
+
+    public void setPaymentMethodDescriptionInfo(String paymentMethodDescriptionInfo) {
+        this.mPaymentMethodDescriptionInfo = paymentMethodDescriptionInfo;
     }
 
     public void setDecorationPreference(DecorationPreference decorationPreference) {

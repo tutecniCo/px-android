@@ -443,7 +443,8 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
 
             finishWithCardResult();
         } else {
-            MPTracker.getInstance().trackEvent(PAYMENT_VAULT_SCREEN_NAME, "CANCELED", "2", mPublicKey, mPaymentVaultPresenter.getSite().getId(), BuildConfig.VERSION_NAME, this);
+            String siteId = mPaymentVaultPresenter.getSite() == null ? "" : mPaymentVaultPresenter.getSite().getId();
+            MPTracker.getInstance().trackEvent(PAYMENT_VAULT_SCREEN_NAME, "CANCELED", "2", mPublicKey, siteId, BuildConfig.VERSION_NAME, this);
             if (shouldFinishOnBack(data)) {
                 setResult(Activity.RESULT_CANCELED, data);
                 this.finish();
@@ -541,7 +542,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     }
 
     @Override
-    public void startCardFlow(String paymentType, BigDecimal amount) {
+    public void startCardFlow(String paymentType, BigDecimal amount, Boolean automaticSelection) {
         PaymentPreference paymentPreference = mPaymentVaultPresenter.getPaymentPreference();
         paymentPreference.setDefaultPaymentTypeId(paymentType);
 
@@ -556,6 +557,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setInstallmentsEnabled(mInstallmentsEnabled)
                 .setPayerEmail(mPaymentVaultPresenter.getPayerEmail())
                 .setDiscount(mPaymentVaultPresenter.getDiscount())
+                .setAutomaticSelection(automaticSelection)
                 .setDiscountEnabled(mPaymentVaultPresenter.getDiscountEnabled())
                 .setDirectDiscountEnabled(mPaymentVaultPresenter.getDirectDiscountEnabled())
                 .setInstallmentsReviewEnabled(mPaymentVaultPresenter.getInstallmentsReviewEnabled())

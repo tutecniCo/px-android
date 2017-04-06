@@ -7,6 +7,7 @@ import com.mercadopago.callbacks.OnConfirmPaymentCallback;
 import com.mercadopago.callbacks.OnReviewChange;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.core.MercadoPagoUI;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Item;
@@ -66,16 +67,13 @@ public class ReviewAndConfirmProviderImpl implements ReviewAndConfirmProvider {
     }
 
     @Override
-    public Reviewable getItemsReviewable(String currency, List<Item> items) {
-        if(CustomReviewablesHandler.getInstance().hasCustomItemsReviewable()) {
-            return CustomReviewablesHandler.getInstance().getItemsReviewable();
-        } else {
-            return new MercadoPagoComponents.Views.ReviewItemsViewBuilder()
-                    .setContext(context)
-                    .setCurrencyId(currency)
-                    .addItems(items)
-                    .build();
-        }
+    public Reviewable getItemsReviewable(String currency, List<Item> items, DecorationPreference decorationPreference) {
+        return new MercadoPagoComponents.Views.ReviewItemsViewBuilder()
+                .setContext(context)
+                .setCurrencyId(currency)
+                .addItems(items)
+                .setDecorationPreference(decorationPreference)
+                .build();
     }
 
     @Override
@@ -93,11 +91,12 @@ public class ReviewAndConfirmProviderImpl implements ReviewAndConfirmProvider {
     }
 
     @Override
-    public Reviewable getPaymentMethodOffReviewable(PaymentMethod paymentMethod, String extraPaymentMethodInfo, BigDecimal amount, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange onReviewChange) {
+    public Reviewable getPaymentMethodOffReviewable(PaymentMethod paymentMethod, String paymentMethodCommentInfo, String paymentMethodDescriptionInfo, BigDecimal amount, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange onReviewChange) {
         return new MercadoPagoComponents.Views.ReviewPaymentMethodOffBuilder()
                 .setContext(context)
                 .setPaymentMethod(paymentMethod)
-                .setExtraPaymentMethodInfo(extraPaymentMethodInfo)
+                .setPaymentMethodCommentInfo(paymentMethodCommentInfo)
+                .setPaymentMethodDescriptionInfo(paymentMethodDescriptionInfo)
                 .setAmount(amount)
                 .setSite(site)
                 .setDecorationPreference(decorationPreference)

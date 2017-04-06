@@ -250,7 +250,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.merchantPublicKey == null && this.payerAccessToken == null) throw new IllegalStateException("key is null");
+                if (this.merchantPublicKey == null && this.payerAccessToken == null)
+                    throw new IllegalStateException("key is null");
                 startPaymentVaultActivity();
             }
 
@@ -298,7 +299,8 @@ public class MercadoPagoComponents {
             private BigDecimal amount;
             private Site site;
             private Boolean editionEnabled;
-            private String extraPaymentMethodInfo;
+            private String paymentMethodCommentInfo;
+            private String paymentMethodDescriptionInfo;
             private List<Item> items;
             private Discount discount;
             private Token token;
@@ -348,8 +350,13 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public ReviewAndConfirmBuilder setExtraPaymentMethodInfo(String extraPaymentMethodInfo) {
-                this.extraPaymentMethodInfo = extraPaymentMethodInfo;
+            public ReviewAndConfirmBuilder setPaymentMethodCommentInfo(String paymentMethodCommentInfo) {
+                this.paymentMethodCommentInfo = paymentMethodCommentInfo;
+                return this;
+            }
+
+            public ReviewAndConfirmBuilder setPaymentMethodDescriptionInfo(String paymentMethodDescriptionInfo) {
+                this.paymentMethodDescriptionInfo = paymentMethodDescriptionInfo;
                 return this;
             }
 
@@ -406,7 +413,8 @@ public class MercadoPagoComponents {
                 intent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
                 intent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
                 intent.putExtra("token", JsonUtil.getInstance().toJson(token));
-                intent.putExtra("extraPaymentMethodInfo", extraPaymentMethodInfo);
+                intent.putExtra("paymentMethodCommentInfo", paymentMethodCommentInfo);
+                intent.putExtra("paymentMethodDescriptionInfo", paymentMethodDescriptionInfo);
                 intent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
                 intent.putExtra("items", new Gson().toJson(items));
                 intent.putExtra("termsAndConditionsEnabled", termsAndConditionsEnabled);
@@ -506,6 +514,7 @@ public class MercadoPagoComponents {
             private boolean discountEnabled;
             private boolean directDiscountEnabled;
             private boolean installmentsReviewEnabled;
+            private boolean automaticSelection;
             private String payerEmail;
             private String payerAccessToken;
 
@@ -595,6 +604,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public CardVaultActivityBuilder setAutomaticSelection(Boolean automaticSelection) {
+                this.automaticSelection = automaticSelection;
+                return this;
+            }
+
             public void startActivity() {
 
                 if (this.activity == null) throw new IllegalStateException("activity is null");
@@ -643,6 +657,8 @@ public class MercadoPagoComponents {
 
                 cardVaultIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
 
+                cardVaultIntent.putExtra("automaticSelection", automaticSelection);
+
                 activity.startActivityForResult(cardVaultIntent, CARD_VAULT_REQUEST_CODE);
             }
         }
@@ -663,6 +679,7 @@ public class MercadoPagoComponents {
             private Discount discount;
             private Boolean discountEnabled;
             private Boolean directDiscountEnabled;
+            private Boolean showDiscount;
             private String payerAccessToken;
 
             public GuessingCardActivityBuilder setActivity(Activity activity) {
@@ -745,6 +762,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public GuessingCardActivityBuilder setShowDiscount(Boolean showDiscount) {
+                this.showDiscount = showDiscount;
+                return this;
+            }
+
             public void startActivity() {
 
                 if (this.activity == null) throw new IllegalStateException("activity is null");
@@ -780,7 +802,7 @@ public class MercadoPagoComponents {
 
                 guessingCardIntent.putExtra("card", JsonUtil.getInstance().toJson(card));
 
-                if(amount != null) {
+                if (amount != null) {
                     guessingCardIntent.putExtra("amount", amount.toString());
                 }
 
@@ -793,6 +815,8 @@ public class MercadoPagoComponents {
                 guessingCardIntent.putExtra("discountEnabled", discountEnabled);
 
                 guessingCardIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
+
+                guessingCardIntent.putExtra("showDiscount", showDiscount);
 
                 activity.startActivityForResult(guessingCardIntent, GUESSING_CARD_REQUEST_CODE);
             }
@@ -1328,7 +1352,8 @@ public class MercadoPagoComponents {
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.merchantPublicKey == null) throw new IllegalStateException("key is null");
-                if (this.cardInformation == null) throw new IllegalStateException("card info is null");
+                if (this.cardInformation == null)
+                    throw new IllegalStateException("card info is null");
                 if (this.paymentMethod == null)
                     throw new IllegalStateException("payment method is null");
                 if (this.card != null && this.token != null)
@@ -1536,7 +1561,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
 
@@ -1601,7 +1627,8 @@ public class MercadoPagoComponents {
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.amount == null) throw new IllegalStateException("amount is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
                 if (this.site == null)
@@ -1674,7 +1701,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
 
@@ -1725,7 +1753,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
 
@@ -2171,6 +2200,7 @@ public class MercadoPagoComponents {
             private Context context;
             private String currencyId;
             private List<Item> items;
+            private DecorationPreference decorationPreference;
 
             public ReviewItemsViewBuilder() {
                 items = new ArrayList<>();
@@ -2186,6 +2216,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public ReviewItemsViewBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
             public ReviewItemsViewBuilder addItem(Item item) {
                 this.items.add(item);
                 return this;
@@ -2197,7 +2232,7 @@ public class MercadoPagoComponents {
             }
 
             public ReviewItemsView build() {
-                return new ReviewItemsView(context, items, currencyId);
+                return new ReviewItemsView(context, items, currencyId, decorationPreference);
             }
         }
 
@@ -2205,7 +2240,8 @@ public class MercadoPagoComponents {
 
             private Context context;
             private PaymentMethod paymentMethod;
-            private String paymentMethodInfo;
+            private String paymentMethodCommentInfo;
+            private String paymentMethodDescriptionInfo;
             private BigDecimal amount;
             private Site site;
             private DecorationPreference decorationPreference;
@@ -2222,8 +2258,13 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public ReviewPaymentMethodOffBuilder setExtraPaymentMethodInfo(String paymentMethodInfo) {
-                this.paymentMethodInfo = paymentMethodInfo;
+            public ReviewPaymentMethodOffBuilder setPaymentMethodCommentInfo(String paymentMethodCommentInfo) {
+                this.paymentMethodCommentInfo = paymentMethodCommentInfo;
+                return this;
+            }
+
+            public ReviewPaymentMethodOffBuilder setPaymentMethodDescriptionInfo(String paymentMethodDescriptionInfo) {
+                this.paymentMethodDescriptionInfo = paymentMethodDescriptionInfo;
                 return this;
             }
 
@@ -2253,7 +2294,7 @@ public class MercadoPagoComponents {
             }
 
             public ReviewPaymentOffView build() {
-                return new ReviewPaymentOffView(context, paymentMethod, paymentMethodInfo, amount, site, reviewChangeCallback, editionEnabled, decorationPreference);
+                return new ReviewPaymentOffView(context, paymentMethod, paymentMethodCommentInfo, paymentMethodDescriptionInfo, amount, site, reviewChangeCallback, editionEnabled, decorationPreference);
             }
 
         }

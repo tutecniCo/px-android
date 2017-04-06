@@ -37,6 +37,7 @@ import com.mercadopago.model.PaymentBody;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
+import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.PaymentResultAction;
@@ -700,6 +701,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
                 MPTracker.getInstance().trackEvent("CARD_VAULT", "CANCELED", "3", mMerchantPublicKey, mCheckoutPreference.getSite().getId(), BuildConfig.VERSION_NAME, this);
                 cancelCheckout(data);
             } else {
+                mPaymentMethodEdited = true;
                 startPaymentVaultActivity();
             }
         }
@@ -785,8 +787,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (MercadoPagoUtil.isCard(mSelectedPaymentMethod.getPaymentTypeId())) {
             builder.setToken(mCreatedToken);
         } else if (!PaymentTypes.ACCOUNT_MONEY.equals(mSelectedPaymentMethod.getPaymentTypeId())) {
-            String searchItemComment = mPaymentMethodSearch.getSearchItemByPaymentMethod(mSelectedPaymentMethod).getComment();
-            builder.setExtraPaymentMethodInfo(searchItemComment);
+            PaymentMethodSearchItem paymentMethodSearchItem = mPaymentMethodSearch.getSearchItemByPaymentMethod(mSelectedPaymentMethod);
+            String searchItemComment = paymentMethodSearchItem.getComment();
+            String searchItemDescription = paymentMethodSearchItem.getDescription();
+            builder.setPaymentMethodCommentInfo(searchItemComment);
+            builder.setPaymentMethodDescriptionInfo(searchItemDescription);
         }
         builder.startActivity();
     }
@@ -800,6 +805,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             String nextAction = data.getStringExtra("nextAction");
             if (!isEmpty(nextAction)) {
                 if (nextAction.equals(PaymentResultAction.SELECT_OTHER_PAYMENT_METHOD)) {
+                    mPaymentMethodEdited = true;
                     startPaymentVaultActivity();
                     overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
                 } else if (nextAction.equals(PaymentResultAction.RECOVER_PAYMENT)) {

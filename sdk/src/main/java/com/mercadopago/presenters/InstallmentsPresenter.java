@@ -16,6 +16,8 @@ import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
+import com.mercadopago.util.CurrenciesUtil;
+import com.mercadopago.util.TextUtil;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.InstallmentsActivityView;
@@ -146,7 +148,11 @@ public class InstallmentsPresenter {
     }
 
     private Boolean isDiscountValid() {
-        return isAmountValid(mDiscount.getCouponAmount()) && isCampaignIdValid();
+        return isAmountValid(mDiscount.getCouponAmount()) && isCampaignIdValid() && isDiscountCurrencyIdValid();
+    }
+
+    private Boolean isDiscountCurrencyIdValid() {
+        return mDiscount != null && mDiscount.getCurrencyId() != null && CurrenciesUtil.isValidCurrency(mDiscount.getCurrencyId());
     }
 
     private Boolean isAmountValid(BigDecimal amount) {
@@ -209,8 +215,6 @@ public class InstallmentsPresenter {
     }
 
     private void loadDiscount() {
-        mView.showLoadingView();
-
         if (mDirectDiscountEnabled && mDiscount == null) {
             if (isAmountValid()) {
                 getDirectDiscount();
@@ -425,22 +429,28 @@ public class InstallmentsPresenter {
             mView.showHeader();
             mView.initializeInstallments(mPayerCosts);
         }
+        mView.stopLoadingView();
     }
 
     public void onItemSelected(int position) {
-        if (isInstallmentsReviewEnabled()) {
+        PayerCost selectedPayerCost = mPayerCosts.get(position);
+        if (isInstallmentsReviewEnabled() && isInstallmentsReviewRequired(selectedPayerCost)) {
             mView.hideInstallmentsRecyclerView();
             mView.showInstallmentsReviewView();
 
             initializeDiscountRow();
-            mView.initInstallmentsReviewView(mPayerCosts.get(position));
+            mView.initInstallmentsReviewView(selectedPayerCost);
         } else {
-            mView.finishWithResult(mPayerCosts.get(position));
+            mView.finishWithResult(selectedPayerCost);
         }
     }
 
     private Boolean isInstallmentsReviewEnabled() {
         return mInstallmentsReviewEnabled != null && mInstallmentsReviewEnabled;
+    }
+
+    private Boolean isInstallmentsReviewRequired(PayerCost payerCost) {
+        return payerCost != null && payerCost.getCFTPercent() != null && payerCost.getTEAPercent() != null;
     }
 
     private boolean isMerchantServerDiscountsAvailable() {
