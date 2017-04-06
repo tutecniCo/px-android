@@ -2,6 +2,7 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mpsdkIdentificationCardContainer"
     android:layout_width="@dimen/mpsdk_card_size_medium_width"
     android:layout_height="@dimen/mpsdk_card_size_medium_height"
@@ -90,7 +91,18 @@
                             android:textColor="@color/mpsdk_base_text"
                             android:textSize="12dp"
                             app:allowCustomFont="false"
-                            android:visibility="visible"
+                            android:visibility="gone"
+                            />
+                        <com.mercadopago.customviews.MPTextView
+                            android:id="@+id/mpsdk_id_number_big"
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:textColor="@color/mpsdk_base_text"
+                            android:textSize="12dp"
+                            app:allowCustomFont="false"
+                            android:lines="2"
+                            android:visibility="gone"
                             />
 
                     </FrameLayout>

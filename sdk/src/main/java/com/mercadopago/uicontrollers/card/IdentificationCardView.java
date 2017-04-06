@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPAutoResizeTextView;
@@ -26,6 +25,10 @@ import com.mercadopago.util.ScaleUtil;
 public class IdentificationCardView {
 
     public static final int NORMAL_TEXT_VIEW_COLOR = R.color.mpsdk_base_text;
+    private static final int BIG_IDENTIFICATION_NUMBER_LENGHT = 15;
+    private static final int IDENTIFICATION_NUMBER_MIN_SIZE = 14;
+    private static final int LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE = 12;
+
     private Identification mIdentification;
 
     private Context mContext;
@@ -42,6 +45,7 @@ public class IdentificationCardView {
     private IdentificationType mIdentificationType;
     private String mSize;
     private MPTextView mCardTypeId;
+    private MPTextView mCardIdentificationBigNumberTextView;
 
     public IdentificationCardView(Context context) {
         this.mContext = context;
@@ -74,8 +78,16 @@ public class IdentificationCardView {
 
             mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
             mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
-            mCardIdentificationNumberTextView = (MPAutoResizeTextView) mView.findViewById(R.id.mpsdk_id_number);
             mCardTypeId = (MPTextView) mView.findViewById(R.id.mpsdk_type_id);
+
+            if (isBigIdentificationNumber()){
+                mCardIdentificationBigNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdk_id_number_big);
+                mCardIdentificationBigNumberTextView.setVisibility(View.VISIBLE);
+            }else{
+                mCardIdentificationNumberTextView = (MPAutoResizeTextView) mView.findViewById(R.id.mpsdk_id_number);
+                mCardIdentificationNumberTextView.setVisibility(View.VISIBLE);
+            }
+
 
             transformView();
 
@@ -88,6 +100,10 @@ public class IdentificationCardView {
 
     }
 
+    private boolean isBigIdentificationNumber(){
+        return mIdentification.getNumber().trim().length() > BIG_IDENTIFICATION_NUMBER_LENGHT;
+    }
+
 
     private void transformView() {
 
@@ -95,11 +111,38 @@ public class IdentificationCardView {
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
             mCardTypeId.setText(mIdentification.getType());
             mIdentificationNumber = mIdentification.getNumber();
-            mCardIdentificationNumberTextView.setText(mIdentificationNumber);
-            mCardIdentificationNumberTextView.setMinTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, mContext.getResources().getDisplayMetrics()));
-            decorateIdentificationNumberTextView();
-            //FIXME: Si vienen más de 10 dígitos cambio el diseño. Caso Otro con 20.
+            if(!isBigIdentificationNumber()){
+                mCardIdentificationNumberTextView.setText(mIdentificationNumber);
+                setMinTextSize();
+                decorateIdentificationNumberTextView();
+            }else{
+                mCardIdentificationBigNumberTextView.setText(mIdentificationNumber);
+                decorateIdentificationBigNumberTextView();
+            }
+
+
         }
+    }
+
+    private void setMinTextSize() {
+        if(mSize!=null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE) && !isBigIdentificationNumber()){
+            if (isLimitTextSize()){
+                mCardIdentificationNumberTextView.setMinTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE, mContext.getResources().getDisplayMetrics()));
+            }else
+            {
+                mCardIdentificationNumberTextView.setMinTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, IDENTIFICATION_NUMBER_MIN_SIZE, mContext.getResources().getDisplayMetrics()));
+            }
+
+        }
+
+    }
+
+    private boolean isLimitTextSize() {
+        return getIdentificationNumberLength() == LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE || getIdentificationNumberLength() == LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE+1;
+    }
+
+    private int getIdentificationNumberLength(){
+        return mIdentification.getNumber().trim().length();
     }
 
 
@@ -130,6 +173,10 @@ public class IdentificationCardView {
         String number = MPCardMaskUtil.buildIdentificationNumberWithMask(mIdentificationNumber, mIdentificationType);
         mCardIdentificationNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
         mCardIdentificationNumberTextView.setText(number);
+    }
+    private void decorateIdentificationBigNumberTextView() {
+        int color = NORMAL_TEXT_VIEW_COLOR;
+        mCardIdentificationBigNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
     }
 
     public void show() {
