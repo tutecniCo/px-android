@@ -1,6 +1,7 @@
 package com.mercadopago.views;
 
 import com.mercadopago.model.ApiException;
+import com.mercadopago.model.EntityType;
 import com.mercadopago.mvp.MvpView;
 
 import java.util.List;
@@ -12,12 +13,12 @@ import java.util.List;
 public interface EntityTypeActivityView extends MvpView {
     void onValidStart();
     void onInvalidStart(String message);
-    void initializeEntityTypes(List<String> entityTypesList);
+    void initializeEntityTypes(List<EntityType> entityTypesList);
     void showApiExceptionError(ApiException exception);
     void startErrorView(String message, String errorDetail);
     void showHeader();
     void showLoadingView();
     void stopLoadingView();
-    void finishWithResult(String entityType);
+    void finishWithResult(EntityType entityType);
 
 }

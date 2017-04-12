@@ -76,7 +76,6 @@ public class CurrenciesUtil {
         Currency currency = currenciesList.get(currencyId);
 
         if (currency != null) {
-
             // Set formatters
             DecimalFormatSymbols dfs = new DecimalFormatSymbols();
             dfs.setDecimalSeparator(currency.getDecimalSeparator());

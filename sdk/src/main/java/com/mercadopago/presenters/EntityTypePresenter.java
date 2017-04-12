@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.mercadopago.R;
 import com.mercadopago.callbacks.FailureRecovery;
+import com.mercadopago.model.EntityType;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
@@ -29,7 +30,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
     private String mPublicKey;
     private PaymentMethod mPaymentMethod;
     private Identification mIdentification;
-    private List<String> mEntityTypes;
+    private List<EntityType> mEntityTypes;
     private IdentificationType mIdentificationType;
     private Site mSite;
 
@@ -106,7 +107,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
         resolveEntityTypes(mEntityTypes);
     }
 
-    protected void resolveEntityTypes(List<String> entityTypes) {
+    protected void resolveEntityTypes(List<EntityType> entityTypes) {
 
         mEntityTypes = entityTypes;
         if (mEntityTypes==null || mEntityTypes.isEmpty()) {

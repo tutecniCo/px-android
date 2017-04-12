@@ -3,6 +3,9 @@ package com.mercadopago.util;
 import android.content.Context;
 
 import com.mercadopago.R;
+import com.mercadopago.constants.Sites;
+import com.mercadopago.model.EntityType;
+import com.mercadopago.model.Site;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,59 +19,37 @@ import java.util.Map;
 
 public class EntityTypesUtil {
 
-    private static final String DEFAULT_SITE = "DEFAULT";
     private static final String INVIVIDUAL_FOR_PAYMENT = "individual";
     private static final String ASSOCIATION_FOR_PAYMENT = "association";
-    private static Map<String,Integer> entityTypesResourceids;
-    private static Map<String, String> entityTypesConversionsForPayment;
+    private static Map<String,List<EntityType>> entityTypesBySite;
 
-    public static List<String> getEntityTypesBySite(String siteId, Context context) {
+    public static List<EntityType> getEntityTypesBySite(Site site, Context context) {
 
-        int resourceId = getResourceId(siteId, context);
+        loadEntityTypesBySite(context);
 
-        List<String> entityTypes = new ArrayList<>();
-        Collections.addAll(entityTypes, context.getResources().getStringArray(resourceId));
+        List<EntityType> list = entityTypesBySite.get(site.getId());
 
-        return entityTypes;
+        return list==null ? new ArrayList<EntityType>() : list;
     }
 
-    private static int getResourceId(String siteId, Context context){
 
-        loadEntityTypesResourceIds();
+    private static void loadEntityTypesBySite(Context context){
 
-        Integer resourceId = entityTypesResourceids.get(siteId);
+        if (entityTypesBySite==null || entityTypesBySite.isEmpty()){
+            entityTypesBySite = new HashMap<>();
 
-        if(resourceId==null){
-            resourceId = entityTypesResourceids.get(DEFAULT_SITE);
+            //MCO
+            List<EntityType> entityTypesMCO = new ArrayList<>();
+
+            entityTypesMCO.add(new EntityType(INVIVIDUAL_FOR_PAYMENT, context.getResources().getString(R.string.entity_type_mco_individual)));
+            entityTypesMCO.add(new EntityType(ASSOCIATION_FOR_PAYMENT, context.getResources().getString(R.string.entity_type_mco_association)));
+
+            entityTypesBySite.put(Sites.COLOMBIA.getId(),entityTypesMCO);
+
         }
 
-        return resourceId;
     }
 
-    private static void loadEntityTypesResourceIds(){
-
-        if (entityTypesResourceids==null || entityTypesResourceids.isEmpty()){
-            entityTypesResourceids = new HashMap<>();
-            entityTypesResourceids.put(SitesUtil.MCO, R.array.entity_types_mco_array);
-            entityTypesResourceids.put(DEFAULT_SITE, R.array.entity_types_default_array);
-        }
-    }
-
-    private static void loadEntityTypesConversionsForPayment(Context context){
-
-        if (entityTypesConversionsForPayment==null || entityTypesConversionsForPayment.isEmpty()){
-            entityTypesConversionsForPayment = new HashMap<>();
-            entityTypesConversionsForPayment.put(context.getResources().getString(R.string.entity_type_individual), INVIVIDUAL_FOR_PAYMENT);
-            entityTypesConversionsForPayment.put(context.getResources().getString(R.string.entity_type_association), ASSOCIATION_FOR_PAYMENT);
-        }
-    }
-
-
-    public static String convertForPayment(String entityType,Context context){
-
-        loadEntityTypesConversionsForPayment(context);
-        return entityTypesConversionsForPayment.get(entityType);
-    }
 
 }
 

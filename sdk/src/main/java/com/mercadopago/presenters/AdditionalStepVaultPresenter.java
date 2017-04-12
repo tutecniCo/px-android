@@ -138,6 +138,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
 
     public void finishWithCancel() {
         getView().finishWithCancel();
+        getView().animateBackSelection();
     }
 
     public void startIdentificationStep() {
@@ -158,17 +159,18 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
 
     public void finishWithResult() {
         getView().finishWithResult();
+        getView().animateNextSelection();
     }
 
-    public void startIdentificationStepAnimatedBack() {
+    public void backToIdentificationStep() {
         getView().startIdentificationStepAnimatedBack();
     }
 
-    public void startEntityTypeStepAnimatedBack() {
+    public void backToEntityTypeStep() {
         getView().startEntityTypeStepAnimatedBack();
     }
 
-    public void startFinancialInstitutionsStepAnimatedBack() {
+    public void backToFinancialInstitutionsStep() {
         getView().startFinancialInstitutionsStepAnimatedBack();
     }
 

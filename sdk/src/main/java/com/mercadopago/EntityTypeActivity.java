@@ -19,6 +19,7 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
 import com.mercadopago.model.ApiException;
+import com.mercadopago.model.EntityType;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
@@ -235,7 +236,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     @Override
-    public void initializeEntityTypes(List<String> entityTypesList) {
+    public void initializeEntityTypes(List<EntityType> entityTypesList) {
         mEntityTypesAdapter.addResults(entityTypesList);
     }
 
@@ -361,9 +362,9 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     @Override
-    public void finishWithResult(String entityType) {
+    public void finishWithResult(EntityType entityType) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("entityType", entityType);
+        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(entityType));
         setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.mpsdk_hold, R.anim.mpsdk_hold);

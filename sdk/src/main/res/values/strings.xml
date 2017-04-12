@@ -39,18 +39,8 @@
     <!-- Entity Types -->
     <string name="mpsdk_entity_types_title">¿Cuál es el tipo de persona?</string>
 
-    <string-array name="entity_types_default_array">
-        <item>@string/entity_type_individual</item>
-        <item>@string/entity_type_association</item>
-    </string-array>
-
-    <string-array name="entity_types_mco_array">
-        <item>@string/entity_type_individual</item>
-        <item>@string/entity_type_association</item>
-    </string-array>
-
-    <string name="entity_type_individual">Natural</string>
-    <string name="entity_type_association">Jurídica</string>
+    <string name="entity_type_mco_individual">Natural</string>
+    <string name="entity_type_mco_association">Jurídica</string>
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">¿Cuál es tu banco?</string>

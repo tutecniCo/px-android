@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.model.EntityType;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -29,7 +30,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     private Identification mSelectedIdentification;
     private IdentificationType mSelectedIdentificationType;
     private FinancialInstitution mSelectedFinancialInstitution;
-    private String mSelectedEntityType;
+    private EntityType mSelectedEntityType;
 
 
     @Override
@@ -158,12 +159,13 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     }
 
 
-
-    private void animateNextSelection() {
+    @Override
+    public void animateNextSelection() {
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
-    private void animateBackSelection() {
+    @Override
+    public void animateBackSelection() {
         overridePendingTransition(R.anim.mpsdk_slide_left_to_right_in, R.anim.mpsdk_slide_left_to_right_out);
     }
 
@@ -181,12 +183,11 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     @Override
     public void finishWithResult() {
 
-        String entityType = EntityTypesUtil.convertForPayment(mSelectedEntityType,this);
-
+        String entityTypeId = mSelectedEntityType.getId();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("identification", JsonUtil.getInstance().toJson(mSelectedIdentification));
         returnIntent.putExtra("financialInstitution", JsonUtil.getInstance().toJson(mSelectedFinancialInstitution));
-        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(entityType));
+        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(entityTypeId));
 
 
         setResult(RESULT_OK, returnIntent);
@@ -210,7 +211,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     private void resolveEntityTypeRequest(int resultCode, Intent data) {
 
         if (resultCode == RESULT_OK) {
-            this.mSelectedEntityType = data.getStringExtra("entityType");
+            this.mSelectedEntityType = JsonUtil.getInstance().fromJson(data.getStringExtra("entityType"), EntityType.class);
 
             mPresenter.checkFlowWithEntityTypeSelected();
 

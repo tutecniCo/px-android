@@ -2,6 +2,7 @@ package com.mercadopago.providers;
 
 import android.content.Context;
 
+import com.mercadopago.model.EntityType;
 import com.mercadopago.model.Site;
 import com.mercadopago.util.EntityTypesUtil;
 
@@ -20,8 +21,8 @@ public class EntityTypeProviderImpl implements EntityTypeProvider{
     }
 
     @Override
-    public List<String> getEntityTypesBySite(Site site) {
+    public List<EntityType> getEntityTypesBySite(Site site) {
 
-        return EntityTypesUtil.getEntityTypesBySite(site.getId(),mContext);
+        return EntityTypesUtil.getEntityTypesBySite(site,mContext);
     }
 }

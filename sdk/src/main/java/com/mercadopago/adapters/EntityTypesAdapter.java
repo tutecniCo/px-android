@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.model.EntityType;
 import com.mercadopago.uicontrollers.entitytypes.EntityTypesView;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 public class EntityTypesAdapter extends RecyclerView.Adapter<EntityTypesAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> mEntityTypes;
+    private List<EntityType> mEntityTypes;
     private OnSelectedCallback<Integer> mCallback;
 
     public EntityTypesAdapter(Context context, OnSelectedCallback<Integer> callback) {
@@ -32,7 +33,7 @@ public class EntityTypesAdapter extends RecyclerView.Adapter<EntityTypesAdapter.
         this.mCallback = callback;
     }
 
-    public void addResults(List<String> list) {
+    public void addResults(List<EntityType> list) {
         mEntityTypes.addAll(list);
         notifyDataSetChanged();
     }
@@ -46,20 +47,20 @@ public class EntityTypesAdapter extends RecyclerView.Adapter<EntityTypesAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View adapterView = inflater.inflate(R.layout.mpsdk_adapter_issuer, parent, false);
+        View adapterView = inflater.inflate(R.layout.mpsdk_adapter_entity_type, parent, false);
         ViewHolder viewHolder = new ViewHolder(adapterView);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String entityType = mEntityTypes.get(position);
+        String entityType = mEntityTypes.get(position).getName();
         holder.mEntityTypeView.drawEntityType(entityType);
     }
 
 
     public String getItem(int position) {
-        return mEntityTypes.get(position);
+        return mEntityTypes.get(position).getName();
     }
 
     @Override
@@ -74,7 +75,7 @@ public class EntityTypesAdapter extends RecyclerView.Adapter<EntityTypesAdapter.
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mEntityTypeContainer = (FrameLayout) itemView.findViewById(R.id.mpsdkIssuerAdapterContainer);
+            mEntityTypeContainer = (FrameLayout) itemView.findViewById(R.id.mpsdkEntityTypeAdapterContainer);
             mEntityTypeView = new EntityTypesView(mContext);
             mEntityTypeView.inflateInParent(mEntityTypeContainer, true);
             mEntityTypeView.initializeControls();

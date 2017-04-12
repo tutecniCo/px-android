@@ -18,4 +18,6 @@ public interface AdditionalStepVaultActivityView extends MvpView{
     void finishWithResult();
     void finishWithCancel();
     void onError(String message);
+    void animateNextSelection();
+    void animateBackSelection();
 }
