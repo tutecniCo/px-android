@@ -189,10 +189,6 @@ public class PaymentMethod {
         return accreditationTime;
     }
 
-    public boolean isAdditionalInfoNeeded() {
-        return isIdentificationOffRequired() || isFinancialInstitutionsRequired() || isEntityTypeRequired();
-    }
-
     public boolean isOnPaymentMethod() {
         return paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card");
     }

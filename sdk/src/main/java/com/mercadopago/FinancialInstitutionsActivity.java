@@ -20,7 +20,6 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.FinancialInstitutionsPresenter;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.util.ApiUtil;
@@ -45,8 +44,6 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
     protected FinancialInstitutionsAdapter mFinancialInstitutionsAdapter;
     protected RecyclerView mFinancialInstitutionsRecyclerView;
     protected DecorationPreference mDecorationPreference;
-    //ViewMode
-    protected boolean mLowResActive;
     //Low Res View
     protected Toolbar mLowResToolbar;
     protected MPTextView mLowResTitleToolbar;
@@ -77,7 +74,6 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
 
         String publicKey = getIntent().getStringExtra("merchantPublicKey");
         String payerAccessToken = getIntent().getStringExtra("payerAccessToken");
-        PaymentPreference paymentPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("paymentPreference"), PaymentPreference.class);
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
 
         PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(
@@ -90,18 +86,17 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
         mPresenter.setPublicKey(publicKey);
         mPresenter.setPrivateKey(payerAccessToken);
         mPresenter.setFinancialInstitutions(financialInstitutions);
-        mPresenter.setPaymentPreference(paymentPreference);
     }
 
 
     public void setContentView() {
-        MPTracker.getInstance().trackScreen("FINANCIAL_INSTITUTIONS", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
         setContentViewLowRes();
     }
 
     @Override
     public void onValidStart() {
+        MPTracker.getInstance().trackScreen("FINANCIAL_INSTITUTIONS", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
         mPresenter.initializeMercadoPago();
         initializeViews();
         loadViews();

@@ -21,4 +21,9 @@ public class AdditionalStepVaultProviderImpl implements AdditionalStepVaultProvi
     public String getInvalidAdditionalStepErrorMessage() {
         return mContext.getResources().getString(R.string.error_invalid_additional_step);
     }
+
+    @Override
+    public Context getContext() {
+        return mContext;
+    }
 }

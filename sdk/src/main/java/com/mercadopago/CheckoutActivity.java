@@ -28,7 +28,6 @@ import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.Identification;
-import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
@@ -424,7 +423,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void startFlow() {
-        //TODO chequear como agregar los datos de PSE para wallet
         if (mPaymentDataInput != null) {
             mSelectedIssuer = mPaymentDataInput.getIssuer();
             mSelectedPayerCost = mPaymentDataInput.getPayerCost();
@@ -593,21 +591,16 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             if (identification != null) {
                 mPayer.setIdentification(identification);
             }
-            if (entityType != null && !entityType.equals("")) {
-                mPayer.setEntityType(entityType);
+            if (!TextUtils.isEmpty(entityType)) {
+                mPayer.setEntityTypeId(entityType);
             }
             if (financialInstitution != null) {
                 mTransactionDetails = new TransactionDetails();
                 mTransactionDetails.setFinancialInstitution(financialInstitution.getId().toString());
             }
 
+            checkReviewAndConfirmFlow();
 
-            if (isReviewAndConfirmEnabled()) {
-                showReviewAndConfirm();
-
-            } else {
-                resolvePaymentDataCallback();
-            }
         } else if (resultCode == RESULT_CANCELED && isUniquePaymentMethod()) {
             cancelCheckout(data);
         } else if (resultCode == RESULT_CANCELED) {
@@ -733,11 +726,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         if (isAdditionalStepRequired()) {
             startAdditionalStepVault();
 
-        } else if (isReviewAndConfirmEnabled()) {
-            showReviewAndConfirm();
-
         } else {
-            resolvePaymentDataCallback();
+            checkReviewAndConfirmFlow();
         }
     }
 
@@ -757,9 +747,18 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private boolean isAdditionalStepRequired() {
-        return mSelectedPaymentMethod.isAdditionalInfoNeeded();
+        return mSelectedPaymentMethod.isIdentificationOffRequired() || mSelectedPaymentMethod.isFinancialInstitutionsRequired() || mSelectedPaymentMethod.isEntityTypeRequired();
     }
 
+
+    private void checkReviewAndConfirmFlow(){
+        if (isReviewAndConfirmEnabled()) {
+            showReviewAndConfirm();
+
+        } else {
+            resolvePaymentDataCallback();
+        }
+    }
 
     private void showReviewAndConfirm() {
 

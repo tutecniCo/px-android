@@ -20,7 +20,7 @@ import com.mercadopago.views.EntityTypeActivityView;
 import java.util.List;
 
 
-public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,EntityTypeProvider>{
+public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, EntityTypeProvider> {
 
     private Context mContext;
     private FailureRecovery mFailureRecovery;
@@ -53,7 +53,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
         this.mFailureRecovery = failureRecovery;
     }
 
-    public boolean isIdentificationAvailable() {
+    public boolean isCardInfoAvailable() {
         return mIdentification != null && mPaymentMethod != null;
     }
 
@@ -80,7 +80,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
         } else if (mIdentification == null) {
             if (mPublicKey == null) {
                 getView().onInvalidStart("public key not set");
-            }else if(mSite == null){
+            } else if (mSite == null) {
                 getView().onInvalidStart("site not set");
             } else {
                 getView().onValidStart();
@@ -110,7 +110,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
     protected void resolveEntityTypes(List<EntityType> entityTypes) {
 
         mEntityTypes = entityTypes;
-        if (mEntityTypes==null || mEntityTypes.isEmpty()) {
+        if (mEntityTypes == null || mEntityTypes.isEmpty()) {
             getView().startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                     "no entityTypes found at EntityTypesActivity");
         } else if (mEntityTypes.size() == 1) {
@@ -139,7 +139,7 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView,Ent
         this.mIdentificationType = identificationType;
     }
 
-    public void setmSite(Site mSite) {
+    public void setSite(Site mSite) {
         this.mSite = mSite;
     }
 }

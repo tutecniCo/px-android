@@ -24,6 +24,7 @@ import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
+import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.EntityTypePresenter;
@@ -102,9 +103,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
         IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
         Site site = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("site"), Site.class);
-        ;
 
-        mPresenter.setmSite(site);
+        mPresenter.setSite(site);
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
         mPresenter.setIdentification(identification);
@@ -112,7 +112,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     public void analyzeLowRes() {
-        if (mPresenter.isIdentificationAvailable()) {
+        if (mPresenter.isCardInfoAvailable()) {
             this.mLowResActive = ScaleUtil.isLowRes(this);
         } else {
             this.mLowResActive = true;
@@ -129,6 +129,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     @Override
     public void onValidStart() {
+        MPTracker.getInstance().trackScreen("ENTITY_TYPE_ACTIVITY", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
         initializeViews();
         loadViews();
         hideHeader();
@@ -372,6 +374,8 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     @Override
     public void onBackPressed() {
+        MPTracker.getInstance().trackEvent("ENTITY_TYPE_ACTIVITY", "BACK_PRESSED", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);

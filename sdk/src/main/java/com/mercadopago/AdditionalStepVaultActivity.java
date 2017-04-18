@@ -10,20 +10,20 @@ import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
+import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.AdditionalStepVaultPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
-import com.mercadopago.util.EntityTypesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.views.AdditionalStepVaultActivityView;
+import com.mercadopago.views.AdditionalStepVaultView;
 
 
 /**
  * Created by marlanti on 3/23/17.
  */
 
-public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity implements AdditionalStepVaultActivityView {
+public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity implements AdditionalStepVaultView {
 
     private AdditionalStepVaultPresenter mPresenter;
     private DecorationPreference mDecorationPreference;
@@ -42,8 +42,6 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         mPresenter.attachView(this);
         mPresenter.attachResourcesProvider(new AdditionalStepVaultProviderImpl(this));
         mPresenter.validateActivityParameters();
-
-
     }
 
     private void createPresenter() {
@@ -69,6 +67,8 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     }
 
 
+
+
     @Override
     public void onInvalidStart(String msg) {
         Intent returnIntent = new Intent();
@@ -78,6 +78,8 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
     @Override
     public void onValidStart() {
+        MPTracker.getInstance().trackScreen("ADDITIONAL_STEP_VAULT_ACTIVITY", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
         mPresenter.checkFlow();
     }
 
@@ -101,7 +103,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     private void startEntityTypeStepComponent() {
         new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
                 .setActivity(this)
-                .setMerchantPublicKey(mPresenter.getmPublicKey())
+                .setMerchantPublicKey(mPresenter.getPublicKey())
                 .setPaymentMethod(mPresenter.getmPaymentMethod())
                 .setIdentification(mSelectedIdentification)
                 .setIdentificationType(mSelectedIdentificationType)
@@ -127,7 +129,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
         new MercadoPagoComponents.Activities.IdentificationActivityBuilder()
                 .setActivity(this)
-                .setMerchantPublicKey(mPresenter.getmPublicKey())
+                .setMerchantPublicKey(mPresenter.getPublicKey())
                 .setDecorationPreference(mDecorationPreference)
                 .startActivity();
     }
@@ -152,7 +154,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     private void startFinancialInstitutionsStepComponent() {
         new MercadoPagoComponents.Activities.FinancialInstitutionsActivityBuilder()
                 .setActivity(this)
-                .setMerchantPublicKey(mPresenter.getmPublicKey())
+                .setMerchantPublicKey(mPresenter.getPublicKey())
                 .setPaymentMethod(mPresenter.getmPaymentMethod())
                 .setDecorationPreference(mDecorationPreference)
                 .startActivity();
@@ -226,23 +228,15 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         this.finish();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-
         if (requestCode == MercadoPagoComponents.Activities.FINANCIAL_INSTITUTIONS_REQUEST_CODE) {
             resolveFinancialInstitutionsRequest(resultCode, data);
-
-        } else if (requestCode == MercadoPagoComponents.Activities.IDENTIFICATION_REQUEST_CODE)
-
-        {
+        } else if (requestCode == MercadoPagoComponents.Activities.IDENTIFICATION_REQUEST_CODE) {
             resolveIdentificationRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE)
-
-        {
+        } else if (requestCode == MercadoPagoComponents.Activities.ENTITY_TYPE_REQUEST_CODE) {
             resolveEntityTypeRequest(resultCode, data);
-
         }
 
     }

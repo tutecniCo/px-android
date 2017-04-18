@@ -1,5 +1,7 @@
 package com.mercadopago.providers;
 
+import android.content.Context;
+
 import com.mercadopago.mvp.ResourcesProvider;
 
 /**
@@ -7,4 +9,5 @@ import com.mercadopago.mvp.ResourcesProvider;
  */
 
 public interface AdditionalStepVaultProvider extends ResourcesProvider {
+    Context getContext();
 }

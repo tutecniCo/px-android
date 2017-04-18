@@ -95,6 +95,7 @@ public class MercadoPagoComponents {
         public static final int REJECTION_REQUEST_CODE = 9;
         public static final int PAYMENT_VAULT_REQUEST_CODE = 10;
         public static final int BANK_DEALS_REQUEST_CODE = 11;
+        public static final int CHECKOUT_REQUEST_CODE = 12;
         public static final int GUESSING_CARD_REQUEST_CODE = 13;
         public static final int INSTRUCTIONS_REQUEST_CODE = 14;
         public static final int CARD_VAULT_REQUEST_CODE = 15;

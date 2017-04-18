@@ -1,17 +1,19 @@
 package com.mercadopago.presenters;
 
+import com.mercadopago.BuildConfig;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
+import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
 import com.mercadopago.statemachines.AdditionalStepVaultStateMachine;
-import com.mercadopago.views.AdditionalStepVaultActivityView;
+import com.mercadopago.views.AdditionalStepVaultView;
 
 /**
  * Created by marlanti on 3/23/17.
  */
 
-public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVaultActivityView, AdditionalStepVaultProviderImpl> {
+public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVaultView, AdditionalStepVaultProviderImpl> {
 
 
     private Site mSite;
@@ -31,6 +33,8 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     public void setPublicKey(String publicKey) {
         this.mPublicKey = publicKey;
     }
+
+
 
     public void validateActivityParameters() throws IllegalStateException {
         if (mPaymentMethod == null) {
@@ -107,7 +111,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
         return mPaymentMethod;
     }
 
-    public String getmPublicKey() {
+    public String getPublicKey() {
         return mPublicKey;
     }
 
@@ -125,6 +129,8 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     }
 
     public void onBackPressed() {
+        MPTracker.getInstance().trackEvent("ADDITIONAL_STEP_VAULT_ACTIVITY", "BACK_PRESSED", "2", mPublicKey,
+                BuildConfig.VERSION_NAME, getResourcesProvider().getContext());
         state = state.onBackPressed(this);
     }
 

@@ -259,6 +259,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void onValidStart() {
+        MPTracker.getInstance().trackScreen("IDENTIFICATION_NUMBER", "2", mPresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
         mPresenter.initializeMercadoPago();
         initializeViews();
         loadViews();
@@ -586,9 +588,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
 
     private void requestIdentificationFocus() {
-
-        MPTracker.getInstance().trackScreen("IDENTIFICATION_NUMBER", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
         openKeyboard(mIdentificationNumberEditText);
         enableBackInputButton();
         if (mLowResActive) {

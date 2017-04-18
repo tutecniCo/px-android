@@ -7,7 +7,6 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.core.MercadoPagoServices;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.views.FinancialInstitutionsActivityView;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class FinancialInstitutionsPresenter {
     //Activity parameters
     private String mPublicKey;
     private PaymentMethod mPaymentMethod;
-    private PaymentPreference mPaymentPreference;
     private String mPrivateKey;
     private List<FinancialInstitution> mFinancialInstitutions;
     private MercadoPagoServices mMercadoPago;
@@ -56,10 +54,6 @@ public class FinancialInstitutionsPresenter {
         this.mPrivateKey = privateKey;
     }
 
-
-    public void setPaymentPreference(PaymentPreference paymentPreference) {
-        this.mPaymentPreference = paymentPreference;
-    }
 
     private void setFailureRecovery(FailureRecovery failureRecovery) {
         this.mFailureRecovery = failureRecovery;
