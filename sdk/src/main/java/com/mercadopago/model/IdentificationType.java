@@ -63,19 +63,19 @@ public class IdentificationType {
 
     public boolean validateIdentificationNumber(Identification identification) {
 
-            if ((identification != null) && (identification.getNumber() != null)) {
+        if ((identification != null) && (identification.getNumber() != null)) {
 
-                int len = identification.getNumber().length();
-                Integer min = minLength;
-                Integer max = maxLength;
-                if ((min != null) && (max != null)) {
-                    return ((len <= max) && (len >= min));
-                } else {
-                    return identification.validateIdentificationNumber();
-                }
+            int len = identification.getNumber().length();
+            Integer min = minLength;
+            Integer max = maxLength;
+            if ((min != null) && (max != null)) {
+                return ((len <= max) && (len >= min));
             } else {
-                return false;
+                return identification.validateIdentificationNumber();
             }
+        } else {
+            return false;
+        }
 
     }
 }

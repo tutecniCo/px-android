@@ -18,11 +18,10 @@ public enum AdditionalStepVaultStateMachine {
 
         @Override
         public AdditionalStepVaultStateMachine onNextStep(AdditionalStepVaultPresenter mPresenter) {
-            if(mPresenter.isOnlyIdentificationAndFinancialStepRequired()){
+            if (mPresenter.isOnlyIdentificationAndFinancialStepRequired()) {
                 mPresenter.startFinancialInstitutionsStep();
                 return FINANCIAL_INSTITUTIONS;
-            }
-            else if (mPresenter.isEntityTypeStepRequired()){
+            } else if (mPresenter.isEntityTypeStepRequired()) {
                 mPresenter.startEntityTypeStep();
                 return ENTITY_TYPES;
             }
@@ -68,11 +67,10 @@ public enum AdditionalStepVaultStateMachine {
         @Override
         public AdditionalStepVaultStateMachine onBackPressed(AdditionalStepVaultPresenter mPresenter) {
 
-            if(mPresenter.isOnlyIdentificationAndFinancialStepRequired()){
+            if (mPresenter.isOnlyIdentificationAndFinancialStepRequired()) {
                 mPresenter.backToIdentificationStep();
                 return IDENTIFICATION;
-            }
-            else if(mPresenter.isEntityTypeStepRequired()){
+            } else if (mPresenter.isEntityTypeStepRequired()) {
                 mPresenter.backToEntityTypeStep();
                 return ENTITY_TYPES;
             }
@@ -95,7 +93,8 @@ public enum AdditionalStepVaultStateMachine {
     }, ERROR {
         @Override
         public AdditionalStepVaultStateMachine onBackPressed(AdditionalStepVaultPresenter mPresenter) {
-            return onNextStep(mPresenter);
+            mPresenter.onError(mPresenter.getInvalidAdditionalStepErrorMessage());
+            return ERROR;
         }
 
         @Override
@@ -106,7 +105,8 @@ public enum AdditionalStepVaultStateMachine {
 
         @Override
         public AdditionalStepVaultStateMachine onInit(AdditionalStepVaultPresenter mPresenter) {
-            return onNextStep(mPresenter);
+            mPresenter.onError(mPresenter.getInvalidAdditionalStepErrorMessage());
+            return ERROR;
         }
     };
 

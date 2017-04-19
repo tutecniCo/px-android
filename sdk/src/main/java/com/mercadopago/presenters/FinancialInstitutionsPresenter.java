@@ -60,7 +60,6 @@ public class FinancialInstitutionsPresenter {
     }
 
 
-
     public String getPublicKey() {
         return mPublicKey;
     }
@@ -73,6 +72,8 @@ public class FinancialInstitutionsPresenter {
     public void validateActivityParameters() throws IllegalStateException {
         if (mPaymentMethod == null) {
             mView.onInvalidStart("payment method is null");
+        } else if (!wereFinancialInstitutionsSet()) {
+            mView.onInvalidStart("financial institutions are null");
         } else {
             mView.onValidStart();
         }
@@ -88,7 +89,7 @@ public class FinancialInstitutionsPresenter {
 
     public void loadFinancialInstitutions() {
         if (wereFinancialInstitutionsSet()) {
-            resolveFinancialInstitutions(mFinancialInstitutions);
+            resolveFinancialInstitutions();
         } else {
             mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                     "no financialInstitutions found at FinancialInstitutionsActivity");
@@ -96,22 +97,20 @@ public class FinancialInstitutionsPresenter {
     }
 
     private boolean wereFinancialInstitutionsSet() {
-        return mFinancialInstitutions != null;
+        return mFinancialInstitutions != null && !mFinancialInstitutions.isEmpty();
     }
 
 
+    protected void resolveFinancialInstitutions() {
 
-    protected void resolveFinancialInstitutions(List<FinancialInstitution> financialInstitutions) {
-
-        mFinancialInstitutions = financialInstitutions;
-        if (mFinancialInstitutions.isEmpty()) {
+        if (!wereFinancialInstitutionsSet()) {
             mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                     "no financialInstitutions found at FinancialInstitutionsActivity");
         } else if (mFinancialInstitutions.size() == 1) {
-            mView.finishWithResult(financialInstitutions.get(0));
+            mView.finishWithResult(mFinancialInstitutions.get(0));
         } else {
             mView.showHeader();
-            mView.initializeFinancialInstitutions(financialInstitutions);
+            mView.initializeFinancialInstitutions(mFinancialInstitutions);
         }
     }
 

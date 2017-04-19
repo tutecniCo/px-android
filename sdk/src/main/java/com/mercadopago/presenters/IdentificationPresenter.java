@@ -100,9 +100,7 @@ public class IdentificationPresenter {
         if (mPublicKey == null) {
             return;
         }
-        if(mMercadoPago != null){
-            return;
-        }
+
         mMercadoPago = new MercadoPagoServices.Builder()
                 .setContext(mContext)
                 .setPublicKey(mPublicKey)
@@ -122,9 +120,6 @@ public class IdentificationPresenter {
 
 
     public void loadIdentificationTypes() {
-        if(mMercadoPago==null){
-            initializeMercadoPago();
-        }
         getIdentificationTypesAsync();
     }
 

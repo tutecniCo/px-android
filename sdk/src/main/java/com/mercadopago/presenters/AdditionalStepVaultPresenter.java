@@ -35,7 +35,6 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     }
 
 
-
     public void validateActivityParameters() throws IllegalStateException {
         if (mPaymentMethod == null) {
             getView().onInvalidStart("payment method is null");
@@ -43,10 +42,17 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
             getView().onInvalidStart("public key not set");
         } else if (mSite == null) {
             getView().onInvalidStart("site not set");
+        } else if (!isAdditionalStepFound()) {
+            getView().onInvalidStart("No additional step found");
         } else {
             getView().onValidStart();
         }
     }
+
+    private boolean isAdditionalStepFound() {
+        return mPaymentMethod.isIdentificationOffRequired() || mPaymentMethod.isFinancialInstitutionsRequired() || mPaymentMethod.isEntityTypeRequired();
+    }
+
 
     public void checkFlow() {
 
@@ -59,10 +65,9 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
         } else if (isFinancialInstitutionsStepRequired()) {
             state = AdditionalStepVaultStateMachine.FINANCIAL_INSTITUTIONS;
             state.onInit(this);
-
-
         } else {
-            getView().onInvalidStart("No additional step found");
+            state = AdditionalStepVaultStateMachine.ERROR;
+            state.onInit(this);
         }
 
 

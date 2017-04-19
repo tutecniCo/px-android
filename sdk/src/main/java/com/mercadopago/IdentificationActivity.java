@@ -147,7 +147,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
         Identification identification = new Identification();
         mPresenter.setPublicKey(publicKey);
-        mPresenter.loadIdentificationTypes();
         mPresenter.setIdentification(identification);
 
     }
@@ -262,6 +261,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         MPTracker.getInstance().trackScreen("IDENTIFICATION_NUMBER", "2", mPresenter.getPublicKey(),
                 BuildConfig.VERSION_NAME, this);
         mPresenter.initializeMercadoPago();
+        mPresenter.loadIdentificationTypes();
         initializeViews();
         loadViews();
         decorate();
@@ -270,8 +270,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             CheckoutTimer.getInstance().addObserver(this);
             mTimerTextView.setVisibility(View.VISIBLE);
             mTimerTextView.setText(CheckoutTimer.getInstance().getCurrentTime());
-        } else {
-            //TODO
         }
 
         mErrorState = NORMAL_STATE;
