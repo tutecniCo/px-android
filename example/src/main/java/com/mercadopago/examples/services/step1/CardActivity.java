@@ -208,7 +208,7 @@ public class CardActivity extends AppCompatActivity {
 
         // Validate identification number
         if (getIdentificationType() != null) {
-            if (!cardToken.validateIdentificationNumber()) {
+            if (!cardToken.getCardholder().getIdentification().validateIdentificationNumber()) {
                 mIdentificationNumber.setError(getString(R.string.mpsdk_invalid_field));
                 if (!focusSet) {
                     mIdentificationNumber.requestFocus();

@@ -10,7 +10,6 @@ import com.mercadopago.core.MercadoPagoServices;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
-import com.mercadopago.validators.IdentificationValidator;
 import com.mercadopago.views.IdentificationActivityView;
 
 import java.util.List;
@@ -199,7 +198,7 @@ public class IdentificationPresenter {
 
     public boolean validateIdentificationNumber() {
         mIdentification.setNumber(getIdentificationNumber());
-        boolean ans = IdentificationValidator.validateIdentificationNumber(mIdentificationType,mIdentification);
+        boolean ans = mIdentificationType.validateIdentificationNumber(mIdentification);
 
         if (ans) {
             mView.clearErrorView();

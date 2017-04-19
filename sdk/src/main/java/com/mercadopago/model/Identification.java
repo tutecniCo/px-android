@@ -1,5 +1,7 @@
 package com.mercadopago.model;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 public class Identification implements Serializable {
@@ -21,6 +23,18 @@ public class Identification implements Serializable {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public boolean validateIdentification() {
+        return validateIdentificationType() && validateIdentificationNumber();
+    }
+
+    public boolean validateIdentificationType() {
+        return !TextUtils.isEmpty(type);
+    }
+
+    public boolean validateIdentificationNumber() {
+        return (!validateIdentificationType()) ? false : !TextUtils.isEmpty(number);
     }
 
 }

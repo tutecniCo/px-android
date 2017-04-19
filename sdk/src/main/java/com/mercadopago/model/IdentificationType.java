@@ -59,4 +59,23 @@ public class IdentificationType {
     public void setMaxLength(Integer MaxLength) {
         this.maxLength = MaxLength;
     }
+
+
+    public boolean validateIdentificationNumber(Identification identification) {
+
+            if ((identification != null) && (identification.getNumber() != null)) {
+
+                int len = identification.getNumber().length();
+                Integer min = minLength;
+                Integer max = maxLength;
+                if ((min != null) && (max != null)) {
+                    return ((len <= max) && (len >= min));
+                } else {
+                    return identification.validateIdentificationNumber();
+                }
+            } else {
+                return false;
+            }
+
+    }
 }

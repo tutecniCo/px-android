@@ -85,7 +85,7 @@ public class CardToken {
     }
 
     public boolean validate(boolean includeSecurityCode) {
-        boolean result = validateCardNumber() && validateExpiryDate() && validateIdentification() && validateCardholderName();
+        boolean result = validateCardNumber() && validateExpiryDate() && cardholder.getIdentification().validateIdentification() && validateCardholderName();
         if (includeSecurityCode) {
             result = result && validateSecurityCode();
         }
@@ -185,43 +185,6 @@ public class CardToken {
         return (year == null) ? false : !hasYearPassed(year);
     }
 
-    public boolean validateIdentification() {
-        return validateIdentificationType() && validateIdentificationNumber();
-    }
-
-    public boolean validateIdentificationType() {
-        return (cardholder == null) ? false :
-                (cardholder.getIdentification() == null) ? false :
-                        !TextUtils.isEmpty(cardholder.getIdentification().getType());
-    }
-
-    public boolean validateIdentificationNumber() {
-        return (cardholder == null) ? false :
-                (cardholder.getIdentification() == null) ? false :
-                        (!validateIdentificationType()) ? false :
-                                !TextUtils.isEmpty(cardholder.getIdentification().getNumber());
-    }
-
-    public boolean validateIdentificationNumber(IdentificationType identificationType) {
-        if (identificationType != null) {
-            if ((cardholder != null) &&
-                    (cardholder.getIdentification() != null) &&
-                    (cardholder.getIdentification().getNumber() != null)) {
-                int len = cardholder.getIdentification().getNumber().length();
-                Integer min = identificationType.getMinLength();
-                Integer max = identificationType.getMaxLength();
-                if ((min != null) && (max != null)) {
-                    return ((len <= max) && (len >= min));
-                } else {
-                    return validateIdentificationNumber();
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return validateIdentificationNumber();
-        }
-    }
 
     public boolean validateCardholderName() {
         return (cardholder == null) ? false :
