@@ -31,7 +31,7 @@
             >
 
             <FrameLayout
-                android:id="@+id/mpsdk_id_picture_frame"
+                android:id="@+id/mpsdkIdPictureFrame"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
                 android:layout_weight="0.3"
                 >
                 <ImageView
-                    android:id="@+id/mpsdk_id_picture"
+                    android:id="@+id/mpsdkIdPicture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -65,7 +65,7 @@
                     >
 
                     <com.mercadopago.customviews.MPTextView
-                        android:id="@+id/mpsdk_type_id"
+                        android:id="@+id/mpsdkTypeId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingRight="14dp"
@@ -84,7 +84,7 @@
                         android:paddingRight="2dp">
 
                         <com.mercadopago.customviews.MPAutoResizeTextView
-                            android:id="@+id/mpsdk_id_number"
+                            android:id="@+id/mpsdkIdNumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
@@ -94,7 +94,7 @@
                             android:visibility="gone"
                             />
                         <com.mercadopago.customviews.MPTextView
-                            android:id="@+id/mpsdk_id_number_big"
+                            android:id="@+id/mpsdkIdNumberBig"
                             android:layout_width="72dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"

@@ -12,7 +12,7 @@
     <include layout="@layout/mpsdk_view_progress_bar_small"/>
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/mpsdkIssuersAppBar"
+        android:id="@+id/mpsdkEntityTypeAppBar"
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -30,7 +30,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/mpsdkActivityIssuersView"
+            android:id="@+id/mpsdkActivityEntityTypeView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"

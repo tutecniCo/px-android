@@ -78,13 +78,13 @@ public class IdentificationCardView {
 
             mCardContainer = (FrameLayout) mView.findViewById(R.id.mpsdkIdentificationCardContainer);
             mCardBorder = (ImageView) mView.findViewById(R.id.mpsdkCardShadowBorder);
-            mCardTypeId = (MPTextView) mView.findViewById(R.id.mpsdk_type_id);
+            mCardTypeId = (MPTextView) mView.findViewById(R.id.mpsdkTypeId);
 
-            if (isBigIdentificationNumber()){
-                mCardIdentificationBigNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdk_id_number_big);
+            if (isBigIdentificationNumber()) {
+                mCardIdentificationBigNumberTextView = (MPTextView) mView.findViewById(R.id.mpsdkIdNumberBig);
                 mCardIdentificationBigNumberTextView.setVisibility(View.VISIBLE);
-            }else{
-                mCardIdentificationNumberTextView = (MPAutoResizeTextView) mView.findViewById(R.id.mpsdk_id_number);
+            } else {
+                mCardIdentificationNumberTextView = (MPAutoResizeTextView) mView.findViewById(R.id.mpsdkIdNumber);
                 mCardIdentificationNumberTextView.setVisibility(View.VISIBLE);
             }
 
@@ -100,7 +100,7 @@ public class IdentificationCardView {
 
     }
 
-    private boolean isBigIdentificationNumber(){
+    private boolean isBigIdentificationNumber() {
         return mIdentification.getNumber().trim().length() > BIG_IDENTIFICATION_NUMBER_LENGHT;
     }
 
@@ -111,25 +111,23 @@ public class IdentificationCardView {
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
             mCardTypeId.setText(mIdentification.getType());
             mIdentificationNumber = mIdentification.getNumber();
-            if(!isBigIdentificationNumber()){
+            if (isBigIdentificationNumber()) {
+                mCardIdentificationBigNumberTextView.setText(mIdentificationNumber);
+                decorateIdentificationBigNumberTextView();
+            } else {
                 mCardIdentificationNumberTextView.setText(mIdentificationNumber);
                 setMinTextSize();
                 decorateIdentificationNumberTextView();
-            }else{
-                mCardIdentificationBigNumberTextView.setText(mIdentificationNumber);
-                decorateIdentificationBigNumberTextView();
             }
-
 
         }
     }
 
     private void setMinTextSize() {
-        if(mSize!=null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE) && !isBigIdentificationNumber()){
-            if (isLimitTextSize()){
+        if (mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE) && !isBigIdentificationNumber()) {
+            if (isLimitTextSize()) {
                 mCardIdentificationNumberTextView.setMinTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE, mContext.getResources().getDisplayMetrics()));
-            }else
-            {
+            } else {
                 mCardIdentificationNumberTextView.setMinTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, IDENTIFICATION_NUMBER_MIN_SIZE, mContext.getResources().getDisplayMetrics()));
             }
 
@@ -138,10 +136,10 @@ public class IdentificationCardView {
     }
 
     private boolean isLimitTextSize() {
-        return getIdentificationNumberLength() == LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE || getIdentificationNumberLength() == LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE+1;
+        return getIdentificationNumberLength() == LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE || getIdentificationNumberLength() == LIMIT_IDENTIFICATION_NUMBER_MIN_SIZE + 1;
     }
 
-    private int getIdentificationNumberLength(){
+    private int getIdentificationNumberLength() {
         return mIdentification.getNumber().trim().length();
     }
 
@@ -174,6 +172,7 @@ public class IdentificationCardView {
         mCardIdentificationNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));
         mCardIdentificationNumberTextView.setText(number);
     }
+
     private void decorateIdentificationBigNumberTextView() {
         int color = NORMAL_TEXT_VIEW_COLOR;
         mCardIdentificationBigNumberTextView.setTextColor(ContextCompat.getColor(mContext, color));

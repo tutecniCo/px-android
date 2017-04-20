@@ -22,7 +22,6 @@ public class FinancialInstitutionsView implements FinancialInstitutionsViewContr
     private View mView;
     private ImageView mFinancialInstitutionImageView;
     private MPTextView mFinancialInstitutionTextView;
-    private FinancialInstitution mFinancialInstitution;
 
     public FinancialInstitutionsView(Context context) {
         this.mContext = context;
@@ -53,7 +52,6 @@ public class FinancialInstitutionsView implements FinancialInstitutionsViewContr
 
     @Override
     public void drawFinancialInstitution(FinancialInstitution financialInstitution) {
-        this.mFinancialInstitution = financialInstitution;
 
         int image = getCardImage(financialInstitution);
         if (image == 0) {

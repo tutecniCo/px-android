@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.mercadopago.R;
 import com.mercadopago.customviews.MPTextView;
-import com.mercadopago.model.Issuer;
 
 /**
  * Created by marlanti on 3/3/17.
@@ -17,14 +16,12 @@ import com.mercadopago.model.Issuer;
 
 public class EntityTypesView implements EntityTypesViewController {
 
-    public static final String CARD_IMAGE_PREFIX = "mpsdk_issuer_";
 
-    private Issuer mIssuer;
 
     private Context mContext;
     private View mView;
-    private ImageView mIssuerImageView;
-    private MPTextView mIssuerTextView;
+    private ImageView mEntityTypeImageView;
+    private MPTextView mEntityTypeTextView;
     private String mEntityType;
 
     public EntityTypesView(Context context) {
@@ -33,14 +30,14 @@ public class EntityTypesView implements EntityTypesViewController {
 
     @Override
     public void initializeControls() {
-        mIssuerImageView = (ImageView) mView.findViewById(R.id.mpsdkIssuerImageView);
-        mIssuerTextView = (MPTextView) mView.findViewById(R.id.mpsdkIssuerTextView);
+        mEntityTypeImageView = (ImageView) mView.findViewById(R.id.mpsdkEntityTypeImageView);
+        mEntityTypeTextView = (MPTextView) mView.findViewById(R.id.mpsdkEntityTypeTextView);
     }
 
     @Override
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
         mView = LayoutInflater.from(mContext)
-                .inflate(R.layout.mpsdk_view_issuer, parent, attachToRoot);
+                .inflate(R.layout.mpsdk_view_entity_type, parent, attachToRoot);
         return mView;
     }
 
@@ -58,9 +55,9 @@ public class EntityTypesView implements EntityTypesViewController {
     public void drawEntityType(String entityType) {
         this.mEntityType = entityType;
 
-            mIssuerImageView.setVisibility(View.GONE);
-            mIssuerTextView.setVisibility(View.VISIBLE);
-            mIssuerTextView.setText(entityType);
+            mEntityTypeImageView.setVisibility(View.GONE);
+            mEntityTypeTextView.setVisibility(View.VISIBLE);
+            mEntityTypeTextView.setText(entityType);
 
     }
 

@@ -164,7 +164,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     private void initializeViews() {
-        mEntityTypesRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityIssuersView);
+        mEntityTypesRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityEntityTypeView);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
         if (mLowResActive) {
@@ -189,7 +189,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
             mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.mpsdkCollapsingToolbar);
-            mAppBar = (AppBarLayout) findViewById(R.id.mpsdkIssuersAppBar);
+            mAppBar = (AppBarLayout) findViewById(R.id.mpsdkEntityTypeAppBar);
             mCardContainer = (FrameLayout) findViewById(R.id.mpsdkActivityCardContainer);
             mNormalToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
             mNormalToolbar.setVisibility(View.VISIBLE);

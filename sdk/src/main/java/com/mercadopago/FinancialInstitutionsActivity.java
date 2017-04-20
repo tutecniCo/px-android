@@ -128,7 +128,7 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
 
 
     private void initializeViews() {
-        mFinancialInstitutionsRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityIssuersView);
+        mFinancialInstitutionsRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityFinancialInstitutionsView);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
         mLowResToolbar = (Toolbar) findViewById(R.id.mpsdkRegularToolbar);
