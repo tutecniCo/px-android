@@ -131,6 +131,8 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getPublicKey())
                 .setDecorationPreference(mDecorationPreference)
+                .setIdentification(mSelectedIdentification)
+                .setIdentificationType(mSelectedIdentificationType)
                 .startActivity();
     }
 

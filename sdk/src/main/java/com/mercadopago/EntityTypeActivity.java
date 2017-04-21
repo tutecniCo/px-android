@@ -288,6 +288,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    onBackPressed();
                     finish();
                 }
             });

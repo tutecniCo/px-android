@@ -35,11 +35,13 @@ public class IdentificationPresenter {
 
     //Activity parameters
     private String mPublicKey;
-    private Identification mIdentification;
 
     //Card Info
     private IdentificationType mIdentificationType;
     private String mIdentificationNumber;
+    private IdentificationType mSavedIdentificationType;
+    private Identification mIdentification;
+    private Identification mSavedIdentification;
 
 
     public IdentificationPresenter(Context context) {
@@ -67,7 +69,13 @@ public class IdentificationPresenter {
     }
 
 
+    public Identification getIdentification() {
+        return mIdentification;
+    }
 
+    public void setIdentification(Identification mIdentification) {
+        this.mIdentification = mIdentification;
+    }
 
     public List<IdentificationType> getIdentificationTypes() {
         return this.mIdentificationTypes;
@@ -79,14 +87,21 @@ public class IdentificationPresenter {
         this.mIdentificationTypes = identificationTypesList;
     }
 
-    public Identification getIdentification() {
-        return mIdentification;
+    public Identification getSavedIdentification() {
+        return mSavedIdentification;
     }
 
-    public void setIdentification(Identification identification) {
-        this.mIdentification = identification;
+    public void setSavedIdentification(Identification identification) {
+        this.mSavedIdentification = identification;
     }
 
+    public IdentificationType getSavedIdentificationType() {
+        return mSavedIdentificationType;
+    }
+
+    public void setSavedIdentificationType(IdentificationType savedIdentificationType) {
+        this.mSavedIdentificationType = savedIdentificationType;
+    }
 
     public void validateActivityParameters() {
         if (mPublicKey == null) {
@@ -132,7 +147,11 @@ public class IdentificationPresenter {
                     mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                             "identification types call is empty at IdentificationActivity");
                 } else {
-                    mIdentificationType = identificationTypes.get(0);
+                    if(mIdentificationType==null && mSavedIdentificationType ==null){
+                        mIdentificationType = identificationTypes.get(0);
+                    }else{
+                        mIdentificationType = mSavedIdentificationType;
+                    }
                     mView.initializeIdentificationTypes(identificationTypes);
                     mIdentificationTypes = identificationTypes;
                     mView.showInputContainer();
@@ -218,4 +237,7 @@ public class IdentificationPresenter {
     }
 
 
+    public void setIdentificationType(IdentificationType identificationType) {
+        this.mIdentificationType = identificationType;
+    }
 }

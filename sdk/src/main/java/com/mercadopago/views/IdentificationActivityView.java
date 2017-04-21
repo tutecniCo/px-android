@@ -33,4 +33,5 @@ public interface IdentificationActivityView {
     void setSoftInputMode();
     void finishWithResult(IdentificationType identificationType, Identification identification);
     void setNextButtonListeners();
+    void loadPresetInfo();
 }

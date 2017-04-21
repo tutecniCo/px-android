@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -143,12 +144,20 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
         String publicKey = getIntent().getStringExtra("merchantPublicKey");
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
-
-
-        Identification identification = new Identification();
         mPresenter.setPublicKey(publicKey);
-        mPresenter.setIdentification(identification);
+        Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
+        IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
 
+        if (identification != null && identificationType != null) {
+            mPresenter.setSavedIdentification(identification);
+            mPresenter.setIdentification(identification);
+            mPresenter.setIdentificationNumber(identification.getNumber());
+            mPresenter.setSavedIdentificationType(identificationType);
+            mPresenter.setIdentificationType(identificationType);
+
+        } else {
+            mPresenter.setIdentification(new Identification());
+        }
     }
 
     @Override
@@ -192,7 +201,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             mIdentificationCardView.setIdentificationNumber(idNumber);
             mIdentificationCardView.setIdentificationType(identificationType);
             mIdentificationCardView.draw();
-
         }
     }
 
@@ -320,7 +328,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mInputContainer.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-
         fullScrollDown();
     }
 
@@ -340,6 +347,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         }
     }
 
+
     private boolean cardViewsActive() {
         return !mLowResActive;
     }
@@ -353,6 +361,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationCardView = new IdentificationCardView(mActivity);
         mIdentificationCardView.inflateInParent(mIdentificationCardContainer, true);
         mIdentificationCardView.initializeControls();
+        loadPresetInfo();
         mIdentificationCardView.draw();
         mIdentificationCardView.show();
         requestIdentificationFocus();
@@ -371,8 +380,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent returnIntent = new Intent();
-                    setResult(RESULT_CANCELED, returnIntent);
+                    onBackPressed();
                     finish();
                 }
             });
@@ -522,10 +530,38 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationTypeContainer.setVisibility(View.VISIBLE);
 
         if (cardViewsActive()) {
-            mIdentificationCardView.setIdentificationType(identificationTypes.get(0));
+            if (mPresenter.getSavedIdentificationType() == null) {
+                mIdentificationCardView.setIdentificationType(identificationTypes.get(0));
+            } else {
+                mIdentificationCardView.setIdentificationType(mPresenter.getSavedIdentificationType());
+            }
+        }
+
+        if (mPresenter.getSavedIdentificationType() != null) {
+            setIdentificationTypeSelection(identificationTypes);
         }
     }
 
+
+    private void setIdentificationTypeSelection(List<IdentificationType> identificationTypes) {
+        IdentificationType idType = mPresenter.getSavedIdentificationType();
+        IdentificationTypesAdapter adapter = (IdentificationTypesAdapter) mIdentificationTypeSpinner.getAdapter();
+        int spinnerPosition = adapter.getPosition(idType);
+        mIdentificationTypeSpinner.setSelection(spinnerPosition);
+
+    }
+
+    private void setIdentificationNumberEditText() {
+        String number = mPresenter.getIdentification().getNumber();
+        mIdentificationNumberEditText.setText(number);
+        mIdentificationCardView.setIdentificationNumber(number);
+    }
+
+    public void loadPresetInfo() {
+        if (mPresenter.getSavedIdentification() != null && mPresenter.getSavedIdentificationType() != null) {
+            setIdentificationNumberEditText();
+        }
+    }
 
     private void onTouchEditText(MPEditText editText, MotionEvent event) {
         int action = MotionEventCompat.getActionMasked(event);

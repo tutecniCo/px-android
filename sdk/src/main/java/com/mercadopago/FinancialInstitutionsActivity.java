@@ -219,6 +219,7 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    onBackPressed();
                     finish();
                 }
             });

@@ -1064,19 +1064,20 @@ public class MercadoPagoComponents {
                 this.site = site;
                 return this;
             }
+
         }
 
         public static class IdentificationActivityBuilder {
             private Activity activity;
             private String merchantPublicKey;
             private DecorationPreference decorationPreference;
+            private Identification identification;
+            private IdentificationType identificationType;
 
             public IdentificationActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
                 return this;
             }
-
-
 
             public IdentificationActivityBuilder setMerchantPublicKey(String merchantPublicKey) {
                 this.merchantPublicKey = merchantPublicKey;
@@ -1090,6 +1091,15 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public IdentificationActivityBuilder setIdentification(Identification identification) {
+                this.identification = identification;
+                return this;
+            }
+
+            public IdentificationActivityBuilder setIdentificationType(IdentificationType identificationType) {
+                this.identificationType = identificationType;
+                return this;
+            }
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
@@ -1102,8 +1112,11 @@ public class MercadoPagoComponents {
                 Intent intent = new Intent(activity, IdentificationActivity.class);
                 intent.putExtra("merchantPublicKey", merchantPublicKey);
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
+                intent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
+                intent.putExtra("identificationType", JsonUtil.getInstance().toJson(identificationType));
                 activity.startActivityForResult(intent, IDENTIFICATION_REQUEST_CODE);
             }
+
         }
 
         public static class FinancialInstitutionsActivityBuilder {

@@ -35,6 +35,11 @@ public class IdentificationTypesAdapter extends BaseAdapter {
         }
     }
 
+    public int getPosition(IdentificationType item) {
+        return mData.indexOf(item);
+    }
+
+
     public List<IdentificationType> getIdentificationTypes() {
         return mData;
     }
