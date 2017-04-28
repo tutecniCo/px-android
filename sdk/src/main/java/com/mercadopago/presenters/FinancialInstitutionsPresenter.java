@@ -25,9 +25,7 @@ public class FinancialInstitutionsPresenter {
     //Activity parameters
     private String mPublicKey;
     private PaymentMethod mPaymentMethod;
-    private String mPrivateKey;
     private List<FinancialInstitution> mFinancialInstitutions;
-    private MercadoPagoServices mMercadoPago;
 
 
     public FinancialInstitutionsPresenter(Context context) {
@@ -46,14 +44,13 @@ public class FinancialInstitutionsPresenter {
         this.mFinancialInstitutions = mFinancialInstitutions;
     }
 
+    public List<FinancialInstitution> getFinancialInstitutions() {
+        return mFinancialInstitutions;
+    }
+
     public void setPublicKey(String publicKey) {
         this.mPublicKey = publicKey;
     }
-
-    public void setPrivateKey(String privateKey) {
-        this.mPrivateKey = privateKey;
-    }
-
 
     private void setFailureRecovery(FailureRecovery failureRecovery) {
         this.mFailureRecovery = failureRecovery;
@@ -77,14 +74,6 @@ public class FinancialInstitutionsPresenter {
         } else {
             mView.onValidStart();
         }
-    }
-
-    public void initializeMercadoPago() {
-        mMercadoPago = new MercadoPagoServices.Builder()
-                .setContext(mContext)
-                .setPublicKey(mPublicKey)
-                .setPrivateKey(mPrivateKey)
-                .build();
     }
 
     public void loadFinancialInstitutions() {

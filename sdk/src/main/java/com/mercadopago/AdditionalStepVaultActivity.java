@@ -1,6 +1,7 @@
 package com.mercadopago;
 
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import com.mercadopago.core.MercadoPagoComponents;
@@ -14,9 +15,12 @@ import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.AdditionalStepVaultPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
+import com.mercadopago.statemachines.AdditionalStepVaultStateMachine;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.views.AdditionalStepVaultView;
+
+import java.security.PublicKey;
 
 
 /**
@@ -25,6 +29,15 @@ import com.mercadopago.views.AdditionalStepVaultView;
 
 public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity implements AdditionalStepVaultView {
 
+    private static final String DECORATION_PREFERENCE_BUNDLE = "mDecorationPreference";
+    private static final String SELECTED_IDENTIFICATION_BUNDLE = "mSelectedIdentification";
+    private static final String SELECTED_IDENTIFICATION_TYPE_BUNDLE = "mSelectedIdentificationType";
+    private static final String SELECTED_ENTITY_TYPE_BUNDLE = "mSelectedEntityType";
+    private static final String SELECTED_FINANCIAL_INSTITUTIONS_BUNDLE = "mSelectedFinancialInstitution";
+    private static final String SITE_BUNDLE = "mSite";
+    private static final String PAYMENT_METHOD_BUNDLE = "mPaymentMethod";
+    private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
+    private static final String STATE_BUNDLE = "mState";
     private AdditionalStepVaultPresenter mPresenter;
     private DecorationPreference mDecorationPreference;
     private Identification mSelectedIdentification;
@@ -36,18 +49,22 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createPresenter();
-        getActivityParameters();
+        if(savedInstanceState==null){
+            createPresenter();
+            configurePresenter();
+            getActivityParameters();
+            mPresenter.validateActivityParameters();
+        }
+    }
 
+    private void configurePresenter(){
         mPresenter.attachView(this);
         mPresenter.attachResourcesProvider(new AdditionalStepVaultProviderImpl(this));
-        mPresenter.validateActivityParameters();
     }
 
     private void createPresenter() {
         mPresenter = new AdditionalStepVaultPresenter();
     }
-
 
     private void getActivityParameters() {
 
@@ -63,10 +80,44 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         mPresenter.setSite(site);
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
-
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(DECORATION_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(mDecorationPreference));
+        outState.putString(SELECTED_IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mSelectedIdentification));
+        outState.putString(SELECTED_IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mSelectedIdentificationType));
+        outState.putString(SELECTED_ENTITY_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mSelectedEntityType));
+        outState.putString(SELECTED_FINANCIAL_INSTITUTIONS_BUNDLE, JsonUtil.getInstance().toJson(mSelectedFinancialInstitution));
+        outState.putString(SITE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSite()));
+        outState.putString(PAYMENT_METHOD_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentMethod()));
+        outState.putString(PUBLIC_KEY_BUNDLE, mPresenter.getPublicKey());
+        outState.putString(STATE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getState()));
 
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+
+            createPresenter();
+            configurePresenter();
+
+            mDecorationPreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(DECORATION_PREFERENCE_BUNDLE), DecorationPreference.class);
+            mSelectedIdentification = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SELECTED_IDENTIFICATION_BUNDLE), Identification.class);
+            mSelectedIdentificationType = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SELECTED_IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
+            mSelectedEntityType = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SELECTED_ENTITY_TYPE_BUNDLE), EntityType.class);
+            mSelectedFinancialInstitution = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SELECTED_FINANCIAL_INSTITUTIONS_BUNDLE), FinancialInstitution.class);
+            mPresenter.setSite(JsonUtil.getInstance().fromJson(savedInstanceState.getString(SITE_BUNDLE), Site.class));
+            mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class));
+            mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
+            mPresenter.setState(JsonUtil.getInstance().fromJson(savedInstanceState.getString(STATE_BUNDLE), AdditionalStepVaultStateMachine.class));
+        }
+
+    }
 
 
     @Override
@@ -94,24 +145,21 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
     @Override
     public void startEntityTypeStepAnimatedBack() {
-
         startEntityTypeStepComponent();
         animateBackSelection();
-
     }
 
     private void startEntityTypeStepComponent() {
         new MercadoPagoComponents.Activities.EntityTypeActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getPublicKey())
-                .setPaymentMethod(mPresenter.getmPaymentMethod())
+                .setPaymentMethod(mPresenter.getPaymentMethod())
                 .setIdentification(mSelectedIdentification)
                 .setIdentificationType(mSelectedIdentificationType)
                 .setDecorationPreference(mDecorationPreference)
                 .setSite(mPresenter.getSite())
                 .startActivity();
     }
-
 
     @Override
     public void startIdentificationStep() {
@@ -157,7 +205,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         new MercadoPagoComponents.Activities.FinancialInstitutionsActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getPublicKey())
-                .setPaymentMethod(mPresenter.getmPaymentMethod())
+                .setPaymentMethod(mPresenter.getPaymentMethod())
                 .setDecorationPreference(mDecorationPreference)
                 .startActivity();
     }

@@ -142,4 +142,8 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, En
     public void setSite(Site mSite) {
         this.mSite = mSite;
     }
+
+    public Site getSite() {
+        return mSite;
+    }
 }

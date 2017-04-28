@@ -48,6 +48,14 @@ import java.util.List;
 
 public class EntityTypeActivity extends MercadoPagoBaseActivity implements EntityTypeActivityView, TimerObserver {
 
+    private static final String DECORATION_PREFERENCE_BUNDLE = "mDecorationPreference";
+    private static final String IDENTIFICATION_BUNDLE = "mIdentification";
+    private static final String IDENTIFICATION_TYPE_BUNDLE = "mIdentificationType";
+    private static final String SITE_BUNDLE = "mSite";
+    private static final String PAYMENT_METHOD_BUNDLE = "mPaymetMethod";
+    private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
+    private static final String LOW_RES_BUNDLE = "mLowResActive";
+
     protected EntityTypePresenter mPresenter;
     protected Activity mActivity;
 
@@ -71,22 +79,69 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = this;
+
+        if (savedInstanceState == null) {
+            createPresenter();
+            configurePresenter();
+            getActivityParameters();
+            setTheme();
+            analyzeLowRes();
+            setContentView();
+            mPresenter.validateActivityParameters();
+        }
+
+    }
+
+    private void createPresenter() {
         if (mPresenter == null) {
             mPresenter = new EntityTypePresenter(getBaseContext());
         }
+    }
 
+    private void configurePresenter() {
         mPresenter.attachView(this);
         EntityTypeProviderImpl resourcesProvider = new EntityTypeProviderImpl(this);
         mPresenter.attachResourcesProvider(resourcesProvider);
+    }
 
-        mActivity = this;
-        getActivityParameters();
+    private void setTheme() {
         if (isCustomColorSet()) {
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
-        analyzeLowRes();
-        setContentView();
-        mPresenter.validateActivityParameters();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(DECORATION_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(mDecorationPreference));
+        outState.putString(IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentification()));
+        outState.putString(IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
+        outState.putString(SITE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSite()));
+        outState.putString(PAYMENT_METHOD_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentMethod()));
+        outState.putString(PUBLIC_KEY_BUNDLE, mPresenter.getPublicKey());
+        outState.putBoolean(LOW_RES_BUNDLE, mLowResActive);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            createPresenter();
+            configurePresenter();
+            mDecorationPreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(DECORATION_PREFERENCE_BUNDLE), DecorationPreference.class);
+            mPresenter.setSite(JsonUtil.getInstance().fromJson(savedInstanceState.getString(SITE_BUNDLE), Site.class));
+            mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class));
+            mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
+            mPresenter.setIdentification(JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class));
+            mPresenter.setIdentificationType(JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class));
+            mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
+            setTheme();
+            analyzeLowRes();
+            setContentView();
+        }
+
     }
 
     private boolean isCustomColorSet() {

@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -65,6 +64,13 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     public static final String IDENTIFICATION_TYPE_BUNDLE = "mIdentificationType";
     public static final String IDENTIFICATION_TYPES_LIST_BUNDLE = "mIdTypesList";
     public static final String LOW_RES_BUNDLE = "mLowRes";
+    private static final String SAVED_IDENTIFICATION_BUNDLE = "mSavedIdentification";
+    private static final String SAVED_IDENTIFICATION_TYPE_BUNDLE = "mSavedIdentificationType";
+    private static final String DECORATION_PREFERENCE_BUNDLE = "mDecorationPreference";
+    private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
+    private static final String DEFAULT_BASE_URL_BUNDLE = "mDefaultBaseURL";
+    private static final String MERCHANT_DISCOUNT_BASE_URL_BUNDLE = "mMerchantDiscountBaseURL";
+    private static final String MERCHANT_GET_DISCOUNT_URI_BUNDLE = "mMerchantGetDiscountURI";
 
     //ViewMode
     protected boolean mLowResActive;
@@ -112,19 +118,33 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mActivity = this;
+
+        if(savedInstanceState==null){
+            createPresenter();
+            configurePresenter();
+
+            getActivityParameters();
+            setTheme();
+            analizeLowRes();
+            setMerchantInfo();
+            setContentView();
+            mPresenter.validateActivityParameters();
+
+        }
+
+
+    }
+
+    private void createPresenter(){
         if (mPresenter == null) {
             mPresenter = new IdentificationPresenter(getBaseContext());
         }
+    }
+
+    private void configurePresenter(){
         mPresenter.setView(this);
-        mActivity = this;
-        getActivityParameters();
-        if (isCustomColorSet()) {
-            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
-        }
-        analizeLowRes();
-        setMerchantInfo();
-        setContentView();
-        mPresenter.validateActivityParameters();
     }
 
     private boolean isCustomColorSet() {
@@ -137,7 +157,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             mMerchantDiscountBaseURL = CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountBaseURL();
             mMerchantGetDiscountURI = CustomServicesHandler.getInstance().getServicePreference().getGetMerchantDiscountURI();
         }
-
     }
 
     private void getActivityParameters() {
@@ -150,10 +169,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
         if (identification != null && identificationType != null) {
             mPresenter.setSavedIdentification(identification);
-            mPresenter.setIdentification(identification);
-            mPresenter.setIdentificationNumber(identification.getNumber());
             mPresenter.setSavedIdentificationType(identificationType);
-            mPresenter.setIdentificationType(identificationType);
 
         } else {
             mPresenter.setIdentification(new Identification());
@@ -162,13 +178,19 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         outState.putString(IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentification()));
         outState.putString(IDENTIFICATION_NUMBER_BUNDLE, mPresenter.getIdentificationNumber());
         outState.putString(IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
+        outState.putString(SAVED_IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSavedIdentification()));
+        outState.putString(SAVED_IDENTIFICATION_TYPE_BUNDLE,JsonUtil.getInstance().toJson(mPresenter.getSavedIdentificationType()));
         outState.putString(IDENTIFICATION_TYPES_LIST_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationTypes()));
         outState.putBoolean(LOW_RES_BUNDLE, mLowResActive);
+        outState.putString(DECORATION_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(mDecorationPreference));
+        outState.putString(PUBLIC_KEY_BUNDLE, mPresenter.getPublicKey());
+        outState.putString(DEFAULT_BASE_URL_BUNDLE, mDefaultBaseURL);
+        outState.putString(MERCHANT_DISCOUNT_BASE_URL_BUNDLE, mMerchantDiscountBaseURL);
+        outState.putString(MERCHANT_GET_DISCOUNT_URI_BUNDLE, mMerchantGetDiscountURI);
+        super.onSaveInstanceState(outState);
 
     }
 
@@ -176,6 +198,13 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
+
+            createPresenter();
+            configurePresenter();
+            mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
+            setTheme();
+            setContentView();
+
             List<IdentificationType> identificationTypesList;
             try {
                 Type listType = new TypeToken<List<IdentificationType>>() {
@@ -186,21 +215,44 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
                 identificationTypesList = null;
             }
 
+
+            mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
             mPresenter.setIdentificationTypesList(identificationTypesList);
+
+            Identification savedIdentification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra(SAVED_IDENTIFICATION_BUNDLE), Identification.class);
+            IdentificationType savedIdentificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra(SAVED_IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
+
+            if (savedIdentification != null && savedIdentificationType != null) {
+                mPresenter.setSavedIdentification(savedIdentification);
+                mPresenter.setSavedIdentificationType(savedIdentificationType);
+
+            }
+
             String idNumber = savedInstanceState.getString(IDENTIFICATION_NUMBER_BUNDLE);
             mPresenter.setIdentificationNumber(idNumber);
             Identification identification = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class);
             identification.setNumber(idNumber);
             mPresenter.setIdentification(identification);
 
+
             IdentificationType identificationType = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
 
-            mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
+            mDecorationPreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(DECORATION_PREFERENCE_BUNDLE), DecorationPreference.class);
+            mDefaultBaseURL = savedInstanceState.getString(DEFAULT_BASE_URL_BUNDLE);
+            mMerchantDiscountBaseURL = savedInstanceState.getString(MERCHANT_DISCOUNT_BASE_URL_BUNDLE);
+            mMerchantGetDiscountURI = savedInstanceState.getString(MERCHANT_GET_DISCOUNT_URI_BUNDLE);
+
 
 
             mIdentificationCardView.setIdentificationNumber(idNumber);
             mIdentificationCardView.setIdentificationType(identificationType);
             mIdentificationCardView.draw();
+        }
+    }
+
+    private void setTheme(){
+        if (isCustomColorSet()) {
+            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
     }
 

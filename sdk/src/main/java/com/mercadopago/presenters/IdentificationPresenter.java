@@ -93,6 +93,8 @@ public class IdentificationPresenter {
 
     public void setSavedIdentification(Identification identification) {
         this.mSavedIdentification = identification;
+        this.mIdentification = identification;
+        this.mIdentificationNumber = identification.getNumber();
     }
 
     public IdentificationType getSavedIdentificationType() {
@@ -101,6 +103,7 @@ public class IdentificationPresenter {
 
     public void setSavedIdentificationType(IdentificationType savedIdentificationType) {
         this.mSavedIdentificationType = savedIdentificationType;
+        this.mIdentificationType = savedIdentificationType;
     }
 
     public void validateActivityParameters() {

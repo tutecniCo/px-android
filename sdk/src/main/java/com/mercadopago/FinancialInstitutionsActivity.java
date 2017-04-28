@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.FinancialInstitutionsAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
@@ -29,6 +30,7 @@ import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.views.FinancialInstitutionsActivityView;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -36,6 +38,11 @@ import java.util.List;
  */
 
 public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity implements FinancialInstitutionsActivityView, TimerObserver {
+
+    private static final String DECORATION_PREFERENCE_BUNDLE = "mDecorationPreference";
+    private static final String FINANCIAL_INSTITUTIONS_BUNDLE = "mFinancialInstitutions";
+    private static final String PAYMENT_METHOD_BUNDLE = "mPaymentMethod";
+    private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
 
     protected FinancialInstitutionsPresenter mPresenter;
     protected Activity mActivity;
@@ -53,17 +60,27 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mActivity = this;
+
+        if (savedInstanceState == null) {
+            createPresenter();
+            configurePresenter();
+            getActivityParameters();
+            setTheme();
+            setContentView();
+            mPresenter.validateActivityParameters();
+        }
+
+    }
+
+    private void createPresenter() {
         if (mPresenter == null) {
             mPresenter = new FinancialInstitutionsPresenter(getBaseContext());
         }
+    }
+
+    private void configurePresenter() {
         mPresenter.setView(this);
-        mActivity = this;
-        getActivityParameters();
-        if (isCustomColorSet()) {
-            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
-        }
-        setContentView();
-        mPresenter.validateActivityParameters();
     }
 
     private boolean isCustomColorSet() {
@@ -73,7 +90,6 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
     private void getActivityParameters() {
 
         String publicKey = getIntent().getStringExtra("merchantPublicKey");
-        String payerAccessToken = getIntent().getStringExtra("payerAccessToken");
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
 
         PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(
@@ -84,8 +100,50 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
 
         mPresenter.setPaymentMethod(paymentMethod);
         mPresenter.setPublicKey(publicKey);
-        mPresenter.setPrivateKey(payerAccessToken);
         mPresenter.setFinancialInstitutions(financialInstitutions);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putString(DECORATION_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(mDecorationPreference));
+        outState.putString(FINANCIAL_INSTITUTIONS_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getFinancialInstitutions()));
+        outState.putString(PAYMENT_METHOD_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentMethod()));
+        outState.putString(PUBLIC_KEY_BUNDLE, mPresenter.getPublicKey());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            createPresenter();
+            configurePresenter();
+            setContentView();
+            mDecorationPreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(DECORATION_PREFERENCE_BUNDLE), DecorationPreference.class);
+            mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class));
+            mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
+
+            List<FinancialInstitution> financialInstitutionList;
+            try {
+                Type listType = new TypeToken<List<FinancialInstitution>>() {
+                }.getType();
+                financialInstitutionList = JsonUtil.getInstance().getGson().fromJson(
+                        savedInstanceState.getString(FINANCIAL_INSTITUTIONS_BUNDLE), listType);
+            } catch (Exception ex) {
+                financialInstitutionList = null;
+            }
+
+            mPresenter.setFinancialInstitutions(financialInstitutionList);
+            setTheme();
+        }
+    }
+
+    private void setTheme(){
+        if (isCustomColorSet()) {
+            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
+        }
     }
 
 
@@ -97,7 +155,6 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
     public void onValidStart() {
         MPTracker.getInstance().trackScreen("FINANCIAL_INSTITUTIONS", "2", mPresenter.getPublicKey(),
                 BuildConfig.VERSION_NAME, this);
-        mPresenter.initializeMercadoPago();
         initializeViews();
         loadViews();
         hideHeader();

@@ -22,6 +22,14 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     private AdditionalStepVaultStateMachine state;
 
 
+    public AdditionalStepVaultStateMachine getState() {
+        return state;
+    }
+
+    public void setState(AdditionalStepVaultStateMachine state) {
+        this.state = state;
+    }
+
     public void setSite(Site mSite) {
         this.mSite = mSite;
     }
@@ -112,7 +120,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
         return mSite;
     }
 
-    public PaymentMethod getmPaymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return mPaymentMethod;
     }
 
