@@ -85,7 +85,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .build();
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                .disableReviewAndConfirmScreen()
+//                .disableReviewAndConfirmScreen()
                 .disableBankDeals()
                 .disableDiscount()
                 .disableInstallmentsReviewScreen()

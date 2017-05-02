@@ -97,6 +97,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     private static final String CREATED_TOKEN_BUNDLE = "mCreatedToken";
     private static final String SELECTED_DISCOUNT_BUNDLE = "mDiscount";
     private static final String PAYMENT_METHOD_EDITED = "mPaymentMethodEdited";
+    private static final String PAYER_BUNDLE = "mPayer";
+    private static final String TRANSACTION_DETAILS_BUNDLE = "mTransactionDetails";
 
     //Parameters
     protected CheckoutPreference mCheckoutPreference;
@@ -521,6 +523,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
         outState.putString(CREATED_TOKEN_BUNDLE, JsonUtil.getInstance().toJson(mCreatedToken));
         outState.putString(SELECTED_DISCOUNT_BUNDLE, JsonUtil.getInstance().toJson(mDiscount));
         outState.putBoolean(PAYMENT_METHOD_EDITED, mPaymentMethodEdited);
+        outState.putString(PAYER_BUNDLE, JsonUtil.getInstance().toJson(mPayer));
+        outState.putString(TRANSACTION_DETAILS_BUNDLE, JsonUtil.getInstance().toJson(mTransactionDetails));
+
     }
 
     @Override
@@ -558,6 +563,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
             mCreatedToken = JsonUtil.getInstance().fromJson(savedInstanceState.getString(CREATED_TOKEN_BUNDLE), Token.class);
             mDiscount = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SELECTED_DISCOUNT_BUNDLE), Discount.class);
             mPaymentMethodEdited = savedInstanceState.getBoolean(PAYMENT_METHOD_EDITED);
+
+            mPayer = JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYER_BUNDLE), Payer.class);
+            mTransactionDetails = JsonUtil.getInstance().fromJson(savedInstanceState.getString(TRANSACTION_DETAILS_BUNDLE), TransactionDetails.class);
 
         }
         super.onRestoreInstanceState(savedInstanceState);
