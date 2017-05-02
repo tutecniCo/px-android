@@ -97,11 +97,11 @@ public class PaymentMethod {
     }
 
     public boolean isIdentificationTypeOffRequired() {
-        return isAdditionalInfoNeeded("off_identification_type");
+        return isAdditionalInfoNeeded("identification_type");
     }
 
     public boolean isIdentificationNumberOffRequired() {
-        return isAdditionalInfoNeeded("off_identification_number");
+        return isAdditionalInfoNeeded("identification_number");
     }
 
     public boolean isIdentificationOffRequired(){
