@@ -57,7 +57,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     private void startMercadoPagoCheckout() {
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-                //.disableReviewAndConfirmScreen()
+                .disableReviewAndConfirmScreen()
                 .disableDiscount()
                 .disableBankDeals()
                 .disableInstallmentsReviewScreen()
@@ -85,7 +85,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .build();
 
         FlowPreference flowPreference = new FlowPreference.Builder()
-//                .disableReviewAndConfirmScreen()
+                .disableReviewAndConfirmScreen()
                 .disableBankDeals()
                 .disableDiscount()
                 .disableInstallmentsReviewScreen()
@@ -111,7 +111,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference.Builder()
                 .addItem(new Item("Item", BigDecimal.TEN.multiply(BigDecimal.TEN)))
-                .setSite(Sites.COLOMBIA)
+                .setSite(Sites.ARGENTINA)
 //                .addExcludedPaymentType(PaymentTypes.ATM)
 //                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
