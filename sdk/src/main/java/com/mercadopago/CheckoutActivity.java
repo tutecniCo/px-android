@@ -755,7 +755,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
 
-    private void checkReviewAndConfirmFlow(){
+    private void checkReviewAndConfirmFlow() {
         if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
 
@@ -839,11 +839,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity {
     }
 
     private void finishWithPaymentResult() {
-        if(mPaymentResultInput != null) {
+        if (mPaymentResultInput != null) {
             setResult(RESULT_OK);
         } else {
             Intent data = new Intent();
-            if(mCreatedPayment != null) {
+            if (mCreatedPayment != null) {
                 data.putExtra("payment", JsonUtil.getInstance().toJson(mCreatedPayment));
             }
             setResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE, data);

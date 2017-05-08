@@ -49,7 +49,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             createPresenter();
             configurePresenter();
             getActivityParameters();
@@ -57,7 +57,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         }
     }
 
-    private void configurePresenter(){
+    private void configurePresenter() {
         mPresenter.attachView(this);
         mPresenter.attachResourcesProvider(new AdditionalStepVaultProviderImpl(this));
     }
@@ -235,12 +235,14 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     @Override
     public void finishWithResult() {
 
-        String entityTypeId = mSelectedEntityType.getId();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("identification", JsonUtil.getInstance().toJson(mSelectedIdentification));
         returnIntent.putExtra("financialInstitution", JsonUtil.getInstance().toJson(mSelectedFinancialInstitution));
-        returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(entityTypeId));
 
+        if (mSelectedEntityType != null) {
+            String entityTypeId = mSelectedEntityType.getId();
+            returnIntent.putExtra("entityType", JsonUtil.getInstance().toJson(entityTypeId));
+        }
 
         setResult(RESULT_OK, returnIntent);
         finish();
