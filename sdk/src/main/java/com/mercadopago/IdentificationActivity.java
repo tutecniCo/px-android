@@ -44,6 +44,7 @@ import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
+import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.IdentificationActivityView;
 
 import java.lang.reflect.Type;
@@ -178,7 +179,15 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentification()));
+        String number = mIdentificationNumberEditText.getText().toString();
+        mPresenter.saveIdentificationNumber(number);
+        Identification identification = mPresenter.getIdentification();
+        if(identification!=null){
+            identification.setNumber(number);
+        }
+        mPresenter.setSavedIdentification(identification);
+        mPresenter.setSavedIdentificationType(mPresenter.getIdentificationType());
+        outState.putString(IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(identification));
         outState.putString(IDENTIFICATION_NUMBER_BUNDLE, mPresenter.getIdentificationNumber());
         outState.putString(IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
         outState.putString(SAVED_IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSavedIdentification()));
@@ -219,8 +228,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
             mPresenter.setIdentificationTypesList(identificationTypesList);
 
-            Identification savedIdentification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra(SAVED_IDENTIFICATION_BUNDLE), Identification.class);
-            IdentificationType savedIdentificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra(SAVED_IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
+            Identification savedIdentification = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SAVED_IDENTIFICATION_BUNDLE), Identification.class);
+            IdentificationType savedIdentificationType = JsonUtil.getInstance().fromJson(savedInstanceState.getString(SAVED_IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
 
             if (savedIdentification != null && savedIdentificationType != null) {
                 mPresenter.setSavedIdentification(savedIdentification);
@@ -229,11 +238,12 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             }
 
             String idNumber = savedInstanceState.getString(IDENTIFICATION_NUMBER_BUNDLE);
-            mPresenter.setIdentificationNumber(idNumber);
             Identification identification = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class);
-            identification.setNumber(idNumber);
+            if(identification==null){
+                identification = new Identification();
+            }
             mPresenter.setIdentification(identification);
-
+            mPresenter.setIdentificationNumber(idNumber);
 
             IdentificationType identificationType = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class);
 
@@ -242,7 +252,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             mMerchantDiscountBaseURL = savedInstanceState.getString(MERCHANT_DISCOUNT_BASE_URL_BUNDLE);
             mMerchantGetDiscountURI = savedInstanceState.getString(MERCHANT_GET_DISCOUNT_URI_BUNDLE);
 
-
+            mPresenter.validateActivityParameters();
 
             mIdentificationCardView.setIdentificationNumber(idNumber);
             mIdentificationCardView.setIdentificationType(identificationType);

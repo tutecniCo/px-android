@@ -111,7 +111,9 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference.Builder()
                 .addItem(new Item("Item", BigDecimal.TEN.multiply(BigDecimal.TEN)))
-                .setSite(Sites.ARGENTINA)
+//                .setSite(Sites.ARGENTINA)
+                .setSite(Sites.COLOMBIA)
+                .setId("242624092-e0d12cfe-779b-4b85-b3b5-2243b45334c3")
 //                .addExcludedPaymentType(PaymentTypes.ATM)
 //                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
