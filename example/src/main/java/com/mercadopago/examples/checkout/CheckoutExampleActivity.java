@@ -111,9 +111,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference.Builder()
                 .addItem(new Item("Item", BigDecimal.TEN.multiply(BigDecimal.TEN)))
-//                .setSite(Sites.ARGENTINA)
-                .setSite(Sites.COLOMBIA)
-                .setId("242624092-e0d12cfe-779b-4b85-b3b5-2243b45334c3")
+                .setSite(Sites.ARGENTINA)
 //                .addExcludedPaymentType(PaymentTypes.ATM)
 //                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
@@ -121,7 +119,6 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 //                .addExcludedPaymentType(PaymentTypes.TICKET)
 //                .enableAccountMoney()
 //                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")
-
                 .build();
     }
 
@@ -180,7 +177,6 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 } else {
                     startWithPaymentResult(paymentData);
                 }
-
 
 
             } else if (resultCode == RESULT_CANCELED) {

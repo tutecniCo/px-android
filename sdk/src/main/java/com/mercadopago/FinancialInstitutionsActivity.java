@@ -141,7 +141,7 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
         }
     }
 
-    private void setTheme(){
+    private void setTheme() {
         if (isCustomColorSet()) {
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }

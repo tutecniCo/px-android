@@ -122,7 +122,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
         mActivity = this;
 
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
             createPresenter();
             configurePresenter();
 
@@ -138,13 +138,13 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     }
 
-    private void createPresenter(){
+    private void createPresenter() {
         if (mPresenter == null) {
             mPresenter = new IdentificationPresenter(getBaseContext());
         }
     }
 
-    private void configurePresenter(){
+    private void configurePresenter() {
         mPresenter.setView(this);
     }
 
@@ -182,7 +182,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         String number = mIdentificationNumberEditText.getText().toString();
         mPresenter.saveIdentificationNumber(number);
         Identification identification = mPresenter.getIdentification();
-        if(identification!=null){
+        if (identification != null) {
             identification.setNumber(number);
         }
         mPresenter.setSavedIdentification(identification);
@@ -191,7 +191,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         outState.putString(IDENTIFICATION_NUMBER_BUNDLE, mPresenter.getIdentificationNumber());
         outState.putString(IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
         outState.putString(SAVED_IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSavedIdentification()));
-        outState.putString(SAVED_IDENTIFICATION_TYPE_BUNDLE,JsonUtil.getInstance().toJson(mPresenter.getSavedIdentificationType()));
+        outState.putString(SAVED_IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSavedIdentificationType()));
         outState.putString(IDENTIFICATION_TYPES_LIST_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationTypes()));
         outState.putBoolean(LOW_RES_BUNDLE, mLowResActive);
         outState.putString(DECORATION_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(mDecorationPreference));
@@ -239,7 +239,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
             String idNumber = savedInstanceState.getString(IDENTIFICATION_NUMBER_BUNDLE);
             Identification identification = JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class);
-            if(identification==null){
+            if (identification == null) {
                 identification = new Identification();
             }
             mPresenter.setIdentification(identification);
@@ -260,7 +260,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         }
     }
 
-    private void setTheme(){
+    private void setTheme() {
         if (isCustomColorSet()) {
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
