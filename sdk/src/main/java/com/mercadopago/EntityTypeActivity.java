@@ -140,6 +140,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
             setTheme();
             analyzeLowRes();
             setContentView();
+            mPresenter.validateActivityParameters();
         }
 
     }

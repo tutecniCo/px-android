@@ -137,6 +137,7 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
 
             mPresenter.setFinancialInstitutions(financialInstitutionList);
             setTheme();
+            mPresenter.validateActivityParameters();
         }
     }
 
