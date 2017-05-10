@@ -8,6 +8,8 @@ public class Payer {
     private Identification identification;
     private String type;
     private String entityTypeId;
+    private String name;
+    private String surname;
 
     public String getEntityTypeId() {
         return entityTypeId;
@@ -55,5 +57,21 @@ public class Payer {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getSurname() {
+        return this.surname;
     }
 }

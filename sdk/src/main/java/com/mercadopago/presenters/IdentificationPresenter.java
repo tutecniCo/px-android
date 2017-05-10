@@ -1,6 +1,7 @@
 package com.mercadopago.presenters;
 
 import android.content.Context;
+import android.os.ParcelUuid;
 import android.text.TextUtils;
 
 import com.mercadopago.R;
@@ -10,6 +11,7 @@ import com.mercadopago.core.MercadoPagoServices;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
+import com.mercadopago.model.Payer;
 import com.mercadopago.views.IdentificationActivityView;
 
 import java.util.List;
@@ -22,7 +24,6 @@ import java.util.List;
 public class IdentificationPresenter {
 
     private static final int CARD_DEFAULT_IDENTIFICATION_NUMBER_LENGTH = 12;
-
 
     private List<IdentificationType> mIdentificationTypes;
 
@@ -42,7 +43,7 @@ public class IdentificationPresenter {
     private IdentificationType mSavedIdentificationType;
     private Identification mIdentification;
     private Identification mSavedIdentification;
-
+    private Payer mPayer;
 
     public IdentificationPresenter(Context context) {
         this.mContext = context;
@@ -80,7 +81,6 @@ public class IdentificationPresenter {
     public List<IdentificationType> getIdentificationTypes() {
         return this.mIdentificationTypes;
     }
-
 
 
     public void setIdentificationTypesList(List<IdentificationType> identificationTypesList) {
@@ -126,7 +126,6 @@ public class IdentificationPresenter {
     }
 
 
-
     public void initialize() {
         mView.initializeTitle();
         mView.setIdentificationTypeListeners();
@@ -134,7 +133,6 @@ public class IdentificationPresenter {
         mView.setNextButtonListeners();
         mView.setBackButtonListeners();
     }
-
 
 
     public void loadIdentificationTypes() {
@@ -150,9 +148,9 @@ public class IdentificationPresenter {
                     mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
                             "identification types call is empty at IdentificationActivity");
                 } else {
-                    if(mIdentificationType==null && mSavedIdentificationType ==null){
+                    if (mIdentificationType == null && mSavedIdentificationType == null) {
                         mIdentificationType = identificationTypes.get(0);
-                    }else{
+                    } else {
                         mIdentificationType = mSavedIdentificationType;
                     }
                     mView.initializeIdentificationTypes(identificationTypes);
@@ -199,9 +197,16 @@ public class IdentificationPresenter {
         mIdentification.setNumber(number);
     }
 
-
     public String getIdentificationNumber() {
         return mIdentificationNumber;
+    }
+
+    public Payer getPayer() {
+        return mPayer;
+    }
+
+    public void setPayer(Payer payer) {
+        this.mPayer = payer;
     }
 
     public int getIdentificationNumberMaxLength() {
@@ -211,7 +216,6 @@ public class IdentificationPresenter {
         }
         return maxLength;
     }
-
 
     public boolean validateIdentificationNumber() {
         mIdentification.setNumber(getIdentificationNumber());
@@ -231,14 +235,11 @@ public class IdentificationPresenter {
         mView.setErrorIdentificationNumber();
     }
 
-
-
     public void recoverFromFailure() {
         if (mFailureRecovery != null) {
             mFailureRecovery.recover();
         }
     }
-
 
     public void setIdentificationType(IdentificationType identificationType) {
         this.mIdentificationType = identificationType;

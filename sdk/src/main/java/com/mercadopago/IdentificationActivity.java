@@ -34,6 +34,7 @@ import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
+import com.mercadopago.model.Payer;
 import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
@@ -100,7 +101,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     private TextView mBackInactiveButtonText;
     private TextView mBackButtonText;
     private ProgressBar mProgressBar;
-    private FrameLayout mInputContainer;
+    private LinearLayout mInputContainer;
     private Spinner mIdentificationTypeSpinner;
     private LinearLayout mIdentificationTypeContainer;
     private LinearLayout mButtonContainer;
@@ -161,14 +162,16 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
         mPresenter.setPublicKey(publicKey);
         Identification identification = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identification"), Identification.class);
+        Payer payer = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("payer"), Payer.class);
         IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
 
         if (identification != null && identificationType != null) {
             mPresenter.setSavedIdentification(identification);
             mPresenter.setSavedIdentificationType(identificationType);
-
         } else {
             mPresenter.setIdentification(new Identification());
+            //TODO agregarlo al savedResoreInstance
+            mPresenter.setPayer(payer);
         }
     }
 
@@ -195,7 +198,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         outState.putString(MERCHANT_DISCOUNT_BASE_URL_BUNDLE, mMerchantDiscountBaseURL);
         outState.putString(MERCHANT_GET_DISCOUNT_URI_BUNDLE, mMerchantGetDiscountURI);
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
@@ -218,7 +220,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             } catch (Exception ex) {
                 identificationTypesList = null;
             }
-
 
             mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
             mPresenter.setIdentificationTypesList(identificationTypesList);
@@ -369,7 +370,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationTypeContainer = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationTypeContainer);
         mIdentificationTypeSpinner = (Spinner) findViewById(R.id.mpsdkCardIdentificationType);
         mIdentificationNumberEditText = (MPEditText) findViewById(R.id.mpsdkCardIdentificationNumber);
-        mInputContainer = (FrameLayout) findViewById(R.id.mpsdkInputContainer);
+        mInputContainer = (LinearLayout) findViewById(R.id.mpsdkInputContainer);
         mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
         mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
         mNextButtonText = (TextView) findViewById(R.id.mpsdkNextButtonText);

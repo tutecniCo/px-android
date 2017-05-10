@@ -22,7 +22,7 @@
         tools:text="Name" />
 
     <com.mercadopago.customviews.MPEditText
-        android:id="@+id/mpsdkCardholderName"
+        android:id="@+id/mpsdkName"
         android:layout_width="293dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

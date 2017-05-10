@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mpsdkInputContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="12dp"
+    android:orientation="horizontal"
     android:visibility="visible">
 
     <include layout="@layout/mpsdk_form_cardidentification_input" />
@@ -12,4 +13,4 @@
 
     <include layout="@layout/mpsdk_form_surname_input" />
 
-</FrameLayout>
+</LinearLayout>
