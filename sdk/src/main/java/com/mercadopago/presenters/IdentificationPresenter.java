@@ -16,6 +16,8 @@ import com.mercadopago.views.IdentificationActivityView;
 
 import java.util.List;
 
+import static com.mercadopago.util.TextUtil.isEmpty;
+
 
 /**
  * Created by marlanti on 3/16/17.
@@ -228,6 +230,28 @@ public class IdentificationPresenter {
             setCardIdentificationErrorView(mContext.getString(R.string.mpsdk_invalid_identification_number));
         }
         return ans;
+    }
+
+    //TODO refactor
+    public boolean validatePayerName() {
+        Boolean isValidName = true;
+
+        if (isEmpty(mPayer.getName())) {
+            isValidName = false;
+        }
+
+        return isValidName;
+    }
+
+    //TODO refactor
+    public boolean validatePayerSurname() {
+        Boolean isValidSurname = true;
+
+        if (isEmpty(mPayer.getSurname())) {
+            isValidSurname = false;
+        }
+
+        return isValidSurname;
     }
 
     private void setCardIdentificationErrorView(String message) {

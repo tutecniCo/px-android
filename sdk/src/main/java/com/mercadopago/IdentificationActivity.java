@@ -26,11 +26,13 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.card.CardIdentificationNumberEditTextCallback;
+import com.mercadopago.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
+import com.mercadopago.listeners.card.CardSecurityCodeTextWatcher;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -45,11 +47,12 @@ import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.IdentificationActivityView;
 
 import java.lang.reflect.Type;
 import java.util.List;
+
+import static android.view.View.GONE;
 
 /**
  * Created by marlanti on 3/16/17.
@@ -59,6 +62,11 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     public static final String ERROR_STATE = "textview_error";
     public static final String NORMAL_STATE = "textview_normal";
+
+    //TODO poner el string que va para cada uno
+    public static final String PAYER_IDENTIFICATION_NUMBER_INPUT = "cardNumber";
+    public static final String PAYER_NAME_INPUT = "cardHolderName";
+    public static final String PAYER_SURNAME_INPUT = "cardExpiryDate";
 
     public static final String IDENTIFICATION_BUNDLE = "mIdentification";
     public static final String IDENTIFICATION_NUMBER_BUNDLE = "mIdentificationNumber";
@@ -106,10 +114,15 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     private LinearLayout mIdentificationTypeContainer;
     private LinearLayout mButtonContainer;
     private MPEditText mIdentificationNumberEditText;
+    private MPEditText mPayerNameEditText;
+    private MPEditText mPayerSurnameEditText;
+    private LinearLayout mPayerNameInput;
+    private LinearLayout mPayerSurnameInput;
     private LinearLayout mCardIdentificationInput;
     private FrameLayout mErrorContainer;
     private MPTextView mErrorTextView;
     private String mErrorState;
+    private String mCurrentEditingEditText;
 
     protected String mDefaultBaseURL;
     protected String mMerchantDiscountBaseURL;
@@ -170,9 +183,10 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             mPresenter.setSavedIdentificationType(identificationType);
         } else {
             mPresenter.setIdentification(new Identification());
-            //TODO agregarlo al savedResoreInstance
-            mPresenter.setPayer(payer);
         }
+
+        //TODO ver de hacer el savedIdentification
+        mPresenter.setPayer(payer);
     }
 
     @Override
@@ -262,7 +276,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         }
     }
 
-
     private void analizeLowRes() {
         this.mLowResActive = ScaleUtil.isLowRes(this);
     }
@@ -284,24 +297,21 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     }
 
     private void disableBackInputButton() {
-        mBackButton.setVisibility(View.GONE);
+        mBackButton.setVisibility(GONE);
         mBackInactiveButton.setVisibility(View.VISIBLE);
     }
 
     private void enableBackInputButton() {
         mBackButton.setVisibility(View.VISIBLE);
-        mBackInactiveButton.setVisibility(View.GONE);
+        mBackInactiveButton.setVisibility(GONE);
     }
-
 
     @Override
     public void setNextButtonListeners() {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 validateCurrentEditText();
-
             }
         });
     }
@@ -318,7 +328,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void onInvalidStart(String message) {
-
         finish();
     }
 
@@ -370,6 +379,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationTypeContainer = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationTypeContainer);
         mIdentificationTypeSpinner = (Spinner) findViewById(R.id.mpsdkCardIdentificationType);
         mIdentificationNumberEditText = (MPEditText) findViewById(R.id.mpsdkCardIdentificationNumber);
+        mPayerNameEditText = (MPEditText) findViewById(R.id.mpsdkName);
+        mPayerSurnameEditText = (MPEditText) findViewById(R.id.mpsdkSurname);
         mInputContainer = (LinearLayout) findViewById(R.id.mpsdkInputContainer);
         mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
         mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
@@ -380,10 +391,12 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mBackInactiveButtonText = (TextView) findViewById(R.id.mpsdkBackInactiveButtonText);
         mButtonContainer = (LinearLayout) findViewById(R.id.mpsdkButtonContainer);
         mCardIdentificationInput = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationInput);
+        mPayerNameInput = (LinearLayout) findViewById(R.id.mpsdkPayerNameInput);
+        mPayerSurnameInput = (LinearLayout) findViewById(R.id.mpsdkPayerSurnameInput);
         mErrorContainer = (FrameLayout) findViewById(R.id.mpsdkErrorContainer);
         mErrorTextView = (MPTextView) findViewById(R.id.mpsdkErrorTextView);
         mScrollView = (ScrollView) findViewById(R.id.mpsdkScrollViewContainer);
-        mInputContainer.setVisibility(View.GONE);
+        mInputContainer.setVisibility(GONE);
         mProgressBar.setVisibility(View.VISIBLE);
 
         fullScrollDown();
@@ -392,7 +405,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     @Override
     public void showInputContainer() {
         mIdentificationTypeContainer.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+        mProgressBar.setVisibility(GONE);
         mInputContainer.setVisibility(View.VISIBLE);
         requestIdentificationFocus();
     }
@@ -487,7 +500,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     public void initializeTitle() {
         if (mLowResActive) {
             String paymentTypeText = getString(R.string.mpsdk_form_card_title);
-
             mLowResTitleToolbar.setText(paymentTypeText);
         }
     }
@@ -567,6 +579,85 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             }
         }));
     }
+
+    @Override
+    public void setPayerNameListeners() {
+        mIdentificationNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return onNextKey(actionId, event);
+            }
+        });
+        mIdentificationNumberEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                onTouchEditText(mIdentificationNumberEditText, event);
+                return true;
+            }
+        });
+        mIdentificationNumberEditText.addTextChangedListener(new CardIdentificationNumberTextWatcher(new CardIdentificationNumberEditTextCallback() {
+            @Override
+            public void checkOpenKeyboard() {
+                openKeyboard(mIdentificationNumberEditText);
+            }
+
+            @Override
+            public void saveIdentificationNumber(CharSequence string) {
+                mPresenter.saveIdentificationNumber(string.toString());
+                if (mPresenter.getIdentificationNumberMaxLength() == string.length()) {
+                    mPresenter.setIdentificationNumber(string.toString());
+                    mPresenter.validateIdentificationNumber();
+                }
+                if (cardViewsActive()) {
+                    mIdentificationCardView.setIdentificationNumber(string.toString());
+                    mIdentificationCardView.draw();
+                }
+            }
+
+            @Override
+            public void changeErrorView() {
+                checkChangeErrorView();
+            }
+
+            @Override
+            public void toggleLineColorOnError(boolean toggle) {
+                mIdentificationNumberEditText.toggleLineColorOnError(toggle);
+            }
+        }));
+    }
+
+//    private void setSecurityCodeListeners() {
+//        mSecurityCodeEditText.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                onTouchEditText(mSecurityCodeEditText, event);
+//                return true;
+//            }
+//        });
+//        mSecurityCodeEditText.addTextChangedListener(new CardSecurityCodeTextWatcher(new CardSecurityCodeEditTextCallback() {
+//            @Override
+//            public void checkOpenKeyboard() {
+//                openKeyboard(mSecurityCodeEditText);
+//            }
+//
+//            @Override
+//            public void saveSecurityCode(CharSequence s) {
+//                mPresenter.saveSecurityCode(s.toString());
+//                mCardView.setSecurityCodeLocation(mPresenter.getSecurityCodeLocation());
+//                mCardView.drawEditingSecurityCode(s.toString());
+//            }
+//
+//            @Override
+//            public void changeErrorView() {
+//                clearErrorView();
+//            }
+//
+//            @Override
+//            public void toggleLineColorOnError(boolean toggle) {
+//                mSecurityCodeEditText.toggleLineColorOnError(toggle);
+//            }
+//        }));
+//    }
 
 
     @Override
@@ -690,7 +781,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void hideIdentificationInput() {
-        mCardIdentificationInput.setVisibility(View.GONE);
+        mCardIdentificationInput.setVisibility(GONE);
     }
 
 
@@ -702,7 +793,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void setErrorView(String message) {
-        mButtonContainer.setVisibility(View.GONE);
+        mButtonContainer.setVisibility(GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorTextView.setText(message);
         setErrorState(ERROR_STATE);
@@ -711,7 +802,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     @Override
     public void clearErrorView() {
         mButtonContainer.setVisibility(View.VISIBLE);
-        mErrorContainer.setVisibility(View.GONE);
+        mErrorContainer.setVisibility(GONE);
         mErrorTextView.setText("");
         setErrorState(NORMAL_STATE);
     }
@@ -739,18 +830,62 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     }
 
     private boolean validateCurrentEditText() {
-
-        if (mPresenter.validateIdentificationNumber()) {
-            finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification());
-            return true;
+        //TODO asignar mCurrentEditingEditText
+        //TODO hay que preguntar si la PK es de Brasil???
+        switch (mCurrentEditingEditText) {
+            case PAYER_IDENTIFICATION_NUMBER_INPUT:
+                if (mPresenter.validateIdentificationNumber()) {
+                    if (hasNameAndSurname()) {
+                        finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
+                    } else {
+                        mCardIdentificationInput.setVisibility(View.GONE);
+                        requestPayerNameFocus();
+                    }
+                    return true;
+                }
+                return false;
+            case PAYER_NAME_INPUT:
+                if (mPresenter.validatePayerName()) {
+                    mPayerNameInput.setVisibility(View.GONE);
+                    requestPayerSurnameFocus();
+                    return true;
+                }
+                return false;
+            case PAYER_SURNAME_INPUT:
+                if (mPresenter.validatePayerSurname()) {
+                    mPayerSurnameInput.setVisibility(View.GONE);
+                    finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
+                    return true;
+                }
+                return false;
         }
         return false;
+//        if (mPresenter.validateIdentificationNumber()) {
+//            finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
+//            return true;
+//        }
+//        return false;
     }
 
+    //TODO refactor
+    private boolean hasNameAndSurname() {
+        return true;
+    }
+
+    //TODO refactor
+    private void requestPayerNameFocus() {
+        mCurrentEditingEditText = PAYER_NAME_INPUT;
+    }
+
+    //TODO refactor
+    private void requestPayerSurnameFocus() {
+        mCurrentEditingEditText = PAYER_SURNAME_INPUT;
+    }
 
     @Override
-    public void finishWithResult(IdentificationType identificationType, Identification identification) {
+    public void finishWithResult(IdentificationType identificationType, Identification identification, Payer payer) {
         Intent returnIntent = new Intent();
+        returnIntent.putExtra("payer", JsonUtil.getInstance().toJson(payer));
         returnIntent.putExtra("identification", JsonUtil.getInstance().toJson(identification));
         returnIntent.putExtra("identificationType", JsonUtil.getInstance().toJson(identificationType));
         setResult(RESULT_OK, returnIntent);
@@ -758,11 +893,9 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 
-
     @Override
     public void onBackPressed() {
-        MPTracker.getInstance().trackEvent("IDENTIFICATION_ACTIVITY", "BACK_PRESSED", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
+        MPTracker.getInstance().trackEvent("IDENTIFICATION_ACTIVITY", "BACK_PRESSED", "2", mPresenter.getPublicKey(), BuildConfig.VERSION_NAME, this);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
@@ -778,7 +911,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     public void onFinish() {
         this.finish();
     }
-
 
     @Override
     public void setSoftInputMode() {

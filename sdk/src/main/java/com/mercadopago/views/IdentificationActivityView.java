@@ -3,6 +3,7 @@ package com.mercadopago.views;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
+import com.mercadopago.model.Payer;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface IdentificationActivityView {
     void initializeIdentificationTypes(List<IdentificationType> identificationTypes);
     void setIdentificationTypeListeners();
     void setIdentificationNumberListeners();
+    void setPayerNameListeners();
     void hideIdentificationInput();
     void showIdentificationInput();
     void setIdentificationNumberRestrictions(String type);
@@ -31,7 +33,7 @@ public interface IdentificationActivityView {
     void setBackButtonListeners();
     void initializeTitle();
     void setSoftInputMode();
-    void finishWithResult(IdentificationType identificationType, Identification identification);
+    void finishWithResult(IdentificationType identificationType, Identification identification, Payer payer);
     void setNextButtonListeners();
     void loadPresetInfo();
 }
