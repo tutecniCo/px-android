@@ -56,7 +56,6 @@ import java.util.List;
 
 public class IdentificationActivity extends MercadoPagoBaseActivity implements IdentificationActivityView, TimerObserver {
 
-
     public static final String ERROR_STATE = "textview_error";
     public static final String NORMAL_STATE = "textview_normal";
 
@@ -111,7 +110,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     private MPTextView mErrorTextView;
     private String mErrorState;
 
-
     protected String mDefaultBaseURL;
     protected String mMerchantDiscountBaseURL;
     protected String mMerchantGetDiscountURI;
@@ -132,10 +130,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
             setMerchantInfo();
             setContentView();
             mPresenter.validateActivityParameters();
-
         }
-
-
     }
 
     private void createPresenter() {

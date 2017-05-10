@@ -45,7 +45,6 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     private FinancialInstitution mSelectedFinancialInstitution;
     private EntityType mSelectedEntityType;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +74,6 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
                 this.getIntent().getStringExtra("paymentMethod"), PaymentMethod.class);
 
         Site site = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("site"), Site.class);
-
 
         mPresenter.setSite(site);
         mPresenter.setPaymentMethod(paymentMethod);
@@ -116,7 +114,6 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
             mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
             mPresenter.setState(JsonUtil.getInstance().fromJson(savedInstanceState.getString(STATE_BUNDLE), AdditionalStepVaultStateMachine.class));
         }
-
     }
 
 
@@ -134,13 +131,10 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
         mPresenter.checkFlow();
     }
 
-
     @Override
     public void startEntityTypeStep() {
-
         startEntityTypeStepComponent();
         animateNextSelection();
-
     }
 
     @Override
@@ -174,7 +168,6 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
     }
 
     private void startIdentificationStepComponent() {
-
         new MercadoPagoComponents.Activities.IdentificationActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mPresenter.getPublicKey())

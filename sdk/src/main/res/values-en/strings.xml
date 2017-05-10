@@ -37,9 +37,12 @@
 
     <!-- Entity Types -->
     <string name="mpsdk_entity_types_title">Which is your entity\'s type?</string>
-
     <string name="entity_type_mco_individual">Individual</string>
     <string name="entity_type_mco_association">Association</string>
+
+    <!-- Identification -->
+    <string name="mpsdk_name">Name</string>
+    <string name="mpsdk_surname">Surname</string>
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">Which is your bank?</string>

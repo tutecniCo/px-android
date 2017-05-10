@@ -38,9 +38,12 @@
 
     <!-- Entity Types -->
     <string name="mpsdk_entity_types_title">¿Cuál es el tipo de persona?</string>
-
     <string name="entity_type_mco_individual">Natural</string>
     <string name="entity_type_mco_association">Jurídica</string>
+
+    <!-- Identification -->
+    <string name="mpsdk_name">Nombre</string>
+    <string name="mpsdk_surname">Apellido</string>
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">¿Cuál es tu banco?</string>

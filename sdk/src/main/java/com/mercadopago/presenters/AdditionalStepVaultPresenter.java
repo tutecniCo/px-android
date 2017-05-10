@@ -15,12 +15,10 @@ import com.mercadopago.views.AdditionalStepVaultView;
 
 public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVaultView, AdditionalStepVaultProviderImpl> {
 
-
     private Site mSite;
     private PaymentMethod mPaymentMethod;
     private String mPublicKey;
     private AdditionalStepVaultStateMachine state;
-
 
     public AdditionalStepVaultStateMachine getState() {
         return state;
@@ -61,9 +59,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
         return mPaymentMethod.isIdentificationOffRequired() || mPaymentMethod.isFinancialInstitutionsRequired() || mPaymentMethod.isEntityTypeRequired();
     }
 
-
     public void checkFlow() {
-
         if (isOnlyIdentificationRequired()) {
             state = AdditionalStepVaultStateMachine.IDENTIFICATION;
             state.onInit(this);
@@ -77,8 +73,6 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
             state = AdditionalStepVaultStateMachine.ERROR;
             state.onInit(this);
         }
-
-
     }
 
     private boolean isOnlyIdentificationRequired() {
