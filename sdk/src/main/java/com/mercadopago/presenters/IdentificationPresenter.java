@@ -232,26 +232,32 @@ public class IdentificationPresenter {
         return ans;
     }
 
-    //TODO refactor
-    public boolean validatePayerName() {
-        Boolean isValidName = true;
+    public boolean isEmptyPayerName() {
+        Boolean isEmptyName = false;
 
         if (isEmpty(mPayer.getName())) {
-            isValidName = false;
+            isEmptyName = true;
         }
 
-        return isValidName;
+        return isEmptyName;
     }
 
-    //TODO refactor
-    public boolean validatePayerSurname() {
-        Boolean isValidSurname = true;
+    public boolean isEmptyPayerSurname() {
+        Boolean isEmptySurname = false;
 
         if (isEmpty(mPayer.getSurname())) {
-            isValidSurname = false;
+            isEmptySurname = true;
         }
 
-        return isValidSurname;
+        return isEmptySurname;
+    }
+
+    public boolean isNameValid() {
+        return mPayer != null && !isEmpty(mPayer.getName());
+    }
+
+    public boolean isSurnameValid() {
+        return mPayer != null && !isEmpty(mPayer.getSurname());
     }
 
     private void setCardIdentificationErrorView(String message) {

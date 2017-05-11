@@ -26,13 +26,11 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.card.CardIdentificationNumberEditTextCallback;
-import com.mercadopago.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
-import com.mercadopago.listeners.card.CardSecurityCodeTextWatcher;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -63,10 +61,9 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
     public static final String ERROR_STATE = "textview_error";
     public static final String NORMAL_STATE = "textview_normal";
 
-    //TODO poner el string que va para cada uno
-    public static final String PAYER_IDENTIFICATION_NUMBER_INPUT = "cardNumber";
-    public static final String PAYER_NAME_INPUT = "cardHolderName";
-    public static final String PAYER_SURNAME_INPUT = "cardExpiryDate";
+    public static final String PAYER_IDENTIFICATION_NUMBER_INPUT = "identificationNumber";
+    public static final String PAYER_NAME_INPUT = "payerName";
+    public static final String PAYER_SURNAME_INPUT = "payerSurname";
 
     public static final String IDENTIFICATION_BUNDLE = "mIdentification";
     public static final String IDENTIFICATION_NUMBER_BUNDLE = "mIdentificationNumber";
@@ -187,6 +184,12 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
         //TODO ver de hacer el savedIdentification
         mPresenter.setPayer(payer);
+
+        //TODO borrar no va esto acá
+        mCurrentEditingEditText = PAYER_IDENTIFICATION_NUMBER_INPUT;
+
+        //TODO borrar
+        mPresenter.setPayer(new Payer());
     }
 
     @Override
@@ -778,7 +781,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         }
     }
 
-
     @Override
     public void hideIdentificationInput() {
         mCardIdentificationInput.setVisibility(GONE);
@@ -831,28 +833,23 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     private boolean validateCurrentEditText() {
         //TODO asignar mCurrentEditingEditText
-        //TODO hay que preguntar si la PK es de Brasil???
+        //TODO hay que preguntar si la PK es de Brasil??? Preguntar a Angie si hay algo en el paymentMethod que me indique de donde es
         switch (mCurrentEditingEditText) {
             case PAYER_IDENTIFICATION_NUMBER_INPUT:
                 if (mPresenter.validateIdentificationNumber()) {
-                    if (hasNameAndSurname()) {
-                        finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
-                    } else {
-                        mCardIdentificationInput.setVisibility(View.GONE);
-                        requestPayerNameFocus();
-                    }
+                    resolveIdentificationNumberInput();
                     return true;
                 }
                 return false;
             case PAYER_NAME_INPUT:
-                if (mPresenter.validatePayerName()) {
+                if (mPresenter.isEmptyPayerName()) {
                     mPayerNameInput.setVisibility(View.GONE);
                     requestPayerSurnameFocus();
                     return true;
                 }
                 return false;
             case PAYER_SURNAME_INPUT:
-                if (mPresenter.validatePayerSurname()) {
+                if (mPresenter.isEmptyPayerSurname()) {
                     mPayerSurnameInput.setVisibility(View.GONE);
                     finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
                     return true;
@@ -860,16 +857,15 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
                 return false;
         }
         return false;
-//        if (mPresenter.validateIdentificationNumber()) {
-//            finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
-//            return true;
-//        }
-//        return false;
     }
 
-    //TODO refactor
-    private boolean hasNameAndSurname() {
-        return true;
+    private void resolveIdentificationNumberInput() {
+        if (mPresenter.isNameValid() && mPresenter.isSurnameValid()) {
+            finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
+        } else {
+            mCardIdentificationInput.setVisibility(View.GONE);
+            requestPayerNameFocus();
+        }
     }
 
     //TODO refactor
