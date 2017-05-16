@@ -22,7 +22,7 @@
         tools:text="Surname" />
 
     <com.mercadopago.customviews.MPEditText
-        android:id="@+id/mpsdkSurname"
+        android:id="@+id/mpsdkPayerSurname"
         android:layout_width="293dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

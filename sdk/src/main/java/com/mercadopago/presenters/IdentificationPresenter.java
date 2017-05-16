@@ -274,4 +274,8 @@ public class IdentificationPresenter {
     public void setIdentificationType(IdentificationType identificationType) {
         this.mIdentificationType = identificationType;
     }
+
+    public void savePayerName(String payerName) {
+        //TODO
+    }
 }

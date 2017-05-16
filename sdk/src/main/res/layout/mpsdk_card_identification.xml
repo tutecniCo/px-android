@@ -103,6 +103,42 @@
                         android:visibility="invisible"/>
 
                 </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/mpsdkIdNameClickableZone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:paddingEnd="2dp"
+                    android:paddingRight="2dp"
+                    android:layout_marginTop="10dp">
+
+                    <com.mercadopago.customviews.MPAutoResizeTextView
+                        android:id="@+id/mpsdkIdentificationNameContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:textColor="@color/mpsdk_base_text"
+                        android:textSize="20dp"
+                        app:minTextSize="8dp"
+                        android:maxLines="1"
+                        android:visibility="visible"
+                        android:text="HOLA MANOLA"
+                        app:allowCustomFont="false"
+                        app:fontStyle="mono_regular"/>
+
+                    <com.mercadopago.customviews.MPAutoResizeTextView
+                        android:id="@+id/mpsdkIdNameView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:textColor="@color/mpsdk_base_text"
+                        android:textSize="18dp"
+                        app:allowCustomFont="false"
+                        app:minTextSize="8dp"
+                        android:maxLines="1"
+                        android:visibility="invisible"/>
+
+                </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>

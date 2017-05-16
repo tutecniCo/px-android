@@ -57,7 +57,6 @@ public class IdentificationCardView {
         this.mIdentification = identification;
     }
 
-
     public View inflateInParent(ViewGroup parent, boolean attachToRoot) {
 
         if (mSize != null && mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
@@ -67,8 +66,6 @@ public class IdentificationCardView {
             mView = LayoutInflater.from(mContext)
                     .inflate(R.layout.mpsdk_card_identification, parent, attachToRoot);
         }
-
-
         return mView;
     }
 

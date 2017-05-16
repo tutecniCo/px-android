@@ -26,10 +26,13 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.IdentificationTypesAdapter;
 import com.mercadopago.callbacks.card.CardIdentificationNumberEditTextCallback;
+import com.mercadopago.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.listeners.PayerNameEditTextCallback;
+import com.mercadopago.listeners.PayerNameTextWatcher;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
@@ -382,8 +385,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         mIdentificationTypeContainer = (LinearLayout) findViewById(R.id.mpsdkCardIdentificationTypeContainer);
         mIdentificationTypeSpinner = (Spinner) findViewById(R.id.mpsdkCardIdentificationType);
         mIdentificationNumberEditText = (MPEditText) findViewById(R.id.mpsdkCardIdentificationNumber);
-        mPayerNameEditText = (MPEditText) findViewById(R.id.mpsdkName);
-        mPayerSurnameEditText = (MPEditText) findViewById(R.id.mpsdkSurname);
+        mPayerNameEditText = (MPEditText) findViewById(R.id.mpsdkPayerName);
+        mPayerSurnameEditText = (MPEditText) findViewById(R.id.mpsdkPayerSurname);
         mInputContainer = (LinearLayout) findViewById(R.id.mpsdkInputContainer);
         mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
         mNextButton = (FrameLayout) findViewById(R.id.mpsdkNextButton);
@@ -583,64 +586,57 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
         }));
     }
 
-    @Override
     public void setPayerNameListeners() {
-        mIdentificationNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                return onNextKey(actionId, event);
-            }
-        });
-        mIdentificationNumberEditText.setOnTouchListener(new View.OnTouchListener() {
+        mPayerNameEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                onTouchEditText(mIdentificationNumberEditText, event);
+                onTouchEditText(mPayerNameEditText, event);
                 return true;
             }
         });
-        mIdentificationNumberEditText.addTextChangedListener(new CardIdentificationNumberTextWatcher(new CardIdentificationNumberEditTextCallback() {
+
+        mPayerNameEditText.addTextChangedListener(new PayerNameTextWatcher(new PayerNameEditTextCallback() {
             @Override
             public void checkOpenKeyboard() {
-                openKeyboard(mIdentificationNumberEditText);
+                openKeyboard(mPayerNameEditText);
             }
 
             @Override
-            public void saveIdentificationNumber(CharSequence string) {
-                mPresenter.saveIdentificationNumber(string.toString());
-                if (mPresenter.getIdentificationNumberMaxLength() == string.length()) {
-                    mPresenter.setIdentificationNumber(string.toString());
-                    mPresenter.validateIdentificationNumber();
-                }
-                if (cardViewsActive()) {
-                    mIdentificationCardView.setIdentificationNumber(string.toString());
-                    mIdentificationCardView.draw();
-                }
+            public void savePayerName(CharSequence charSequence) {
+                mPresenter.savePayerName(charSequence.toString());
+//                mCardView.drawEditingPayerName(charSequence.toString());
+
+//                if (cardViewsActive()) {
+//                    mIdentificationCardView.setIdentificationNumber(string.toString());
+//                    mIdentificationCardView.draw();
+//                }
             }
 
             @Override
             public void changeErrorView() {
-                checkChangeErrorView();
+                clearErrorView();
             }
 
             @Override
             public void toggleLineColorOnError(boolean toggle) {
-                mIdentificationNumberEditText.toggleLineColorOnError(toggle);
+                mPayerNameEditText.toggleLineColorOnError(toggle);
             }
         }));
     }
 
-//    private void setSecurityCodeListeners() {
-//        mSecurityCodeEditText.setOnTouchListener(new View.OnTouchListener() {
+//    private void setPayerSurnameListeners() {
+//        mPayerSurnameEditText.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View v, MotionEvent event) {
-//                onTouchEditText(mSecurityCodeEditText, event);
+//                onTouchEditText(mPayerSurnameEditText, event);
 //                return true;
 //            }
 //        });
-//        mSecurityCodeEditText.addTextChangedListener(new CardSecurityCodeTextWatcher(new CardSecurityCodeEditTextCallback() {
+//
+//        mPayerSurnameEditText.addTextChangedListener(new CardSecurityCodeTextWatcher(new CardSecurityCodeEditTextCallback() {
 //            @Override
 //            public void checkOpenKeyboard() {
-//                openKeyboard(mSecurityCodeEditText);
+//                openKeyboard(mPayerSurnameEditText);
 //            }
 //
 //            @Override
@@ -657,7 +653,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 //
 //            @Override
 //            public void toggleLineColorOnError(boolean toggle) {
-//                mSecurityCodeEditText.toggleLineColorOnError(toggle);
+//                mPayerSurnameEditText.toggleLineColorOnError(toggle);
 //            }
 //        }));
 //    }
@@ -850,7 +846,6 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
                 return false;
             case PAYER_SURNAME_INPUT:
                 if (mPresenter.isEmptyPayerSurname()) {
-                    mPayerSurnameInput.setVisibility(View.GONE);
                     finishWithResult(mPresenter.getIdentificationType(), mPresenter.getIdentification(), mPresenter.getPayer());
                     return true;
                 }
