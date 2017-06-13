@@ -33,7 +33,7 @@ public interface PaymentVaultView extends MvpView {
 
     void setTitle(String title);
 
-    void startCardFlow(String paymentType, BigDecimal transactionAmount);
+    void startCardFlow(String paymentType, BigDecimal transactionAmount, Boolean automaticallySelection);
 
     void startPaymentMethodsSelection();
 

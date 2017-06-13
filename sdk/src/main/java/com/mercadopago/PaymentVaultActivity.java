@@ -119,7 +119,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
 
-        mActivityActive = true;
         setContentView();
         initializeControls();
 
@@ -269,6 +268,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             if (mDecorationPreference.hasColors()) {
                 toolbar.setBackgroundColor(mDecorationPreference.getBaseColor());
             }
+
             decorateUpArrow(toolbar);
         }
     }
@@ -356,6 +356,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setInstallmentsReviewEnabled(mPaymentVaultPresenter.getInstallmentsReviewEnabled())
                 .setShowBankDeals(mShowBankDeals)
                 .startActivity();
+        animatePaymentMethodSelection();
     }
 
     @Override
@@ -535,7 +536,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     }
 
     @Override
-    public void startCardFlow(String paymentType, BigDecimal amount) {
+    public void startCardFlow(String paymentType, BigDecimal amount, Boolean automaticSelection) {
         PaymentPreference paymentPreference = mPaymentVaultPresenter.getPaymentPreference();
         paymentPreference.setDefaultPaymentTypeId(paymentType);
 
@@ -550,6 +551,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                 .setInstallmentsEnabled(mInstallmentsEnabled)
                 .setPayerEmail(mPaymentVaultPresenter.getPayerEmail())
                 .setDiscount(mPaymentVaultPresenter.getDiscount())
+                .setAutomaticSelection(automaticSelection)
                 .setDiscountEnabled(mPaymentVaultPresenter.getDiscountEnabled())
                 .setDirectDiscountEnabled(mPaymentVaultPresenter.getDirectDiscountEnabled())
                 .setInstallmentsReviewEnabled(mPaymentVaultPresenter.getInstallmentsReviewEnabled())

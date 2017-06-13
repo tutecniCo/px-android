@@ -1,6 +1,7 @@
 package com.mercadopago.uicontrollers.reviewandconfirm;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.uicontrollers.payercosts.PayerCostColumn;
 import com.mercadopago.uicontrollers.payercosts.PayerCostViewController;
 import com.mercadopago.util.CurrenciesUtil;
-import com.mercadopago.util.ReviewUtil;
 
 /**
  * Created by vaserber on 11/7/16.
@@ -28,15 +28,12 @@ import com.mercadopago.util.ReviewUtil;
 
 public class ReviewPaymentOnView extends Reviewable {
 
-
-    public static final String TEA = "TEA ";
     public static final String CFT = "CFT ";
     protected View mView;
     protected ImageView mPaymentImage;
     protected MPTextView mPaymentText;
     protected MPTextView mPaymentDescription;
     protected MPTextView mChangePaymentTextView;
-    protected MPTextView mTEATextView;
     protected MPTextView mCFTTextView;
     protected FrameLayout mChangePaymentButton;
     protected FrameLayout mPayerCostContainer;
@@ -51,7 +48,6 @@ public class ReviewPaymentOnView extends Reviewable {
     protected PaymentMethod mPaymentMethod;
     protected OnReviewChange mCallback;
     protected Boolean mEditionEnabled;
-    protected Boolean mIsUniquePaymentMethod;
     protected DecorationPreference mDecorationPreference;
 
     public ReviewPaymentOnView(Context context, PaymentMethod paymentMethod, CardInfo cardInfo, PayerCost payerCost,
@@ -89,7 +85,6 @@ public class ReviewPaymentOnView extends Reviewable {
         mIconTimeImageView = (ImageView) mView.findViewById(R.id.mpsdkIconTime);
         mChangePaymentTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewChangePaymentText);
         mIconTimeImageView.setVisibility(View.GONE);
-        mTEATextView = (MPTextView) mView.findViewById(R.id.mpsdkTEA);
         mCFTTextView = (MPTextView) mView.findViewById(R.id.mpsdkCFT);
         mChangePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +101,7 @@ public class ReviewPaymentOnView extends Reviewable {
     public void draw() {
 
         decorateText();
-        mPaymentImage.setImageResource(R.drawable.mpsdk_review_payment_on);
+        setIcon();
 
         if (mPayerCost.getInstallments() != 1) {
             mPaymentText.setVisibility(View.GONE);
@@ -120,7 +115,6 @@ public class ReviewPaymentOnView extends Reviewable {
 
         } else {
             mPayerCostContainer.setVisibility(View.GONE);
-            mTEATextView.setVisibility(View.GONE);
             mCFTTextView.setVisibility(View.GONE);
 
             Spanned amountText = CurrenciesUtil.getFormattedAmount(mPayerCost.getTotalAmount(), mCurrency);
@@ -133,11 +127,16 @@ public class ReviewPaymentOnView extends Reviewable {
         mPaymentDescription.setText(description);
     }
 
-    private void showFinance() {
-        if (mPayerCost.hasTEA()) {
-            mTEATextView.setVisibility(View.VISIBLE);
-            mTEATextView.setText(TEA + mPayerCost.getTEAPercent());
+    private void setIcon() {
+        if (mDecorationPreference != null && mDecorationPreference.hasColors()) {
+            mPaymentImage.setImageResource(R.drawable.mpsdk_grey_review_payment_on);
+            mPaymentImage.setColorFilter(mDecorationPreference.getBaseColor(), PorterDuff.Mode.SRC_ATOP);
+        } else {
+            mPaymentImage.setImageResource(R.drawable.mpsdk_review_payment_on);
         }
+    }
+
+    private void showFinance() {
         if (mPayerCost.hasCFT()) {
             mCFTTextView.setVisibility(View.VISIBLE);
             mCFTTextView.setText(CFT + mPayerCost.getCFTPercent());

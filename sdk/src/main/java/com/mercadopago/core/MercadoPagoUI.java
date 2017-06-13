@@ -9,11 +9,8 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.mercadopago.CustomerCardsActivity;
 import com.mercadopago.ReviewAndConfirmActivity;
-import com.mercadopago.callbacks.OnConfirmPaymentCallback;
 import com.mercadopago.callbacks.OnReviewChange;
-import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.model.Card;
-import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Item;
@@ -24,17 +21,12 @@ import com.mercadopago.model.Site;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.uicontrollers.discounts.DiscountRowView;
-import com.mercadopago.model.Reviewable;
-import com.mercadopago.model.Site;
-import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.uicontrollers.installments.InstallmentsReviewView;
 import com.mercadopago.uicontrollers.reviewandconfirm.ReviewItemsView;
 import com.mercadopago.uicontrollers.reviewandconfirm.ReviewPaymentOffView;
 import com.mercadopago.uicontrollers.reviewandconfirm.ReviewPaymentOnView;
-import com.mercadopago.uicontrollers.reviewandconfirm.ReviewSummaryView;
 import com.mercadopago.uicontrollers.savedcards.SavedCardRowView;
 import com.mercadopago.uicontrollers.savedcards.SavedCardView;
-import com.mercadopago.uicontrollers.savedcards.SavedCardsListView;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 
@@ -71,7 +63,7 @@ public class MercadoPagoUI {
             private Activity activity;
             private List<Card> cards;
             private String title;
-            private String footerText;
+            private String customActionMessage;
             private DecorationPreference decorationPreference;
             private PaymentPreference paymentPreference;
             private Integer selectionImageResId;
@@ -130,8 +122,8 @@ public class MercadoPagoUI {
                 return this;
             }
 
-            public SavedCardsActivityBuilder setFooter(String footerText) {
-                this.footerText = footerText;
+            public SavedCardsActivityBuilder setCustomActionMessage(String customActionMessage) {
+                this.customActionMessage = customActionMessage;
                 return this;
             }
 
@@ -156,7 +148,7 @@ public class MercadoPagoUI {
                 customerCardsIntent.putExtra("title", title);
                 customerCardsIntent.putExtra("selectionConfirmPromptText", selectionConfirmPromptText);
                 customerCardsIntent.putExtra("selectionImageResId", selectionImageResId);
-                customerCardsIntent.putExtra("footerText", footerText);
+                customerCardsIntent.putExtra("customActionMessage", customActionMessage);
                 customerCardsIntent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 customerCardsIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
                 activity.startActivityForResult(customerCardsIntent, CUSTOMER_CARDS_REQUEST_CODE);
@@ -171,7 +163,8 @@ public class MercadoPagoUI {
             private Site site;
             private CardInfo cardInfo;
             private Boolean editionEnabled;
-            private String extraPaymentMethodInfo;
+            private String paymentMethodCommentInfo;
+            private String paymentMethodDescriptionInfo;
             private List<Item> items;
             private DecorationPreference decorationPreference;
             private Discount discount;
@@ -211,8 +204,13 @@ public class MercadoPagoUI {
                 return this;
             }
 
-            public ReviewAndConfirmBuilder setExtraPaymentMethodInfo(String extraPaymentMethodInfo) {
-                this.extraPaymentMethodInfo = extraPaymentMethodInfo;
+            public ReviewAndConfirmBuilder setPaymentMethodCommentInfo(String paymentMethodCommentInfo) {
+                this.paymentMethodCommentInfo = paymentMethodCommentInfo;
+                return this;
+            }
+
+            public ReviewAndConfirmBuilder setPaymentMethodDescriptionInfo(String paymentMethodDescriptionInfo) {
+                this.paymentMethodDescriptionInfo = paymentMethodDescriptionInfo;
                 return this;
             }
 
@@ -234,10 +232,12 @@ public class MercadoPagoUI {
             public void startActivity() {
 
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentMethod == null) throw new IllegalStateException("payment method is null");
+                if (this.paymentMethod == null)
+                    throw new IllegalStateException("payment method is null");
                 if (this.items == null) throw new IllegalStateException("items not set");
                 if (MercadoPagoUtil.isCard(paymentMethod.getPaymentTypeId())) {
-                    if (this.payerCost == null) throw new IllegalStateException("payer cost is null");
+                    if (this.payerCost == null)
+                        throw new IllegalStateException("payer cost is null");
                     if (this.cardInfo == null) throw new IllegalStateException("card info is null");
                 }
                 startReviewAndConfirmActivity();
@@ -252,7 +252,8 @@ public class MercadoPagoUI {
                 intent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
                 intent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 intent.putExtra("cardInfo", JsonUtil.getInstance().toJson(cardInfo));
-                intent.putExtra("extraPaymentMethodInfo", extraPaymentMethodInfo);
+                intent.putExtra("paymentMethodCommentInfo", paymentMethodCommentInfo);
+                intent.putExtra("paymentMethodDescriptionInfo", paymentMethodDescriptionInfo);
                 intent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
                 intent.putExtra("items", new Gson().toJson(items));
 
@@ -316,44 +317,6 @@ public class MercadoPagoUI {
 
             public Reviewable build() {
                 return new ReviewPaymentOnView(context, paymentMethod, cardInfo, payerCost, currencyId, reviewChangeCallback, editionEnabled, decorationPreference);
-            }
-        }
-
-        public static class SavedCardsListViewBuilder {
-
-            private Context context;
-            private List<Card> cards;
-            private String footerText;
-            private OnSelectedCallback<Card> onSelectedCallback;
-            private int selectionImageResId;
-
-            public SavedCardsListViewBuilder setContext(Context context) {
-                this.context = context;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setSelectionImage(@DrawableRes int drawableResId) {
-                this.selectionImageResId = drawableResId;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setCards(List<Card> cards) {
-                this.cards = cards;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setFooter(String footerText) {
-                this.footerText = footerText;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setOnSelectedCallback(OnSelectedCallback<Card> onSelectedCallback) {
-                this.onSelectedCallback = onSelectedCallback;
-                return this;
-            }
-
-            public SavedCardsListView build() {
-                return new SavedCardsListView(context, cards, footerText, selectionImageResId, onSelectedCallback);
             }
         }
 
@@ -434,7 +397,7 @@ public class MercadoPagoUI {
 
             public DiscountRowView build() {
                 return new DiscountRowView(context, discount, transactionAmount, currencyId, shortRowEnabled,
-                                            discountEnabled, showArrow, showSeparator);
+                        discountEnabled, showArrow, showSeparator);
             }
         }
 
@@ -442,6 +405,7 @@ public class MercadoPagoUI {
             private Context context;
             private String currencyId;
             private List<Item> items;
+            private DecorationPreference decorationPreference;
 
             public ReviewItemsViewBuilder() {
                 items = new ArrayList<>();
@@ -457,6 +421,11 @@ public class MercadoPagoUI {
                 return this;
             }
 
+            public ReviewItemsViewBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
             public ReviewItemsViewBuilder addItem(Item item) {
                 this.items.add(item);
                 return this;
@@ -468,7 +437,7 @@ public class MercadoPagoUI {
             }
 
             public ReviewItemsView build() {
-                return new ReviewItemsView(context, items, currencyId);
+                return new ReviewItemsView(context, items, currencyId, decorationPreference);
             }
         }
 
@@ -476,7 +445,8 @@ public class MercadoPagoUI {
 
             private Context context;
             private PaymentMethod paymentMethod;
-            private String paymentMethodInfo;
+            private String paymentMethodComment;
+            private String paymentMethodDescription;
             private BigDecimal amount;
             private Site site;
             private DecorationPreference decorationPreference;
@@ -493,8 +463,13 @@ public class MercadoPagoUI {
                 return this;
             }
 
-            public ReviewPaymentMethodOffBuilder setExtraPaymentMethodInfo(String paymentMethodInfo) {
-                this.paymentMethodInfo = paymentMethodInfo;
+            public ReviewPaymentMethodOffBuilder setPaymentMethodCommentInfo(String paymentMethodComment) {
+                this.paymentMethodComment = paymentMethodComment;
+                return this;
+            }
+
+            public ReviewPaymentMethodOffBuilder setPaymentMethodDescriptionInfo(String paymentMethodDescription) {
+                this.paymentMethodDescription = paymentMethodDescription;
                 return this;
             }
 
@@ -524,7 +499,7 @@ public class MercadoPagoUI {
             }
 
             public ReviewPaymentOffView build() {
-                return new ReviewPaymentOffView(context, paymentMethod, paymentMethodInfo, amount, site, reviewChangeCallback, editionEnabled, decorationPreference);
+                return new ReviewPaymentOffView(context, paymentMethod, paymentMethodComment, paymentMethodDescription, amount, site, reviewChangeCallback, editionEnabled, decorationPreference);
             }
         }
 

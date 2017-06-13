@@ -21,11 +21,11 @@ import java.util.List;
 public interface ReviewAndConfirmProvider extends ResourcesProvider {
     Reviewable getSummaryReviewable(PaymentMethod paymentMethod, PayerCost payerCost, BigDecimal amount, Discount discount, Site site, DecorationPreference decorationPreference, OnConfirmPaymentCallback onConfirmPaymentCallback);
 
-    Reviewable getItemsReviewable(String currency, List<Item> items);
+    Reviewable getItemsReviewable(String currency, List<Item> items, DecorationPreference decorationPreference);
 
     Reviewable getPaymentMethodOnReviewable(PaymentMethod paymentMethod, PayerCost payerCost, CardInfo cardInfo, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange reviewChange);
 
-    Reviewable getPaymentMethodOffReviewable(PaymentMethod paymentMethod, String extraPaymentMethodInfo, BigDecimal amount, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange reviewChange);
+    Reviewable getPaymentMethodOffReviewable(PaymentMethod paymentMethod, String paymentMethodCommentInfo, String paymentMethodDescriptionInfo, BigDecimal amount, Site site, DecorationPreference decorationPreference, Boolean editionEnabled, OnReviewChange reviewChange);
 
     String getReviewTitle();
 

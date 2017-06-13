@@ -70,6 +70,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
                 .setFlowPreference(flowPreference)
+//                .startForPayment();
                 .startForPaymentData();
     }
 
@@ -92,11 +93,18 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .disableInstallmentsReviewScreen()
                 .build();
 
+//        Map<String, String> additionalInfo = new HashMap<>();
+//        additionalInfo.put("merchant_access_token", ExamplesUtils.DUMMY_MERCHANT_ACCESS_TOKEN);
+//        ServicePreference servicePreference = new ServicePreference.Builder()
+//                .setGetCustomerURL(ExamplesUtils.DUMMY_MERCHANT_BASE_URL, ExamplesUtils.DUMMY_MERCHANT_GET_CUSTOMER_URI, additionalInfo)
+//                .build();
+
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
                 .setReviewScreenPreference(reviewScreenPreference)
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
+//                .setServicePreference(servicePreference)
                 .setFlowPreference(flowPreference)
                 .setPaymentData(paymentData)
                 .startForPaymentData();
@@ -106,19 +114,20 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         return new CheckoutPreference.Builder()
                 .addItem(new Item("Item", BigDecimal.TEN.multiply(BigDecimal.TEN)))
                 .setSite(Sites.ARGENTINA)
-                .addExcludedPaymentType(PaymentTypes.ATM)
-                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
+//                .addExcludedPaymentType(PaymentTypes.ATM)
+//                .addExcludedPaymentType(PaymentTypes.BANK_TRANSFER)
 //                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
-                .addExcludedPaymentType(PaymentTypes.TICKET)
-                .enableAccountMoney()
-                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")
+//                .addExcludedPaymentType(PaymentTypes.DEBIT_CARD)
+//                .addExcludedPaymentType(PaymentTypes.TICKET)
+//                .enableAccountMoney()
+//                .setPayerAccessToken("APP_USR-6077407713835188-120612-9c010367e2aba8808865b227526f4ccc__LB_LD__-232134231")
                 .build();
     }
 
     private String getSuccessMessage(PaymentData paymentData, boolean paymentMethodChanged) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Success! " + paymentData.getPaymentMethod().getId() + " selected. ");
-        if(paymentMethodChanged) {
+        if (paymentMethodChanged) {
             stringBuilder.append("And it has changed!");
         }
         return stringBuilder.toString();
@@ -162,7 +171,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 PaymentData paymentData = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentData"), PaymentData.class);
                 Boolean paymentMethodChanged = data.getBooleanExtra("paymentMethodChanged", false);
                 Toast.makeText(mActivity, getSuccessMessage(paymentData, paymentMethodChanged), Toast.LENGTH_SHORT).show();
-                if(!mAlreadyStartedRyC || paymentMethodChanged) {
+                if (!mAlreadyStartedRyC || paymentMethodChanged) {
                     mAlreadyStartedRyC = true;
                     startRyC(paymentData);
                 } else {

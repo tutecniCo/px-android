@@ -54,7 +54,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         }
     }
 
-
     private void onValidStart() {
         if (mDiscountEnabled) {
             initPaymentVaultDiscountFlow();
@@ -187,7 +186,6 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     private void getPaymentMethodSearchAsync() {
-
         if (isViewAttached()) {
             getView().showProgress();
             Payer payer = new Payer();
@@ -234,7 +232,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             if (noPaymentMethodsAvailable()) {
                 showEmptyPaymentMethodsError();
             } else if (isOnlyUniqueSearchSelectionAvailable() && mSelectAutomatically) {
-                selectItem(mPaymentMethodSearch.getGroups().get(0));
+                selectItem(mPaymentMethodSearch.getGroups().get(0), true);
             } else if (isOnlyAccountMoneyEnabled() && mSelectAutomatically) {
                 selectAccountMoney(mPaymentMethodSearch.getCustomSearchItems().get(0));
             } else {
@@ -252,10 +250,15 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     private void selectItem(PaymentMethodSearchItem item) {
+        selectItem(item, false);
+    }
+
+    private void selectItem(PaymentMethodSearchItem item, Boolean automaticSelection) {
+
         if (item.hasChildren()) {
             getView().showSelectedItem(item);
         } else if (item.isPaymentType()) {
-            startNextStepForPaymentType(item);
+            startNextStepForPaymentType(item, automaticSelection);
         } else if (item.isPaymentMethod()) {
             resolvePaymentMethodSelection(item);
         }
@@ -338,13 +341,17 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     private void startNextStepForPaymentType(PaymentMethodSearchItem item) {
+        startNextStepForPaymentType(item, false);
+    }
+
+    private void startNextStepForPaymentType(PaymentMethodSearchItem item, Boolean automaticSelection) {
 
         if (mPaymentPreference == null) {
             mPaymentPreference = new PaymentPreference();
         }
 
         if (MercadoPagoUtil.isCard(item.getId())) {
-            getView().startCardFlow(item.getId(), mAmount);
+            getView().startCardFlow(item.getId(), mAmount, automaticSelection);
         } else {
             getView().startPaymentMethodsSelection();
         }

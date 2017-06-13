@@ -28,7 +28,6 @@ import com.mercadopago.ReviewAndConfirmActivity;
 import com.mercadopago.callbacks.OnConfirmPaymentCallback;
 import com.mercadopago.callbacks.OnReviewChange;
 import com.mercadopago.SecurityCodeActivity;
-import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
@@ -40,7 +39,6 @@ import com.mercadopago.model.Token;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
-import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentRecovery;
@@ -56,7 +54,6 @@ import com.mercadopago.uicontrollers.reviewandconfirm.ReviewSummaryView;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.uicontrollers.savedcards.SavedCardRowView;
 import com.mercadopago.uicontrollers.savedcards.SavedCardView;
-import com.mercadopago.uicontrollers.savedcards.SavedCardsListView;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 
@@ -64,6 +61,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.mercadopago.util.TextUtils.isEmpty;
 
 /**
  * Created by mreverter on 1/17/17.
@@ -242,7 +241,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.merchantPublicKey == null && this.payerAccessToken == null) throw new IllegalStateException("key is null");
+                if (this.merchantPublicKey == null && this.payerAccessToken == null)
+                    throw new IllegalStateException("key is null");
                 startPaymentVaultActivity();
             }
 
@@ -290,7 +290,8 @@ public class MercadoPagoComponents {
             private BigDecimal amount;
             private Site site;
             private Boolean editionEnabled;
-            private String extraPaymentMethodInfo;
+            private String paymentMethodCommentInfo;
+            private String paymentMethodDescriptionInfo;
             private List<Item> items;
             private Discount discount;
             private Token token;
@@ -340,8 +341,13 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public ReviewAndConfirmBuilder setExtraPaymentMethodInfo(String extraPaymentMethodInfo) {
-                this.extraPaymentMethodInfo = extraPaymentMethodInfo;
+            public ReviewAndConfirmBuilder setPaymentMethodCommentInfo(String paymentMethodCommentInfo) {
+                this.paymentMethodCommentInfo = paymentMethodCommentInfo;
+                return this;
+            }
+
+            public ReviewAndConfirmBuilder setPaymentMethodDescriptionInfo(String paymentMethodDescriptionInfo) {
+                this.paymentMethodDescriptionInfo = paymentMethodDescriptionInfo;
                 return this;
             }
 
@@ -398,7 +404,8 @@ public class MercadoPagoComponents {
                 intent.putExtra("paymentMethod", JsonUtil.getInstance().toJson(paymentMethod));
                 intent.putExtra("payerCost", JsonUtil.getInstance().toJson(payerCost));
                 intent.putExtra("token", JsonUtil.getInstance().toJson(token));
-                intent.putExtra("extraPaymentMethodInfo", extraPaymentMethodInfo);
+                intent.putExtra("paymentMethodCommentInfo", paymentMethodCommentInfo);
+                intent.putExtra("paymentMethodDescriptionInfo", paymentMethodDescriptionInfo);
                 intent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
                 intent.putExtra("items", new Gson().toJson(items));
                 intent.putExtra("termsAndConditionsEnabled", termsAndConditionsEnabled);
@@ -415,11 +422,14 @@ public class MercadoPagoComponents {
             private Activity activity;
             private List<Card> cards;
             private String title;
-            private String footerText;
+            private String customActionMessage;
             private DecorationPreference decorationPreference;
             private PaymentPreference paymentPreference;
             private Integer selectionImageResId;
             private String selectionConfirmPromptText;
+            private String privateKey;
+            private String merchantBaseUrl;
+            private String merchantGetCustomerUri;
 
             public SavedCardsActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
@@ -456,15 +466,35 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public SavedCardsActivityBuilder setFooter(String footerText) {
-                this.footerText = footerText;
+            public SavedCardsActivityBuilder setCustomActionMessage(String customActionMessage) {
+                this.customActionMessage = customActionMessage;
+                return this;
+            }
+
+            public SavedCardsActivityBuilder setMerchantBaseUrl(String merchantBaseUrl) {
+                this.merchantBaseUrl = merchantBaseUrl;
+                return this;
+            }
+
+            public SavedCardsActivityBuilder setMerchantGetCustomerUri(String merchantGetCustomerUri) {
+                this.merchantGetCustomerUri = merchantGetCustomerUri;
+                return this;
+            }
+
+            public SavedCardsActivityBuilder setPrivateKey(String privateKey) {
+                this.privateKey = privateKey;
                 return this;
             }
 
             public void startActivity() {
 
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.cards == null) throw new IllegalStateException("cards is null");
+                if (this.cards == null && (isEmpty(merchantBaseUrl)
+                        || isEmpty(merchantGetCustomerUri)
+                        || isEmpty(privateKey))) {
+                    throw new IllegalStateException("cards or merchant server info required");
+                }
+
                 startCustomerCardsActivity();
             }
 
@@ -475,9 +505,12 @@ public class MercadoPagoComponents {
                 customerCardsIntent.putExtra("title", title);
                 customerCardsIntent.putExtra("selectionConfirmPromptText", selectionConfirmPromptText);
                 customerCardsIntent.putExtra("selectionImageResId", selectionImageResId);
-                customerCardsIntent.putExtra("footerText", footerText);
+                customerCardsIntent.putExtra("customActionMessage", customActionMessage);
                 customerCardsIntent.putExtra("decorationPreference", JsonUtil.getInstance().toJson(decorationPreference));
                 customerCardsIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
+                customerCardsIntent.putExtra("merchantBaseUrl", merchantBaseUrl);
+                customerCardsIntent.putExtra("merchantGetCustomerUri", merchantGetCustomerUri);
+                customerCardsIntent.putExtra("privateKey", privateKey);
                 activity.startActivityForResult(customerCardsIntent, CUSTOMER_CARDS_REQUEST_CODE);
             }
         }
@@ -498,6 +531,7 @@ public class MercadoPagoComponents {
             private boolean discountEnabled;
             private boolean directDiscountEnabled;
             private boolean installmentsReviewEnabled;
+            private boolean automaticSelection;
             private String payerEmail;
             private String payerAccessToken;
 
@@ -587,6 +621,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public CardVaultActivityBuilder setAutomaticSelection(Boolean automaticSelection) {
+                this.automaticSelection = automaticSelection;
+                return this;
+            }
+
             public void startActivity() {
 
                 if (this.activity == null) throw new IllegalStateException("activity is null");
@@ -635,6 +674,8 @@ public class MercadoPagoComponents {
 
                 cardVaultIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
 
+                cardVaultIntent.putExtra("automaticSelection", automaticSelection);
+
                 activity.startActivityForResult(cardVaultIntent, CARD_VAULT_REQUEST_CODE);
             }
         }
@@ -655,6 +696,7 @@ public class MercadoPagoComponents {
             private Discount discount;
             private Boolean discountEnabled;
             private Boolean directDiscountEnabled;
+            private Boolean showDiscount;
             private String payerAccessToken;
 
             public GuessingCardActivityBuilder setActivity(Activity activity) {
@@ -737,6 +779,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public GuessingCardActivityBuilder setShowDiscount(Boolean showDiscount) {
+                this.showDiscount = showDiscount;
+                return this;
+            }
+
             public void startActivity() {
 
                 if (this.activity == null) throw new IllegalStateException("activity is null");
@@ -772,7 +819,7 @@ public class MercadoPagoComponents {
 
                 guessingCardIntent.putExtra("card", JsonUtil.getInstance().toJson(card));
 
-                if(amount != null) {
+                if (amount != null) {
                     guessingCardIntent.putExtra("amount", amount.toString());
                 }
 
@@ -785,6 +832,8 @@ public class MercadoPagoComponents {
                 guessingCardIntent.putExtra("discountEnabled", discountEnabled);
 
                 guessingCardIntent.putExtra("directDiscountEnabled", directDiscountEnabled);
+
+                guessingCardIntent.putExtra("showDiscount", showDiscount);
 
                 activity.startActivityForResult(guessingCardIntent, GUESSING_CARD_REQUEST_CODE);
             }
@@ -1106,7 +1155,8 @@ public class MercadoPagoComponents {
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.merchantPublicKey == null) throw new IllegalStateException("key is null");
-                if (this.cardInformation == null) throw new IllegalStateException("card info is null");
+                if (this.cardInformation == null)
+                    throw new IllegalStateException("card info is null");
                 if (this.paymentMethod == null)
                     throw new IllegalStateException("payment method is null");
                 if (this.card != null && this.token != null)
@@ -1314,7 +1364,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
 
@@ -1379,7 +1430,8 @@ public class MercadoPagoComponents {
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.amount == null) throw new IllegalStateException("amount is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
                 if (this.site == null)
@@ -1452,7 +1504,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
 
@@ -1503,7 +1556,8 @@ public class MercadoPagoComponents {
 
             public void startActivity() {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
-                if (this.paymentResult == null) throw new IllegalStateException("payment result is null");
+                if (this.paymentResult == null)
+                    throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
 
@@ -1735,44 +1789,6 @@ public class MercadoPagoComponents {
             }
         }
 
-        public static class SavedCardsListViewBuilder {
-
-            private Context context;
-            private List<Card> cards;
-            private String footerText;
-            private OnSelectedCallback<Card> onSelectedCallback;
-            private int selectionImageResId;
-
-            public SavedCardsListViewBuilder setContext(Context context) {
-                this.context = context;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setSelectionImage(@DrawableRes int drawableResId) {
-                this.selectionImageResId = drawableResId;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setCards(List<Card> cards) {
-                this.cards = cards;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setFooter(String footerText) {
-                this.footerText = footerText;
-                return this;
-            }
-
-            public SavedCardsListViewBuilder setOnSelectedCallback(OnSelectedCallback<Card> onSelectedCallback) {
-                this.onSelectedCallback = onSelectedCallback;
-                return this;
-            }
-
-            public SavedCardsListView build() {
-                return new SavedCardsListView(context, cards, footerText, selectionImageResId, onSelectedCallback);
-            }
-        }
-
         public static class SavedCardViewBuilder {
             private Context context;
             private Card card;
@@ -1949,6 +1965,7 @@ public class MercadoPagoComponents {
             private Context context;
             private String currencyId;
             private List<Item> items;
+            private DecorationPreference decorationPreference;
 
             public ReviewItemsViewBuilder() {
                 items = new ArrayList<>();
@@ -1964,6 +1981,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public ReviewItemsViewBuilder setDecorationPreference(DecorationPreference decorationPreference) {
+                this.decorationPreference = decorationPreference;
+                return this;
+            }
+
             public ReviewItemsViewBuilder addItem(Item item) {
                 this.items.add(item);
                 return this;
@@ -1975,7 +1997,7 @@ public class MercadoPagoComponents {
             }
 
             public ReviewItemsView build() {
-                return new ReviewItemsView(context, items, currencyId);
+                return new ReviewItemsView(context, items, currencyId, decorationPreference);
             }
         }
 
@@ -1983,7 +2005,8 @@ public class MercadoPagoComponents {
 
             private Context context;
             private PaymentMethod paymentMethod;
-            private String paymentMethodInfo;
+            private String paymentMethodCommentInfo;
+            private String paymentMethodDescriptionInfo;
             private BigDecimal amount;
             private Site site;
             private DecorationPreference decorationPreference;
@@ -2000,8 +2023,13 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public ReviewPaymentMethodOffBuilder setExtraPaymentMethodInfo(String paymentMethodInfo) {
-                this.paymentMethodInfo = paymentMethodInfo;
+            public ReviewPaymentMethodOffBuilder setPaymentMethodCommentInfo(String paymentMethodCommentInfo) {
+                this.paymentMethodCommentInfo = paymentMethodCommentInfo;
+                return this;
+            }
+
+            public ReviewPaymentMethodOffBuilder setPaymentMethodDescriptionInfo(String paymentMethodDescriptionInfo) {
+                this.paymentMethodDescriptionInfo = paymentMethodDescriptionInfo;
                 return this;
             }
 
@@ -2031,7 +2059,7 @@ public class MercadoPagoComponents {
             }
 
             public ReviewPaymentOffView build() {
-                return new ReviewPaymentOffView(context, paymentMethod, paymentMethodInfo, amount, site, reviewChangeCallback, editionEnabled, decorationPreference);
+                return new ReviewPaymentOffView(context, paymentMethod, paymentMethodCommentInfo, paymentMethodDescriptionInfo, amount, site, reviewChangeCallback, editionEnabled, decorationPreference);
             }
 
         }

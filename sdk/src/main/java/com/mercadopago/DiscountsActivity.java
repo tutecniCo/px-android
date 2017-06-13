@@ -62,6 +62,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
     protected FrameLayout mBackButton;
     protected FrameLayout mErrorContainer;
     protected FrameLayout mDiscountBackground;
+    protected FrameLayout mCloseImageFrameLayout;
     protected LinearLayout mDiscountCodeContainer;
     protected LinearLayout mDiscountLinearLayout;
     protected MPTextView mReviewSummaryTitle;
@@ -85,6 +86,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         createPresenter();
         getActivityParameters();
         initializePresenter();
+
         if (isCustomColorSet()) {
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
@@ -159,7 +161,9 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
         mNextButtonText = (MPTextView) findViewById(R.id.mpsdkNextButtonText);
         mBackButtonText = (MPTextView) findViewById(R.id.mpsdkBackButtonText);
 
+        mCloseImageFrameLayout = (FrameLayout) findViewById(R.id.mpsdkCloseImageFrameLayout);
         mCloseImage = (ImageView) findViewById(R.id.mpsdkCloseImage);
+
         mErrorContainer = (FrameLayout) findViewById(R.id.mpsdkErrorContainer);
         mErrorTextView = (MPTextView) findViewById(R.id.mpsdkErrorTextView);
         mProgressBar = (ProgressBar) findViewById(R.id.mpsdkProgressBar);
@@ -187,7 +191,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
             }
         });
 
-        mCloseImage.setOnClickListener(new View.OnClickListener() {
+        mCloseImageFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finishWithResult();

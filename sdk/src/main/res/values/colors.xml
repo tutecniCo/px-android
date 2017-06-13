@@ -79,7 +79,7 @@
     <color name="mpsdk_diners">#CECECE</color>
     <color name="mpsdk_elo">#666666</color>
     <color name="mpsdk_hipercard">#941F16</color>
-    <color name="mpsdk_melicard">#2D3277</color>
+    <color name="mpsdk_melicard">#F7F7F7</color>
     <color name="mpsdk_naranja">#FF723F</color>
     <color name="mpsdk_nativa">#013C76</color>
     <color name="mpsdk_tarshop">#3D4064</color>
@@ -93,6 +93,9 @@
     <color name="mpsdk_mercadopagocard">#DCDDD9</color>
     <color name="mpsdk_cmr">#3D7D4E</color>
     <color name="mpsdk_maestro">#004883</color>
+    <color name="mpsdk_codensa">#D3B21D</color>
+    <color name="mpsdk_magna">#666666</color>
+    <color name="mpsdk_presto">#0071b2</color>
 
     <color name="mpsdk_pagofacil">#FFFFFF</color>
     <color name="mpsdk_rapipago">#FFFFFF</color>
@@ -112,7 +115,7 @@
     <color name="mpsdk_font_diners">#B3333333</color>
     <color name="mpsdk_font_elo">#B3FFFFFF</color>
     <color name="mpsdk_font_hipercard">#B3FFFFFF</color>
-    <color name="mpsdk_font_melicard">#B3FFFFFF</color>
+    <color name="mpsdk_font_melicard">#B3333333</color>
     <color name="mpsdk_font_naranja">#B3FFFFFF</color>
     <color name="mpsdk_font_nativa">#B3FFFFFF</color>
     <color name="mpsdk_font_tarshop">#B3FFFFFF</color>
@@ -126,6 +129,9 @@
     <color name="mpsdk_font_mercadopagocard">#B3333333</color>
     <color name="mpsdk_font_cmr">#B3FFFFFF</color>
     <color name="mpsdk_font_maestro">#B3FFFFFF</color>
+    <color name="mpsdk_font_codensa">#B3FFFFFF</color>
+    <color name="mpsdk_font_magna">#B3FFFFFF</color>
+    <color name="mpsdk_font_presto">#B3FFFFFF</color>
 
     <color name="mpsdk_font_pagofacil">#B3333333</color>
     <color name="mpsdk_font_rapipago">#B3333333</color>
