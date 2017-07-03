@@ -32,6 +32,15 @@
     <!-- Issuers -->
     <string name="mpsdk_card_issuers_title">Qual é o seu banco?</string>
 
+    <!-- Entity Types -->
+    <string name="mpsdk_entity_types_title">Qual é o tipo de pessoa?</string>
+
+    <string name="entity_type_mco_individual">Física</string>
+    <string name="entity_type_mco_association">Jurídica</string>
+
+    <!-- Financial Institutions -->
+    <string name="mpsdk_financial_institutions_title">Qual é o seu banco?</string>
+
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">Em quantas parcelas?</string>
     <string name="mpsdk_installments_of">de</string>

@@ -33,6 +33,18 @@
     <!-- Issuers -->
     <string name="mpsdk_card_issuers_title">¿Quién emitió tu tarjeta?</string>
 
+    <!-- Additional Step Vault -->
+    <string name="error_invalid_additional_step">AdditionalStepVaultStateMachine: No es un step adicional válido</string>
+
+    <!-- Entity Types -->
+    <string name="mpsdk_entity_types_title">¿Cuál es el tipo de persona?</string>
+
+    <string name="entity_type_mco_individual">Natural</string>
+    <string name="entity_type_mco_association">Jurídica</string>
+
+    <!-- Financial Institutions -->
+    <string name="mpsdk_financial_institutions_title">¿Cuál es tu banco?</string>
+
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">¿En cuántas cuotas?</string>
     <string name="mpsdk_installments_of">de</string>

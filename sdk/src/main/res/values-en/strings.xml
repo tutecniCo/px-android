@@ -32,6 +32,18 @@
     <!-- Issuers -->
     <string name="mpsdk_card_issuers_title">Which is your bank?</string>
 
+    <!-- Additional Step Vault -->
+    <string name="error_invalid_additional_step">AdditionalStepVaultStateMachine: This is not a valid additional step</string>
+
+    <!-- Entity Types -->
+    <string name="mpsdk_entity_types_title">Which is your entity\'s type?</string>
+
+    <string name="entity_type_mco_individual">Individual</string>
+    <string name="entity_type_mco_association">Association</string>
+
+    <!-- Financial Institutions -->
+    <string name="mpsdk_financial_institutions_title">Which is your bank?</string>
+
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">How many installments?</string>
     <string name="mpsdk_installments_of">of</string>
