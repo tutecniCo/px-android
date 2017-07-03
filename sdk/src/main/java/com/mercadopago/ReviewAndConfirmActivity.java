@@ -24,8 +24,10 @@ import com.mercadopago.adapters.ReviewablesAdapter;
 import com.mercadopago.constants.ReviewKeys;
 import com.mercadopago.constants.Sites;
 import com.mercadopago.controllers.CheckoutTimer;
+import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentData;
@@ -55,7 +57,6 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
 
     public static final int RESULT_CHANGE_PAYMENT_METHOD = 3;
     public static final int RESULT_CANCEL_PAYMENT = 4;
-    public static final int RESULT_SILENT_CANCEL_PAYMENT = 5;
 
     //Controls
 
@@ -80,6 +81,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     protected ReviewScreenPreference mReviewScreenPreference;
     protected String mPublicKey;
     protected Site mSite;
+    private Issuer mIssuer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +96,8 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
             setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
         }
         setContentView(R.layout.mpsdk_activity_review_confirm);
-        showTimer();
         initializeControls();
+        showTimer();
         setListeners();
         initializeReviewablesRecyclerView();
         mPresenter.initialize();
@@ -112,7 +114,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelPayment(true);
+                cancelPayment();
             }
         });
         mTermsAndConditionsButton.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +132,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     private void getActivityParameters() {
         mPublicKey = getIntent().getStringExtra("merchantPublicKey");
         mSite = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("site"), Site.class);
-
+        mIssuer = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("issuer"), Issuer.class);
         Boolean termsAndConditionsEnabled = getIntent().getBooleanExtra("termsAndConditionsEnabled", true);
         Boolean editionEnabled = getIntent().getBooleanExtra("editionEnabled", true);
         Boolean discountEnabled = getIntent().getBooleanExtra("discountEnabled", true);
@@ -143,6 +145,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         String paymentMethodDescriptionInfo = getIntent().getStringExtra("paymentMethodDescriptionInfo");
         Site site = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("site"), Site.class);
         List<Item> items;
+
         try {
             Gson gson = new Gson();
             Type listType = new TypeToken<List<Item>>() {
@@ -154,7 +157,8 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
 
         mPresenter.setItems(items);
         mPresenter.setAmount(amount);
-        mPresenter.setSite(site);
+        mPresenter.setSite(mSite);
+        mPresenter.setIssuer(mIssuer);
         mPresenter.setDiscount(discount);
         mPresenter.setPayerCost(payerCost);
         mPresenter.setToken(token);
@@ -349,7 +353,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     @Override
     public void onFinish() {
         Intent intent = new Intent();
-        setResult(RESULT_CANCELED, intent);
+        setResult(MercadoPagoCheckout.TIMER_FINISHED_RESULT_CODE, intent);
         this.finish();
     }
 
@@ -377,9 +381,8 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     }
 
     @Override
-    public void cancelPayment(boolean notifyCancel) {
-        int resultCode = notifyCancel ? RESULT_CANCEL_PAYMENT : RESULT_SILENT_CANCEL_PAYMENT;
-        setResult(resultCode);
+    public void cancelPayment() {
+        setResult(RESULT_CANCEL_PAYMENT);
         finish();
     }
 
@@ -408,24 +411,13 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         }};
     }
 
-
-    @Override
-    public void changeRequired(Reviewable reviewable) {
-        if (reviewable.getReviewableCallback() != null) {
-            //TODO Deprecate
-            reviewable.getReviewableCallback().onChangeRequired(mPresenter.getPaymentData());
-        }
-        cancelPayment(false);
-    }
-
-
     @Override
     public void changeRequired(Integer resultCode, Bundle resultData) {
         cancelPayment(resultCode, resultData, mPresenter.getPaymentData());
     }
 
     private void trackScreen() {
-        if(mSite != null && !TextUtil.isEmpty(mPublicKey)) {
+        if (mSite != null && !TextUtil.isEmpty(mPublicKey)) {
             MPTracker.getInstance().trackScreen("REVIEW_AND_CONFIRM", "2", mPublicKey, mSite.getId(), BuildConfig.VERSION_NAME, this);
         }
     }

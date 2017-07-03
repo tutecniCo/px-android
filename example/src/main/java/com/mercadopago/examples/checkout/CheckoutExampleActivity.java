@@ -72,7 +72,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setCheckoutPreference(getCheckoutPreference())
 //                .setFlowPreference(flowPreference)
 //                .startForPayment();
-//                .startForPaymentData();
+                .startForPaymentData();
     }
 
     private void startRyC(PaymentData paymentData) {

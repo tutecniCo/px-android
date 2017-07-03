@@ -18,7 +18,6 @@ import com.mercadopago.model.Site;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.util.TextUtil;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +123,7 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
             @Override
             public void success(Customer customer) {
                 List<Card> savedCards = paymentPreference == null ? customer.getCards() : paymentPreference.getValidCards(customer.getCards());
-                paymentMethodSearch.addCards(savedCards, context.getString(R.string.mpsdk_last_digits_label));
+                paymentMethodSearch.setCards(savedCards, context.getString(R.string.mpsdk_last_digits_label));
                 onResourcesRetrievedCallback.onSuccess(paymentMethodSearch);
             }
 

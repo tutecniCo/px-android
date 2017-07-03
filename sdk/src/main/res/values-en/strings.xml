@@ -147,6 +147,10 @@
     <string name="mpsdk_error_message_invalid_installments">Invalid installments number</string>
     <string name="mpsdk_error_title">Oops! Something went wrong</string>
     <string name="mpsdk_standard_error_message">We are going to fix it. Try later.</string>
+    <string name="mpsdk_error_message_detail_no_installments">no installments found for an issuer at InstallmentsActivity</string>
+    <string name="mpsdk_error_message_detail_no_payer_cost_found">no payer costs found at InstallmentsActivity</string>
+    <string name="mpsdk_error_message_detail_multiple_installments">multiple installments found for an issuer at InstallmentsActivity</string>
+    <string name="mpsdk_error_message_detail_issuers">no issuers found at IssuersActivity</string>
     <string name="mpsdk_error_message_email_required">Email is required</string>
 
     <!-- API exception messages -->
@@ -245,5 +249,13 @@
     <string name="mpsdk_discount_percent_off">%1$s %%</string>
     <string name="mpsdk_total">Total:</string>
     <string name="mpsdk_something_went_wrong">Oops! Something went wrong…</string>
+
+    <string name="mpsdk_interest_label">Does\'t include bank interest</string>
+
+    <!-- Unlock Card -->
+    <string name="mpsdk_text_unlock_card_start">Remember to</string>
+    <string name="mpsdk_text_unlock_card_linked">unlock your card</string>
+    <string name="mpsdk_text_unlock_card_end">before you confirm the payment.</string>
+    <string name="mpsdk_title_unlock_card">Card Unlocking</string>
 
 </resources>

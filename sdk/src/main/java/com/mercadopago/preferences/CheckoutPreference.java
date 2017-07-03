@@ -8,6 +8,7 @@ import com.mercadopago.model.Item;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.Site;
 import com.mercadopago.util.CurrenciesUtil;
+import com.mercadopago.util.TextUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,7 +32,11 @@ public class CheckoutPreference {
 
     private Site localPreferenceSite;
 
-    public CheckoutPreference(Builder builder) {
+    public CheckoutPreference(String checkoutPreferenceId) {
+        this.id = checkoutPreferenceId;
+    }
+
+    private CheckoutPreference(Builder builder) {
         this.items = builder.items;
         this.expirationDateFrom = builder.expirationDateFrom;
         this.expirationDateTo = builder.expirationDateTo;
@@ -48,9 +53,6 @@ public class CheckoutPreference {
         paymentPreference.setMaxAcceptedInstallments(builder.maxInstallments);
         paymentPreference.setDefaultInstallments(builder.defaultInstallments);
         this.paymentPreference = paymentPreference;
-
-        //TODO borrar
-        this.id = builder.id;
     }
 
     public void validate() throws CheckoutPreferenceException {
@@ -230,11 +232,15 @@ public class CheckoutPreference {
     }
 
     public Site getSite() {
+        Site site = null;
         if (localPreferenceSite == null) {
-            return Sites.getById(siteId);
+
+            site = Sites.getById(siteId);
+
         } else {
-            return localPreferenceSite;
+            site = localPreferenceSite;
         }
+        return site;
     }
 
     public boolean hasId() {
@@ -253,8 +259,6 @@ public class CheckoutPreference {
         private Site localPreferenceSite;
         private String payerAccessToken;
         private boolean excludeAccountMoney = true;
-        //TODO borrar
-        private String id;
 
         public Builder() {
             items = new ArrayList<>();
@@ -339,21 +343,17 @@ public class CheckoutPreference {
             return this;
         }
 
-        //TODO borrar
-        public Builder setId(String id) {
-            this.id = id;
-            return this;
-        }
-
         public Builder enableAccountMoney() {
             this.excludeAccountMoney = false;
             return this;
         }
 
         public CheckoutPreference build() {
-            if (items == null || items.isEmpty()) throw new IllegalStateException("Items required");
-            if (localPreferenceSite == null) throw new IllegalStateException("Site is required");
 
+            if (items == null || items.isEmpty())
+                throw new IllegalStateException("Items required");
+            if (localPreferenceSite == null)
+                throw new IllegalStateException("Site is required");
             if (excludeAccountMoney) {
                 addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
             }

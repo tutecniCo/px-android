@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
-import com.mercadopago.callbacks.PaymentCallback;
-import com.mercadopago.callbacks.PaymentDataCallback;
 import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.controllers.CustomServicesHandler;
@@ -34,6 +32,7 @@ public class MercadoPagoCheckout {
     public static final Integer CHECKOUT_REQUEST_CODE = 5;
     public static final Integer PAYMENT_DATA_RESULT_CODE = 6;
     public static final Integer PAYMENT_RESULT_CODE = 7;
+    public static final Integer TIMER_FINISHED_RESULT_CODE = 8;
 
     private final ReviewScreenPreference reviewScreenPreference;
     private Context context;
@@ -47,7 +46,6 @@ public class MercadoPagoCheckout {
     private PaymentData paymentData;
     private PaymentResult paymentResult;
     private Boolean binaryMode;
-    private Integer maxSavedCards;
     private Discount discount;
 
     private MercadoPagoCheckout(Builder builder) {
@@ -63,7 +61,6 @@ public class MercadoPagoCheckout {
         this.paymentResult = builder.paymentResult;
         this.reviewScreenPreference = builder.reviewScreenPreference;
         this.binaryMode = builder.binaryMode;
-        this.maxSavedCards = builder.maxSavedCards;
         this.discount = builder.discount;
 
         customizeServices(servicePreference);
@@ -115,6 +112,17 @@ public class MercadoPagoCheckout {
         if (hasTwoDiscountsSet()) {
             throw new IllegalStateException("payment data discount and discount set");
         }
+        if (isCheckoutTimerAvailable(resultCode) && isPaymentDataIntegration(resultCode)) {
+            throw new IllegalStateException("CheckoutTimer is not available with PaymentData integration");
+        }
+    }
+
+    private boolean isCheckoutTimerAvailable(int resultCode) {
+        return flowPreference != null && flowPreference.isCheckoutTimerEnabled();
+    }
+
+    private boolean isPaymentDataIntegration(int resultCode) {
+        return resultCode == MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE;
     }
 
     private Boolean hasTwoDiscountsSet() {
@@ -140,18 +148,6 @@ public class MercadoPagoCheckout {
     }
 
 
-    private void start(PaymentCallback paymentCallback) {
-        CallbackHolder.getInstance().clean();
-        attachCheckoutCallback(paymentCallback);
-        startCheckoutActivity();
-    }
-
-    private void start(PaymentDataCallback paymentDataCallback) {
-        CallbackHolder.getInstance().clean();
-        attachCheckoutCallback(paymentDataCallback);
-        startCheckoutActivity();
-    }
-
     private void startForResult(@NonNull Integer resultCode) {
         CallbackHolder.getInstance().clean();
         startCheckoutActivity(resultCode);
@@ -176,7 +172,6 @@ public class MercadoPagoCheckout {
         checkoutIntent.putExtra("reviewScreenPreference", JsonUtil.getInstance().toJson(reviewScreenPreference));
         checkoutIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         checkoutIntent.putExtra("binaryMode", binaryMode);
-        checkoutIntent.putExtra("maxSavedCards", maxSavedCards);
         checkoutIntent.putExtra("resultCode", resultCode);
 
         if (context != null) {
@@ -184,14 +179,8 @@ public class MercadoPagoCheckout {
         } else {
             activity.startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
         }
-    }
 
-    private void attachCheckoutCallback(PaymentCallback paymentCallback) {
-        CallbackHolder.getInstance().setPaymentCallback(paymentCallback);
-    }
 
-    private void attachCheckoutCallback(PaymentDataCallback paymentDataCallback) {
-        CallbackHolder.getInstance().setPaymentDataCallback(paymentDataCallback);
     }
 
     private void startCheckoutActivity() {
@@ -203,7 +192,6 @@ public class MercadoPagoCheckout {
         private Activity activity;
         private String publicKey;
         private Boolean binaryMode = false;
-        private Integer maxSavedCards;
         private CheckoutPreference checkoutPreference;
         private DecorationPreference decorationPreference;
         private ServicePreference servicePreference;
@@ -213,12 +201,6 @@ public class MercadoPagoCheckout {
         private PaymentData paymentData;
         private PaymentResult paymentResult;
         private Discount discount;
-
-        @Deprecated
-        public Builder setContext(Context context) {
-            this.context = context;
-            return this;
-        }
 
         public Builder setActivity(Activity activity) {
             this.activity = activity;
@@ -265,11 +247,6 @@ public class MercadoPagoCheckout {
             return this;
         }
 
-        public Builder setMaxSavedCards(Integer maxSavedCards) {
-            this.maxSavedCards = maxSavedCards;
-            return this;
-        }
-
         public Builder enableBinaryMode() {
             this.binaryMode = true;
             return this;
@@ -283,19 +260,6 @@ public class MercadoPagoCheckout {
         public Builder setPaymentResult(PaymentResult paymentResult) {
             this.paymentResult = paymentResult;
             return this;
-        }
-
-        @Deprecated
-        public void start(PaymentCallback paymentCallback) {
-            MercadoPagoCheckout mercadoPagoCheckout = new MercadoPagoCheckout(this);
-            mercadoPagoCheckout.start(paymentCallback);
-
-        }
-
-        @Deprecated
-        public void start(PaymentDataCallback paymentDataCallback) {
-            MercadoPagoCheckout mercadoPagoCheckout = new MercadoPagoCheckout(this);
-            mercadoPagoCheckout.start(paymentDataCallback);
         }
 
         public void startForPaymentData() {

@@ -12,6 +12,7 @@ import com.mercadopago.constants.ReviewKeys;
 import com.mercadopago.constants.Sites;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
@@ -33,10 +34,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-/**
- * Created by mreverter on 2/3/17.
- */
 
 public class ReviewAndConfirmPresenterTest {
 
@@ -402,7 +399,7 @@ public class ReviewAndConfirmPresenterTest {
 
         presenter.initialize();
 
-        view.cancelPayment(false);
+        view.cancelPayment();
 
         assertTrue(view.paymentCanceled);
     }
@@ -571,7 +568,7 @@ public class ReviewAndConfirmPresenterTest {
         private String cancelMessage = "Cancelar";
 
         @Override
-        public Reviewable getSummaryReviewable(PaymentMethod paymentMethod, PayerCost payerCost, BigDecimal amount, Discount discount, Site site, DecorationPreference decorationPreference, OnConfirmPaymentCallback onConfirmPaymentCallback) {
+        public Reviewable getSummaryReviewable(PaymentMethod paymentMethod, PayerCost payerCost, BigDecimal amount, Discount discount, Site site, Issuer issuer, DecorationPreference decorationPreference, OnConfirmPaymentCallback onConfirmPaymentCallback) {
             paymentSummaryReviewable = new SummaryMockedReviewable(onConfirmPaymentCallback);
             return paymentSummaryReviewable;
         }
@@ -621,7 +618,6 @@ public class ReviewAndConfirmPresenterTest {
         private String confirmationMessage;
         private String cancelMessage;
         private boolean termsAndConditionsShown = false;
-        private boolean paymentCanceledNotified;
 
         @Override
         public void showError(String message) {
@@ -644,8 +640,7 @@ public class ReviewAndConfirmPresenterTest {
         }
 
         @Override
-        public void cancelPayment(boolean notifyCancel) {
-            this.paymentCanceledNotified = notifyCancel;
+        public void cancelPayment() {
             this.paymentCanceled = true;
         }
 
@@ -676,11 +671,6 @@ public class ReviewAndConfirmPresenterTest {
 
         @Override
         public void changeRequired(Integer resultCode, @Nullable Bundle data) {
-
-        }
-
-        @Override
-        public void changeRequired(Reviewable reviewable) {
 
         }
     }

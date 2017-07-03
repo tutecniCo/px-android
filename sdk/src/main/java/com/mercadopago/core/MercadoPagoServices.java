@@ -79,6 +79,18 @@ public class MercadoPagoServices {
         System.setProperty("http.keepAlive", "false");
     }
 
+
+
+    private Retrofit getMockedRetrofit() {
+        return getMockedRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
+    }
+
+    private Retrofit getMockedRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {
+        String baseUrl = "https://private-e376cb-pxrolloutmco.apiary-mock.com";
+
+        return getRetrofit(baseUrl, connectTimeout, readTimeout, writeTimeout);
+    }
+
     public void getPreference(String checkoutPreferenceId, Callback<CheckoutPreference> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_PREFERENCE", "3", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
@@ -95,7 +107,8 @@ public class MercadoPagoServices {
 
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_PAYMENT_METHOD_SEARCH", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         PayerIntent payerIntent = new PayerIntent(payer);
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
+//        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
+        CheckoutService service = getMockedRetrofit().create(CheckoutService.class);
         String separator = ",";
         String excludedPaymentTypesAppended = getListAsString(excludedPaymentTypes, separator);
         String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);

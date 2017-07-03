@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
+import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Currency;
@@ -332,7 +333,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
             discountAmount = CurrenciesUtil.formatCurrencyInText(mPresenter.getCouponAmount(), mPresenter.getCurrencyId(), discountAmountBuilder.toString(), false, true);
 
             mReviewSummaryDiscountAmount.setText(discountAmount);
-            if(!TextUtils.isEmpty(mPresenter.getDiscount().getConcept())) {
+            if (!TextUtils.isEmpty(mPresenter.getDiscount().getConcept())) {
                 mReviewSummaryDiscountLabel.setText(mPresenter.getDiscount().getConcept());
             }
         } else {
@@ -463,6 +464,7 @@ public class DiscountsActivity extends AppCompatActivity implements DiscountsAct
 
     @Override
     public void onFinish() {
+        setResult(MercadoPagoCheckout.TIMER_FINISHED_RESULT_CODE);
         this.finish();
     }
 

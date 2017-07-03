@@ -15,6 +15,7 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.PaymentVaultPresenter;
 import com.mercadopago.providers.PaymentVaultProvider;
@@ -31,10 +32,6 @@ import java.util.List;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-
-/**
- * Created by mreverter on 1/30/17.
- */
 
 public class PaymentVaultPresenterTest {
 
@@ -542,7 +539,6 @@ public class PaymentVaultPresenterTest {
         assertEquals(MockedProvider.INVALID_MAX_INSTALLMENTS, mockedView.errorShown.getMessage());
     }
 
-
     @Test
     public void ifMaxSavedCardNotSetDoNotLimitCardsShown() {
         MockedView mockedView = new MockedView();
@@ -917,6 +913,138 @@ public class PaymentVaultPresenterTest {
 
         mockedView.simulateItemSelection(1);
         assertTrue(paymentMethodSearch.getGroups().get(1).getId().equals(mockedView.selectedPaymentMethod.getId()));
+    }
+
+    @Test
+    public void ifShowAllSavedCardsTestThenShowThem() {
+
+        PaymentVaultPresenter presenter = new PaymentVaultPresenter();
+
+        MockedView mockedView = new MockedView();
+        MockedProvider provider = new MockedProvider();
+
+        // 6 Saved Cards + Account Money
+        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithSavedCardsMLA();
+
+        provider.setResponse(paymentMethodSearch);
+
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setAmount(BigDecimal.TEN);
+        presenter.setSite(Sites.ARGENTINA);
+        // Set show all saved cards
+        presenter.setShowAllSavedCardsEnabled(true);
+        presenter.setMaxSavedCards(FlowPreference.DEFAULT_MAX_SAVED_CARDS_TO_SHOW);
+
+        presenter.initialize(true);
+
+        assertEquals(mockedView.customOptionsShown.size(), paymentMethodSearch.getCustomSearchItems().size());
+    }
+
+    @Test
+    public void ifMaxSavedCardsSetThenShowWithLimit() {
+
+        PaymentVaultPresenter presenter = new PaymentVaultPresenter();
+
+        MockedView mockedView = new MockedView();
+        MockedProvider provider = new MockedProvider();
+
+        // 6 Saved Cards + Account Money
+        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithSavedCardsMLA();
+
+        provider.setResponse(paymentMethodSearch);
+
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setAmount(BigDecimal.TEN);
+        presenter.setSite(Sites.ARGENTINA);
+        presenter.setMaxSavedCards(4);
+
+        presenter.initialize(true);
+
+        // 4 Cards + Account Money
+        assertEquals(mockedView.customOptionsShown.size(), 5);
+    }
+
+    @Test
+    public void ifMaxSavedCardsSetThenShowWithLimitAgain() {
+
+        PaymentVaultPresenter presenter = new PaymentVaultPresenter();
+
+        MockedView mockedView = new MockedView();
+        MockedProvider provider = new MockedProvider();
+
+        // 6 Saved Cards + Account Money
+        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithSavedCardsMLA();
+
+        provider.setResponse(paymentMethodSearch);
+
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setAmount(BigDecimal.TEN);
+        presenter.setSite(Sites.ARGENTINA);
+        presenter.setMaxSavedCards(1);
+
+        presenter.initialize(true);
+
+        // 1 Card + Account Money
+        assertEquals(mockedView.customOptionsShown.size(), 2);
+    }
+
+    @Test
+    public void ifMaxSavedCardsSetAndShowAllSetThenShowAllSavedCards() {
+
+        PaymentVaultPresenter presenter = new PaymentVaultPresenter();
+
+        MockedView mockedView = new MockedView();
+        MockedProvider provider = new MockedProvider();
+
+        // 6 Saved Cards + Account Money
+        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithSavedCardsMLA();
+
+        provider.setResponse(paymentMethodSearch);
+
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setAmount(BigDecimal.TEN);
+        presenter.setSite(Sites.ARGENTINA);
+        presenter.setShowAllSavedCardsEnabled(true);
+        presenter.setMaxSavedCards(4);
+
+        presenter.initialize(true);
+
+        assertEquals(mockedView.customOptionsShown.size(), paymentMethodSearch.getCustomSearchItems().size());
+    }
+
+    @Test
+    public void ifMaxSavedCardsSetMoreThanActualAmountOfCardsThenShowAll() {
+
+        PaymentVaultPresenter presenter = new PaymentVaultPresenter();
+
+        MockedView mockedView = new MockedView();
+        MockedProvider provider = new MockedProvider();
+
+        // 6 Saved Cards + Account Money
+        PaymentMethodSearch paymentMethodSearch = PaymentMethodSearchs.getPaymentMethodSearchWithSavedCardsMLA();
+
+        provider.setResponse(paymentMethodSearch);
+
+        presenter.attachView(mockedView);
+        presenter.attachResourcesProvider(provider);
+
+        presenter.setAmount(BigDecimal.TEN);
+        presenter.setSite(Sites.ARGENTINA);
+        // More cards than we have
+        presenter.setMaxSavedCards(8);
+
+        presenter.initialize(true);
+
+        // Show every card we have
+        assertEquals(mockedView.customOptionsShown.size(), paymentMethodSearch.getCustomSearchItems().size());
     }
 
     private class MockedProvider implements PaymentVaultProvider {

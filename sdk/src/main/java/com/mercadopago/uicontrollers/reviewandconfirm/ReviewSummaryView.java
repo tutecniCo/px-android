@@ -1,6 +1,8 @@
 package com.mercadopago.uicontrollers.reviewandconfirm;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.ColorInt;
 
 import android.text.Spanned;
@@ -13,15 +15,21 @@ import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnConfirmPaymentCallback;
 import com.mercadopago.constants.ReviewKeys;
+import com.mercadopago.constants.Sites;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Reviewable;
+import com.mercadopago.model.Site;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.uicontrollers.payercosts.PayerCostColumn;
 import com.mercadopago.util.CurrenciesUtil;
+import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.util.TextUtil;
+import com.mercadopago.util.UnlockCardUtil;
 
 import java.math.BigDecimal;
 
@@ -33,7 +41,6 @@ import static com.mercadopago.util.TextUtils.isEmpty;
 
 public class ReviewSummaryView extends Reviewable {
 
-    public static final String TEA = "TEA ";
     public static final String CFT = "CFT ";
     protected View mView;
 
@@ -53,7 +60,6 @@ public class ReviewSummaryView extends Reviewable {
     protected FrameLayout mPayerCostContainer;
     protected FrameLayout mConfirmButton;
     protected MPTextView mConfirmTextView;
-    protected MPTextView mTEATextView;
     protected MPTextView mCFTTextView;
     protected MPTextView mCustomDescriptionTextView;
     protected MPTextView mCustomAmountTextView;
@@ -74,8 +80,13 @@ public class ReviewSummaryView extends Reviewable {
     protected DecorationPreference mDecorationPreference;
     protected Discount mDiscount;
     protected MPTextView mProductsLabelText;
+    private MPTextView mUnlockCardTextView;
+    private LinearLayout mUnlockCard;
+    private Issuer mIssuer;
+    private Site mSite;
+    private String mUnlockLink;
 
-    public ReviewSummaryView(Context context, String confirmationMessage, String productDetailText, String discountDetailText, PaymentMethod paymentMethod, PayerCost payerCost, BigDecimal amount, Discount discount, String currencyId, String customDescription, BigDecimal customAmount, @ColorInt Integer customTextColor, DecorationPreference decorationPreference, OnConfirmPaymentCallback callback) {
+    public ReviewSummaryView(Context context, String confirmationMessage, String productDetailText, String discountDetailText, PaymentMethod paymentMethod, PayerCost payerCost, BigDecimal amount, Discount discount, String currencyId, String customDescription, BigDecimal customAmount, Site site, Issuer issuer, @ColorInt Integer customTextColor, DecorationPreference decorationPreference, OnConfirmPaymentCallback callback) {
         this.mContext = context;
         this.mConfirmationMessage = confirmationMessage;
         this.mProductDetailText = productDetailText;
@@ -90,6 +101,8 @@ public class ReviewSummaryView extends Reviewable {
         this.mCustomTextColor = customTextColor;
         this.mCallback = callback;
         this.mDecorationPreference = decorationPreference;
+        this.mIssuer = issuer;
+        this.mSite = site;
     }
 
     @Override
@@ -111,8 +124,9 @@ public class ReviewSummaryView extends Reviewable {
         mPayerCostContainer = (FrameLayout) mView.findViewById(R.id.mpsdkReviewSummaryPayerCostContainer);
         mConfirmButton = (FrameLayout) mView.findViewById(R.id.mpsdkReviewSummaryConfirmButton);
         mConfirmTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewButtonText);
-        mTEATextView = (MPTextView) mView.findViewById(R.id.mpsdkTEA);
         mCFTTextView = (MPTextView) mView.findViewById(R.id.mpsdkCFT);
+        mUnlockCard = (LinearLayout) mView.findViewById(R.id.mpsdkCheckoutUnlockCard);
+        mUnlockCardTextView = (MPTextView) mView.findViewById(R.id.mpsdkUnlockCard);
         mCustomDescriptionTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewSummaryCustomText);
         mCustomAmountTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewSummaryCustomAmount);
         mConfirmButton.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +136,39 @@ public class ReviewSummaryView extends Reviewable {
 
             }
         });
+    }
+
+    private void startUnlockCardActivity() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUnlockLink));
+        mContext.startActivity(browserIntent);
+    }
+
+    public void showUnlockCard() {
+
+        mUnlockCard.setVisibility(View.VISIBLE);
+
+        mUnlockCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startUnlockCardActivity();
+            }
+        });
+    }
+
+    private boolean isCardUnlockingNeeded() {
+        String link = getCardUnlockingLink();
+        if (!TextUtil.isEmpty(link)) {
+            mUnlockLink = link;
+            return true;
+        }
+        return false;
+    }
+
+    private String getCardUnlockingLink() {
+        if (mSite == null || mIssuer == null) {
+            return null;
+        }
+        return UnlockCardUtil.getCardUnlockingLink(mSite.getId(), mIssuer.getId());
     }
 
     @Override
@@ -148,7 +195,7 @@ public class ReviewSummaryView extends Reviewable {
         if (hasCustomInfo()) {
             showCustomInfo();
         }
-        
+
         //Discounts
         if (hasDiscount()) {
             showDiscountRow();
@@ -165,7 +212,7 @@ public class ReviewSummaryView extends Reviewable {
         if (isCardPaymentMethod()) {
             if (mPayerCost.getInstallments() == 1) {
                 hidePayerCostInfo();
-                if(mDiscount == null) {
+                if (mDiscount == null) {
                     hideTotalRow();
                 } else {
                     showTotal(mPayerCost.getTotalAmount());
@@ -174,6 +221,7 @@ public class ReviewSummaryView extends Reviewable {
                 showPayerCostRow();
                 showFinance();
                 showTotal(mPayerCost.getTotalAmount());
+
             }
 
         } else if (!hasDiscount()) {
@@ -182,7 +230,13 @@ public class ReviewSummaryView extends Reviewable {
         } else {
             hidePayerCostInfo();
             mTotalText.setText(CurrenciesUtil.getFormattedAmount(getSubtotal(), mCurrencyId));
+
         }
+
+        if (isCardUnlockingNeeded()) {
+            showUnlockCard();
+        }
+
     }
 
     private void hideTotalRow() {
@@ -194,19 +248,10 @@ public class ReviewSummaryView extends Reviewable {
         mPayerCostRow.setVisibility(View.GONE);
         mFirstSeparator.setVisibility(View.GONE);
         mSubtotalRow.setVisibility(View.GONE);
-        mTEATextView.setVisibility(View.GONE);
         mCFTTextView.setVisibility(View.GONE);
     }
 
     private void showFinance() {
-        if (mPayerCost.hasTEA()) {
-            mTEATextView.setVisibility(View.VISIBLE);
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(TEA);
-            stringBuilder.append(mPayerCost.getTEAPercent());
-            mTEATextView.setText(stringBuilder);
-        }
-
         if (mPayerCost.hasCFT()) {
             mCFTTextView.setVisibility(View.VISIBLE);
             StringBuilder stringBuilder = new StringBuilder();
@@ -222,6 +267,7 @@ public class ReviewSummaryView extends Reviewable {
             if (mDecorationPreference.isDarkFontEnabled()) {
                 mConfirmTextView.setTextColor(mDecorationPreference.getDarkFontColor(mContext));
             }
+            mUnlockCardTextView.setTextColor(mDecorationPreference.getBaseColor());
         }
     }
 
