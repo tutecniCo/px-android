@@ -29,6 +29,10 @@ public class MPAutoResizeTextView extends MPTextView {
     private boolean mInitialized = false;
     private TextPaint mPaint;
 
+    public void setmMinTextSize(float mMinTextSize) {
+        this.mMinTextSize = mMinTextSize;
+    }
+
     private interface SizeTester {
         /**
          * @param suggestedSize  Size of text to be tested

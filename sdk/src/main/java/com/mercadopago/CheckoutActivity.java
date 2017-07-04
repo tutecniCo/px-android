@@ -9,6 +9,8 @@ import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.FinancialInstitution;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
 import com.mercadopago.model.Payment;
@@ -17,6 +19,7 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
+import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
@@ -151,7 +154,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
             resolveErrorRequest(resultCode, data);
         }else if (resultCode == MercadoPagoCheckout.TIMER_FINISHED_RESULT_CODE) {
-                resolveTimerObserverResult(resultCode);
+            resolveTimerObserverResult(resultCode);
         } else if (requestCode == MercadoPagoComponents.Activities.PAYMENT_VAULT_REQUEST_CODE) {
             resolvePaymentVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.PAYMENT_RESULT_REQUEST_CODE) {
@@ -160,6 +163,22 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.ADDITIONAL_VAULT_REQUEST_CODE) {
+            resolveAdditionalStepRequest(resultCode, data);
+        }
+    }
+
+    private void resolveAdditionalStepRequest(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Identification identification = JsonUtil.getInstance().fromJson(data.getStringExtra("identification"), Identification.class);
+            FinancialInstitution financialInstitution = JsonUtil.getInstance().fromJson(data.getStringExtra("financialInstitution"), FinancialInstitution.class);
+            String entityType = data.getStringExtra("entityType");
+            mCheckoutPresenter.onAdditionalStepCompleted(identification, financialInstitution, entityType);
+        } else if (isErrorResult(data)) {
+            MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
+            mCheckoutPresenter.onErrorCancel(mercadoPagoError);
+        } else {
+            mCheckoutPresenter.onAdditionalStepCancel();
         }
     }
 
@@ -426,16 +445,30 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setShowBankDeals(mCheckoutPresenter.getShowBankDeals())
                 .startActivity();
 
-        animatePaymentMethodSelection();
+        slideInTransition();
+    }
+
+    @Override
+    public void showAdditionalStep(Site site, PaymentMethod paymentMethod) {
+
+        new MercadoPagoComponents.Activities.AdditionalStepVaultActivityBuilder()
+                .setActivity(this)
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setPaymentMethod(paymentMethod)
+                .setDecorationPreference(mDecorationPreference)
+                .setSite(site)
+                .startActivity();
+
+        slideInTransition();
     }
 
     @Override
     public void startPaymentMethodEdition() {
         showPaymentMethodSelection();
-        animatePaymentMethodSelection();
+        slideInTransition();
     }
 
-    private void animatePaymentMethodSelection() {
+    private void slideInTransition() {
         overridePendingTransition(R.anim.mpsdk_slide_right_to_left_in, R.anim.mpsdk_slide_right_to_left_out);
     }
 

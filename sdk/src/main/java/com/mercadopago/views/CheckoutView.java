@@ -3,8 +3,10 @@ package com.mercadopago.views;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentData;
+import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
+import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpView;
 
 public interface CheckoutView extends MvpView {
@@ -42,4 +44,6 @@ public interface CheckoutView extends MvpView {
     void cancelCheckout(Integer customResultCode, PaymentData paymentData, Boolean paymentMethodEdited);
 
     void startPaymentRecoveryFlow(PaymentRecovery paymentRecovery);
+
+    void showAdditionalStep(Site site, PaymentMethod paymentMethod);
 }

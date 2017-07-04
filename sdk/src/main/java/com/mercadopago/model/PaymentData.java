@@ -13,6 +13,15 @@ public class PaymentData {
     private Token token;
     private Discount discount;
     private Payer payer;
+    private TransactionDetails transactionDetails;
+
+    public TransactionDetails getTransactionDetails() {
+        return transactionDetails;
+    }
+
+    public void setTransactionDetails(TransactionDetails transactionDetails) {
+        this.transactionDetails = transactionDetails;
+    }
 
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;

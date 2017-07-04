@@ -59,4 +59,49 @@ public class IdentificationType {
     public void setMaxLength(Integer MaxLength) {
         this.maxLength = MaxLength;
     }
+
+
+    public boolean validateIdentificationNumber(Identification identification) {
+
+        if ((identification != null) && (identification.getNumber() != null)) {
+
+            int len = identification.getNumber().length();
+            Integer min = minLength;
+            Integer max = maxLength;
+            if ((min != null) && (max != null)) {
+                return ((len <= max) && (len >= min));
+            } else {
+                return identification.validateIdentificationNumber();
+            }
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IdentificationType that = (IdentificationType) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (minLength != null ? !minLength.equals(that.minLength) : that.minLength != null)
+            return false;
+        return maxLength != null ? maxLength.equals(that.maxLength) : that.maxLength == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (minLength != null ? minLength.hashCode() : 0);
+        result = 31 * result + (maxLength != null ? maxLength.hashCode() : 0);
+        return result;
+    }
 }

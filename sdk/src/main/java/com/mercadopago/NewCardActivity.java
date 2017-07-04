@@ -234,7 +234,7 @@ public class NewCardActivity extends AppCompatActivity {
 
     protected boolean validateIdentificationNumber(CardToken cardToken, boolean requestFocus) {
         if (getIdentificationType() != null) {
-            if (!cardToken.validateIdentificationNumber(getIdentificationType())) {
+            if (!getIdentificationType().validateIdentificationNumber(cardToken.getCardholder().getIdentification())) {
                 mIdentificationNumber.setError(getString(R.string.mpsdk_invalid_field));
                 if (requestFocus) {
                     mIdentificationNumber.requestFocus();

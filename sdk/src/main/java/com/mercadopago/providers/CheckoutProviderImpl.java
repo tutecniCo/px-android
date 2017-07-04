@@ -95,7 +95,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public void getDirectDiscount(BigDecimal amount, String payerEmail, OnResourcesRetrievedCallback<Discount> onResourcesRetrievedCallback) {
-        if(servicePreference != null && servicePreference.hasGetDiscountURL()) {
+        if (servicePreference != null && servicePreference.hasGetDiscountURL()) {
             getDiscountFromMerchantServer(amount, payerEmail, onResourcesRetrievedCallback);
         } else {
             getDiscountFromMercadoPago(amount, payerEmail, onResourcesRetrievedCallback);
@@ -188,7 +188,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public void createPayment(String transactionId, CheckoutPreference checkoutPreference, PaymentData paymentData, Boolean binaryMode, String customerId, OnResourcesRetrievedCallback<Payment> onResourcesRetrievedCallback) {
-        if(servicePreference != null && servicePreference.hasCreatePaymentURL()) {
+        if (servicePreference != null && servicePreference.hasCreatePaymentURL()) {
             createPaymentInMerchantServer(transactionId, paymentData, onResourcesRetrievedCallback);
         } else {
             createPaymentInMercadoPago(transactionId, checkoutPreference, paymentData, binaryMode, customerId, onResourcesRetrievedCallback);
@@ -223,17 +223,17 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     private void createPaymentInMercadoPago(String transactionId, CheckoutPreference checkoutPreference, PaymentData paymentData, Boolean binaryMode, String customerId, final OnResourcesRetrievedCallback<Payment> onResourcesRetrievedCallback) {
         PaymentBody paymentBody = createPaymentBody(transactionId, checkoutPreference, paymentData, binaryMode, customerId);
-            mercadoPagoServices.createPayment(paymentBody, new Callback<Payment>() {
-                @Override
-                public void success(Payment payment) {
-                    onResourcesRetrievedCallback.onSuccess(payment);
-                }
+        mercadoPagoServices.createPayment(paymentBody, new Callback<Payment>() {
+            @Override
+            public void success(Payment payment) {
+                onResourcesRetrievedCallback.onSuccess(payment);
+            }
 
-                @Override
-                public void failure(ApiException apiException) {
-                    onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
-                }
-            });
+            @Override
+            public void failure(ApiException apiException) {
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+            }
+        });
     }
 
     private PaymentBody createPaymentBody(String transactionId, CheckoutPreference checkoutPreference, PaymentData paymentData, Boolean binaryMode, String customerId) {
@@ -242,11 +242,11 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         paymentBody.setPublicKey(publicKey);
         paymentBody.setPaymentMethodId(paymentData.getPaymentMethod().getId());
         paymentBody.setBinaryMode(binaryMode);
-        Payer payer = checkoutPreference.getPayer();
+
+        Payer payer = paymentData.getPayer();
         if (!TextUtils.isEmpty(customerId) && MercadoPagoUtil.isCard(paymentData.getPaymentMethod().getPaymentTypeId())) {
             payer.setId(customerId);
         }
-
         paymentBody.setPayer(payer);
 
         if (paymentData.getToken() != null) {
@@ -257,6 +257,9 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         }
         if (paymentData.getIssuer() != null) {
             paymentBody.setIssuerId(paymentData.getIssuer().getId());
+        }
+        if (paymentData.getTransactionDetails() != null) {
+            paymentBody.setTransactionDetails(paymentData.getTransactionDetails());
         }
 
         Discount discount = paymentData.getDiscount();

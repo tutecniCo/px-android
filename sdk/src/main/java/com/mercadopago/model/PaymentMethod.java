@@ -17,6 +17,16 @@ public class PaymentMethod {
     private BigDecimal minAllowedAmount;
     private BigDecimal maxAllowedAmount;
     private Integer accreditationTime;
+    private List<FinancialInstitution> financialInstitutions;
+
+
+    public List<FinancialInstitution> getFinancialInstitutions() {
+        return financialInstitutions;
+    }
+
+    public void setFinancialInstitutions(List<FinancialInstitution> financialInstitutions) {
+        this.financialInstitutions = financialInstitutions;
+    }
 
     public List<String> getAdditionalInfoNeeded() {
         return additionalInfoNeeded;
@@ -84,6 +94,26 @@ public class PaymentMethod {
 
     public boolean isIdentificationNumberRequired() {
         return isAdditionalInfoNeeded("cardholder_identification_number");
+    }
+
+    public boolean isIdentificationTypeOffRequired() {
+        return isAdditionalInfoNeeded("identification_type");
+    }
+
+    public boolean isIdentificationNumberOffRequired() {
+        return isAdditionalInfoNeeded("identification_number");
+    }
+
+    public boolean isIdentificationOffRequired(){
+        return isIdentificationNumberOffRequired() && isIdentificationTypeOffRequired();
+    }
+
+    public boolean isEntityTypeRequired(){
+        return isAdditionalInfoNeeded("entity_type");
+    }
+
+    public boolean isFinancialInstitutionsRequired(){
+        return financialInstitutions!= null && !financialInstitutions.isEmpty();
     }
 
     private boolean isAdditionalInfoNeeded(String param) {
@@ -157,5 +187,9 @@ public class PaymentMethod {
 
     public Integer getAccreditationTime() {
         return accreditationTime;
+    }
+
+    public boolean isOnPaymentMethod() {
+        return paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card");
     }
 }

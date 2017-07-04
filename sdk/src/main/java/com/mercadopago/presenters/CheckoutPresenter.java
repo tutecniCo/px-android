@@ -10,6 +10,8 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.FinancialInstitution;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PayerCost;
@@ -21,6 +23,7 @@ import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.PaymentResultAction;
 import com.mercadopago.model.Token;
+import com.mercadopago.model.TransactionDetails;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
@@ -53,6 +56,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private Integer mRequestedResult;
 
     private PaymentMethodSearch mPaymentMethodSearch;
+
+    private Payer mPayer;
     private Issuer mSelectedIssuer;
     private PayerCost mSelectedPayerCost;
     private Token mCreatedToken;
@@ -69,6 +74,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private transient FailureRecovery failureRecovery;
     private transient Timer mCheckoutTimer;
+    private TransactionDetails mTransactionDetails;
 
     public CheckoutPresenter() {
         mFlowPreference = new FlowPreference.Builder()
@@ -112,6 +118,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void startCheckout() {
+        savePayer();
         resolvePreSelectedData();
         setCheckoutTimer();
         boolean shouldGetDiscounts = mDiscount == null && isDiscountEnabled();
@@ -120,6 +127,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         } else {
             retrievePaymentMethodSearch();
         }
+    }
+
+    private void savePayer() {
+        mPayer = mCheckoutPreference.getPayer();
     }
 
     private void setCheckoutTimer() {
@@ -206,7 +217,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void getDirectDiscount(final boolean couponDiscountFount) {
-        String payerEmail = mCheckoutPreference.getPayer() == null ? "" : mCheckoutPreference.getPayer().getEmail();
+        String payerEmail = mPayer == null ? "" : mPayer.getEmail();
         getResourcesProvider().getDirectDiscount(mCheckoutPreference.getAmount(), payerEmail, new OnResourcesRetrievedCallback<Discount>() {
             @Override
             public void onSuccess(Discount discount) {
@@ -234,7 +245,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private void retrievePaymentMethodSearch() {
         getView().showProgress();
         Payer payer = new Payer();
-        payer.setAccessToken(mCheckoutPreference.getPayer().getAccessToken());
+        payer.setAccessToken(mPayer.getAccessToken());
         getResourcesProvider().getPaymentMethodSearch(mCheckoutPreference.getAmount(), mCheckoutPreference.getExcludedPaymentTypes(), mCheckoutPreference.getExcludedPaymentMethods(), payer, mCheckoutPreference.getSite(), onPaymentMethodSearchRetrieved(), onCustomerRetrieved());
     }
 
@@ -367,6 +378,21 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private void onPaymentMethodSelected() {
         mPaymentMethodEditionRequested = false;
+
+        if (isAdditionalStepRequired()) {
+            showAdditionalStep();
+        } else {
+            checkReviewAndConfirmFlow();
+        }
+    }
+
+    private void showAdditionalStep() {
+        if (getView() != null) {
+            getView().showAdditionalStep(mCheckoutPreference.getSite(), mSelectedPaymentMethod);
+        }
+    }
+
+    private void checkReviewAndConfirmFlow() {
         if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {
@@ -568,6 +594,27 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         }
     }
 
+    public void onAdditionalStepCompleted(Identification identification, FinancialInstitution financialInstitution, String entityType) {
+        if (identification != null) {
+            mPayer.setIdentification(identification);
+        }
+        if (!TextUtils.isEmpty(entityType)) {
+            mPayer.setEntityType(entityType);
+        }
+        if (financialInstitution != null) {
+            mTransactionDetails = new TransactionDetails();
+            mTransactionDetails.setFinancialInstitution(financialInstitution.getId().toString());
+        }
+
+        checkReviewAndConfirmFlow();
+    }
+
+    public void onAdditionalStepCancel() {
+        if (getView() != null) {
+            getView().backToPaymentMethodSelection();
+        }
+    }
+
     public boolean isUniquePaymentMethod() {
         return isOnlyUniquePaymentMethodAvailable() || isOnlyAccountMoneyEnabled();
     }
@@ -589,7 +636,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                 .setPaymentId(payment.getId())
                 .setPaymentStatus(payment.getStatus())
                 .setPaymentStatusDetail(payment.getStatusDetail())
-                .setPayerEmail(mCheckoutPreference.getPayer().getEmail())
+                .setPayerEmail(mPayer.getEmail())
                 .setStatementDescription(payment.getStatementDescriptor())
                 .build();
     }
@@ -602,7 +649,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         paymentData.setDiscount(mDiscount);
         paymentData.setToken(mCreatedToken);
         paymentData.setTransactionAmount(mCheckoutPreference.getAmount());
-        paymentData.setPayer(mCheckoutPreference.getPayer());
+        paymentData.setPayer(mPayer);
+        paymentData.setTransactionDetails(mTransactionDetails);
         return paymentData;
     }
 
@@ -629,6 +677,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     public void setFailureRecovery(FailureRecovery failureRecovery) {
         this.failureRecovery = failureRecovery;
+    }
+
+    private boolean isAdditionalStepRequired() {
+        return mSelectedPaymentMethod.isIdentificationOffRequired() || mSelectedPaymentMethod.isFinancialInstitutionsRequired() || mSelectedPaymentMethod.isEntityTypeRequired();
     }
 
     private boolean isRecoverableTokenProcess() {
@@ -779,4 +831,5 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     public Integer getMaxSavedCardsToShow() {
         return mFlowPreference.getMaxSavedCardsToShow();
     }
+
 }

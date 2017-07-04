@@ -876,7 +876,7 @@ public class GuessingCardPresenter {
     public boolean validateIdentificationNumber() {
         mIdentification.setNumber(getIdentificationNumber());
         mCardToken.getCardholder().setIdentification(mIdentification);
-        boolean ans = mCardToken.validateIdentificationNumber(mIdentificationType);
+        boolean ans = mIdentificationType.validateIdentificationNumber(mIdentification);
         if (ans) {
             mView.clearErrorView();
             mView.clearErrorIdentificationNumber();
