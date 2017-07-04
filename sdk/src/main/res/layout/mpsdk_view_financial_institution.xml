@@ -12,18 +12,18 @@
         android:layout_weight="1">
 
         <ImageView
-            android:id="@+id/mpsdkIssuerImageView"
+            android:id="@+id/mpsdkFinancialInstitutionImageView"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_gravity="center"/>
 
         <com.mercadopago.customviews.MPTextView
-            android:id="@+id/mpsdkIssuerTextView"
+            android:id="@+id/mpsdkFinancialInstitutionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20dp"
-            tools:text="banco"/>
+            tools:text="financial institution"/>
     </FrameLayout>
 
     <include layout="@layout/mpsdk_view_dashed_line_separator"/>
