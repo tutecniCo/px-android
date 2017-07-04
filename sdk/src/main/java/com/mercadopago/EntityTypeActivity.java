@@ -18,7 +18,6 @@ import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.listeners.RecyclerItemClickListener;
-import com.mercadopago.model.ApiException;
 import com.mercadopago.model.EntityType;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -32,7 +31,6 @@ import com.mercadopago.providers.EntityTypeProviderImpl;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.IdentificationCardView;
-import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
@@ -49,14 +47,10 @@ import java.util.List;
 public class EntityTypeActivity extends MercadoPagoBaseActivity implements EntityTypeActivityView, TimerObserver {
 
     private static final String DECORATION_PREFERENCE_BUNDLE = "mDecorationPreference";
-    private static final String IDENTIFICATION_BUNDLE = "mIdentification";
-    private static final String IDENTIFICATION_TYPE_BUNDLE = "mIdentificationType";
-    private static final String SITE_BUNDLE = "mSite";
-    private static final String PAYMENT_METHOD_BUNDLE = "mPaymetMethod";
-    private static final String PUBLIC_KEY_BUNDLE = "mPublicKey";
     private static final String LOW_RES_BUNDLE = "mLowResActive";
+    private static final String PRESENTER_BUNDLE = "mEntityTypePresenter";
 
-    protected EntityTypePresenter mPresenter;
+    protected EntityTypePresenter mEntityTypePresenter;
     protected Activity mActivity;
 
     //View controls
@@ -88,21 +82,27 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
             setTheme();
             analyzeLowRes();
             setContentView();
-            mPresenter.validateActivityParameters();
+            mEntityTypePresenter.initialize();
         }
+    }
 
+    public void trackScreen() {
+        MPTracker.getInstance().trackScreen("ENTITY_TYPE_ACTIVITY", "2", mEntityTypePresenter.getPublicKey(),
+                BuildConfig.VERSION_NAME, this);
     }
 
     private void createPresenter() {
-        if (mPresenter == null) {
-            mPresenter = new EntityTypePresenter(getBaseContext());
+        if (mEntityTypePresenter == null) {
+            mEntityTypePresenter = new EntityTypePresenter();
         }
     }
 
     private void configurePresenter() {
-        mPresenter.attachView(this);
-        EntityTypeProviderImpl resourcesProvider = new EntityTypeProviderImpl(this);
-        mPresenter.attachResourcesProvider(resourcesProvider);
+        if (mEntityTypePresenter != null) {
+            mEntityTypePresenter.attachView(this);
+            EntityTypeProviderImpl resourcesProvider = new EntityTypeProviderImpl(this);
+            mEntityTypePresenter.attachResourcesProvider(resourcesProvider);
+        }
     }
 
     private void setTheme() {
@@ -114,11 +114,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(DECORATION_PREFERENCE_BUNDLE, JsonUtil.getInstance().toJson(mDecorationPreference));
-        outState.putString(IDENTIFICATION_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentification()));
-        outState.putString(IDENTIFICATION_TYPE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getIdentificationType()));
-        outState.putString(SITE_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getSite()));
-        outState.putString(PAYMENT_METHOD_BUNDLE, JsonUtil.getInstance().toJson(mPresenter.getPaymentMethod()));
-        outState.putString(PUBLIC_KEY_BUNDLE, mPresenter.getPublicKey());
+        outState.putString(PRESENTER_BUNDLE, JsonUtil.getInstance().toJson(mEntityTypePresenter));
         outState.putBoolean(LOW_RES_BUNDLE, mLowResActive);
 
         super.onSaveInstanceState(outState);
@@ -128,19 +124,13 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            createPresenter();
-            configurePresenter();
+            mEntityTypePresenter = JsonUtil.getInstance().fromJson(savedInstanceState.getString(PRESENTER_BUNDLE), EntityTypePresenter.class);
             mDecorationPreference = JsonUtil.getInstance().fromJson(savedInstanceState.getString(DECORATION_PREFERENCE_BUNDLE), DecorationPreference.class);
-            mPresenter.setSite(JsonUtil.getInstance().fromJson(savedInstanceState.getString(SITE_BUNDLE), Site.class));
-            mPresenter.setPaymentMethod(JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class));
-            mPresenter.setPublicKey(savedInstanceState.getString(PUBLIC_KEY_BUNDLE));
-            mPresenter.setIdentification(JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_BUNDLE), Identification.class));
-            mPresenter.setIdentificationType(JsonUtil.getInstance().fromJson(savedInstanceState.getString(IDENTIFICATION_TYPE_BUNDLE), IdentificationType.class));
             mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
             setTheme();
             analyzeLowRes();
             setContentView();
-            mPresenter.validateActivityParameters();
+            mEntityTypePresenter.initialize();
         }
 
     }
@@ -160,15 +150,15 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         IdentificationType identificationType = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("identificationType"), IdentificationType.class);
         Site site = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("site"), Site.class);
 
-        mPresenter.setSite(site);
-        mPresenter.setPaymentMethod(paymentMethod);
-        mPresenter.setPublicKey(publicKey);
-        mPresenter.setIdentification(identification);
-        mPresenter.setIdentificationType(identificationType);
+        mEntityTypePresenter.setSite(site);
+        mEntityTypePresenter.setPaymentMethod(paymentMethod);
+        mEntityTypePresenter.setPublicKey(publicKey);
+        mEntityTypePresenter.setIdentification(identification);
+        mEntityTypePresenter.setIdentificationType(identificationType);
     }
 
     public void analyzeLowRes() {
-        if (mPresenter.isCardInfoAvailable()) {
+        if (mEntityTypePresenter.isCardInfoAvailable()) {
             this.mLowResActive = ScaleUtil.isLowRes(this);
         } else {
             this.mLowResActive = true;
@@ -184,31 +174,26 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     @Override
-    public void onValidStart() {
-        MPTracker.getInstance().trackScreen("ENTITY_TYPE_ACTIVITY", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
-        initializeViews();
+    public void initialize() {
+        initializeControls();
         loadViews();
         hideHeader();
         decorate();
-        showTimer();
-        initializeAdapter();
-        mPresenter.loadEntityTypes();
     }
 
-    private void showTimer() {
+    @Override
+    public void showEntityTypes(List<EntityType> entityTypesList, OnSelectedCallback<Integer> onSelectedCallback) {
+        initializeAdapter(onSelectedCallback);
+        mEntityTypesAdapter.addResults(entityTypesList);
+    }
+
+    @Override
+    public void showTimer() {
         if (CheckoutTimer.getInstance().isTimerEnabled()) {
             CheckoutTimer.getInstance().addObserver(this);
             mTimerTextView.setVisibility(View.VISIBLE);
             mTimerTextView.setText(CheckoutTimer.getInstance().getCurrentTime());
         }
-    }
-
-    @Override
-    public void onInvalidStart(String message) {
-        Intent returnIntent = new Intent();
-        setResult(RESULT_CANCELED, returnIntent);
-        finish();
     }
 
     private void setContentViewLowRes() {
@@ -219,7 +204,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         setContentView(R.layout.mpsdk_activity_entity_type_normal);
     }
 
-    private void initializeViews() {
+    private void initializeControls() {
         mEntityTypesRecyclerView = (RecyclerView) findViewById(R.id.mpsdkActivityEntityTypeView);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
 
@@ -267,18 +252,9 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         }
     }
 
-    private void initializeAdapter() {
-        mEntityTypesAdapter = new EntityTypesAdapter(this, getDpadSelectionCallback());
+    private void initializeAdapter(OnSelectedCallback<Integer> onSelectedCallback) {
+        mEntityTypesAdapter = new EntityTypesAdapter(this, onSelectedCallback);
         initializeAdapterListener(mEntityTypesAdapter, mEntityTypesRecyclerView);
-    }
-
-    protected OnSelectedCallback<Integer> getDpadSelectionCallback() {
-        return new OnSelectedCallback<Integer>() {
-            @Override
-            public void onSelected(Integer position) {
-                mPresenter.onItemSelected(position);
-            }
-        };
     }
 
     private void initializeAdapterListener(RecyclerView.Adapter adapter, RecyclerView view) {
@@ -288,23 +264,13 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mPresenter.onItemSelected(position);
+                        mEntityTypePresenter.onItemSelected(position);
                     }
                 }));
     }
 
     @Override
-    public void initializeEntityTypes(List<EntityType> entityTypesList) {
-        mEntityTypesAdapter.addResults(entityTypesList);
-    }
-
-    @Override
-    public void showApiExceptionError(ApiException exception) {
-        ApiUtil.showApiExceptionError(mActivity, exception);
-    }
-
-    @Override
-    public void startErrorView(String message, String errorDetail) {
+    public void showError(String message, String errorDetail) {
         ErrorUtil.startErrorActivity(mActivity, message, errorDetail, false);
     }
 
@@ -321,10 +287,10 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
         mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
         setCustomFontNormal();
 
-        mIdentificationCardView = new IdentificationCardView(mActivity, CardRepresentationModes.MEDIUM_SIZE, mPresenter.getIdentification());
+        mIdentificationCardView = new IdentificationCardView(mActivity, CardRepresentationModes.MEDIUM_SIZE, mEntityTypePresenter.getIdentification());
 
 
-        mIdentificationCardView.setIdentificationType(mPresenter.getIdentificationType());
+        mIdentificationCardView.setIdentificationType(mEntityTypePresenter.getIdentificationType());
 
         mIdentificationCardView.inflateInParent(mCardContainer, true);
         mIdentificationCardView.initializeControls();
@@ -391,11 +357,11 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     }
 
     @Override
-    public void showHeader() {
+    public void showHeader(String title) {
         if (mLowResActive) {
             mLowResToolbar.setVisibility(View.VISIBLE);
         } else {
-            mNormalToolbar.setTitle(getString(R.string.mpsdk_entity_types_title));
+            mNormalToolbar.setTitle(title);
             setCustomFontNormal();
         }
     }
@@ -431,7 +397,7 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
 
     @Override
     public void onBackPressed() {
-        MPTracker.getInstance().trackEvent("ENTITY_TYPE_ACTIVITY", "BACK_PRESSED", "2", mPresenter.getPublicKey(),
+        MPTracker.getInstance().trackEvent("ENTITY_TYPE_ACTIVITY", "BACK_PRESSED", "2", mEntityTypePresenter.getPublicKey(),
                 BuildConfig.VERSION_NAME, this);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
@@ -443,14 +409,17 @@ public class EntityTypeActivity extends MercadoPagoBaseActivity implements Entit
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                mPresenter.recoverFromFailure();
-            } else {
-                setResult(resultCode, data);
-                finish();
-            }
+            resolveErrorRequest(resultCode, data);
         }
+    }
 
+    private void resolveErrorRequest(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            mEntityTypePresenter.recoverFromFailure();
+        } else {
+            setResult(resultCode, data);
+            finish();
+        }
     }
 
     @Override

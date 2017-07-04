@@ -139,7 +139,9 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
         PaymentResult paymentResult = new PaymentResult.Builder()
                 .setPaymentData(paymentData)
-                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+//                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+                .setPaymentStatus(Payment.StatusCodes.STATUS_PENDING)
+                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_PENDING_WAITING_PAYMENT)
 //                .setPaymentStatus(Payment.StatusCodes.STATUS_PENDING)
 //                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
 //                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER)

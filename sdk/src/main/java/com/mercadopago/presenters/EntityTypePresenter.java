@@ -4,10 +4,8 @@ package com.mercadopago.presenters;
  * Created by marlanti on 3/3/17.
  */
 
-import android.content.Context;
-
-import com.mercadopago.R;
 import com.mercadopago.callbacks.FailureRecovery;
+import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.model.EntityType;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
@@ -22,7 +20,6 @@ import java.util.List;
 
 public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, EntityTypeProvider> {
 
-    private Context mContext;
     private FailureRecovery mFailureRecovery;
 
 
@@ -30,15 +27,11 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, En
     private String mPublicKey;
     private PaymentMethod mPaymentMethod;
     private Identification mIdentification;
-    private List<EntityType> mEntityTypes;
     private IdentificationType mIdentificationType;
     private Site mSite;
 
-
-    public EntityTypePresenter(Context context) {
-        this.mContext = context;
-    }
-
+    //Fields
+    private List<EntityType> mEntityTypes;
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.mPaymentMethod = paymentMethod;
@@ -74,23 +67,35 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, En
     }
 
 
-    public void validateActivityParameters() throws IllegalStateException {
+    public void validate() throws IllegalStateException {
         if (mPaymentMethod == null) {
-            getView().onInvalidStart("payment method is null");
-        } else if (mIdentification == null) {
-            if (mPublicKey == null) {
-                getView().onInvalidStart("public key not set");
-            } else if (mSite == null) {
-                getView().onInvalidStart("site not set");
-            } else {
-                getView().onValidStart();
-            }
-        } else {
-            getView().onValidStart();
+            throw new IllegalStateException("payment method is null");
+        }
+        if (mIdentification == null) {
+            throw new IllegalStateException("Identification is not set");
+        }
+        if (mIdentificationType == null) {
+            throw new IllegalStateException("Identification Type is not set");
+        }
+        if (mPublicKey == null) {
+            throw new IllegalStateException("public key not set");
+        }
+        if (mSite == null) {
+            throw new IllegalStateException("site not set");
         }
     }
 
-    public void loadEntityTypes() {
+    public void initialize() {
+        try {
+            validate();
+            showEntityTypes();
+        } catch (IllegalStateException exception) {
+            String standardErrorMessage = getResourcesProvider().getStandardErrorMessageGotten();
+            getView().showError(standardErrorMessage, exception.getMessage());
+        }
+    }
+
+    private void showEntityTypes() {
         if (wereEntityTypesSet()) {
             resolveEntityTypes(mEntityTypes);
         } else {
@@ -111,13 +116,18 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, En
 
         mEntityTypes = entityTypes;
         if (mEntityTypes == null || mEntityTypes.isEmpty()) {
-            getView().startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
-                    "no entityTypes found at EntityTypesActivity");
+            String standardErrorMessage = getResourcesProvider().getStandardErrorMessageGotten();
+            String errorDetail = getResourcesProvider().getEmptyEntityTypesErrorMessage();
+            getView().showError(standardErrorMessage, errorDetail);
         } else if (mEntityTypes.size() == 1) {
             getView().finishWithResult(entityTypes.get(0));
         } else {
-            getView().showHeader();
-            getView().initializeEntityTypes(entityTypes);
+            getView().initialize();
+            getView().showTimer();
+            getView().trackScreen();
+            String title = getResourcesProvider().getEntityTypesTitle();
+            getView().showHeader(title);
+            getView().showEntityTypes(entityTypes, getDpadSelectionCallback());
         }
     }
 
@@ -125,6 +135,15 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, En
         if (mFailureRecovery != null) {
             mFailureRecovery.recover();
         }
+    }
+
+    protected OnSelectedCallback<Integer> getDpadSelectionCallback() {
+        return new OnSelectedCallback<Integer>() {
+            @Override
+            public void onSelected(Integer position) {
+                onItemSelected(position);
+            }
+        };
     }
 
     public void onItemSelected(int position) {
@@ -146,4 +165,5 @@ public class EntityTypePresenter extends MvpPresenter<EntityTypeActivityView, En
     public Site getSite() {
         return mSite;
     }
+
 }
