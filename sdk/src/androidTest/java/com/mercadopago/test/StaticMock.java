@@ -10,6 +10,7 @@ import com.mercadopago.model.Card;
 import com.mercadopago.model.CardToken;
 import com.mercadopago.model.Customer;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
@@ -96,6 +97,14 @@ public class StaticMock {
 
     // * Discount
     public final static String DUMMY_DISCOUNT_CODE = "PRUEBA";
+
+    public static Identification getIdentification(){
+        Identification identification = new Identification();
+
+        identification.setNumber(DUMMY_IDENTIFICATION_NUMBER);
+        identification.setType(DUMMY_IDENTIFICATION_TYPE);
+        return identification;
+    }
 
     public static CardToken getCardToken() {
 

@@ -1,0 +1,7 @@
+{
+   "id":"DNI",
+   "name":"DNI",
+   "type":"number",
+   "min_length":7,
+   "max_length":8
+}

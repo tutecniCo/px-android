@@ -1,0 +1,18 @@
+{
+  "id": "dummy_id",
+  "items": [
+    {
+      "id": "item_id",
+      "currency_id": "ARS",
+      "title": "string",
+      "picture_url": "string",
+      "description": "Item",
+      "quantity": 1,
+      "unit_price": 10000
+    }
+  ],
+  "payer": {
+    "email": "unemail@gmail.com"
+  },
+  "site_id": "MLA"
+}

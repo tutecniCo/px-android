@@ -1,6 +1,6 @@
 package com.mercadopago.model;
 
-import android.text.TextUtils;
+import com.mercadopago.util.TextUtils;
 
 import java.io.Serializable;
 
@@ -26,11 +26,13 @@ public class Identification implements Serializable {
     }
 
     public boolean validateIdentification() {
-        return validateIdentificationType() && validateIdentificationNumber();
+        boolean validate =validateIdentificationType() && validateIdentificationNumber();
+        return validate;
     }
 
     public boolean validateIdentificationType() {
-        return !TextUtils.isEmpty(type);
+        boolean validate = !TextUtils.isEmpty(type);
+        return validate;
     }
 
     public boolean validateIdentificationNumber() {

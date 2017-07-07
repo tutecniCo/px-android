@@ -63,7 +63,7 @@ public class IdentificationType {
 
     public boolean validateIdentificationNumber(Identification identification) {
 
-        if ((identification != null) && (identification.getNumber() != null)) {
+        if ((identification != null) && (identification.getNumber() != null) && identification.getType() != null) {
 
             int len = identification.getNumber().length();
             Integer min = minLength;

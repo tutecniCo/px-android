@@ -10,9 +10,8 @@ import com.mercadopago.utils.ResourcesUtil;
 
 public class Identifications {
 
-    public static Identification getIdentificationMCO() {
-        String json = ResourcesUtil.getStringResource("identification_MCO.json");
+    public static Identification getIdentificationMLA() {
+        String json = ResourcesUtil.getStringResource("identification_MLA.json");
         return JsonUtil.getInstance().fromJson(json, Identification.class);
     }
-
 }

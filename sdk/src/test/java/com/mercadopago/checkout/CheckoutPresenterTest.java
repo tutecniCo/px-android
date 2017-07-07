@@ -7,6 +7,7 @@ import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.mocks.ApiExceptions;
+import com.mercadopago.mocks.CheckoutPreferences;
 import com.mercadopago.mocks.Customers;
 import com.mercadopago.mocks.Discounts;
 import com.mercadopago.mocks.Installments;
@@ -37,6 +38,7 @@ import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.presenters.CheckoutPresenter;
 import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.TextUtils;
+import com.mercadopago.utils.ResourcesUtil;
 import com.mercadopago.views.CheckoutView;
 
 import org.junit.Test;
@@ -950,18 +952,19 @@ public class CheckoutPresenterTest {
         presenter.attachResourcesProvider(provider);
         presenter.attachView(view);
 
-        //Real preference, without items
         CheckoutPreference preference = new CheckoutPreference("dummy_id");
-
         Payer payer = new Payer();
         payer.setEmail("unemail@gmail.com");
         preference.setPayer(payer);
 
-        provider.setCheckoutPreferenceResponse(preference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
 
         presenter.setRequestedResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
+        CheckoutPreference mockedPreference = CheckoutPreferences.getCheckoutPreferenceMLA();
+
+        provider.setCheckoutPreferenceResponse(mockedPreference);
+
         presenter.setCheckoutPreference(preference);
         presenter.initialize();
 
@@ -994,7 +997,9 @@ public class CheckoutPresenterTest {
         payer.setEmail("unemail@gmail.com");
         preference.setPayer(payer);
 
-        provider.setCheckoutPreferenceResponse(preference);
+        CheckoutPreference mockedPreference = CheckoutPreferences.getCheckoutPreferenceMLA();
+
+        provider.setCheckoutPreferenceResponse(mockedPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
 
@@ -1037,7 +1042,9 @@ public class CheckoutPresenterTest {
         payer.setEmail("unemail@gmail.com");
         preference.setPayer(payer);
 
-        provider.setCheckoutPreferenceResponse(preference);
+        CheckoutPreference mockedPreference = CheckoutPreferences.getCheckoutPreferenceMLA();
+
+        provider.setCheckoutPreferenceResponse(mockedPreference);
         provider.setPaymentMethodSearchResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         provider.setPaymentResponse(Payments.getCallForAuthPayment());
 
