@@ -45,6 +45,7 @@
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">Which is your bank?</string>
+    <string name="mpsdk_financial_institutions_not_found_error_message">No Financial Institutions found at FinancialInstitutionsPresenter</string>
 
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">How many installments?</string>

@@ -42,10 +42,11 @@
     <string name="entity_type_mco_individual">Natural</string>
     <string name="entity_type_mco_association">Jurídica</string>
 
-    <string name="mpsdk_entity_types_not_found_error_message">No se encontraron tipos de persona en EntityTypesActivity</string>
+    <string name="mpsdk_entity_types_not_found_error_message">No se encontraron tipos de persona en EntityTypesPresenter</string>
 
     <!-- Financial Institutions -->
     <string name="mpsdk_financial_institutions_title">¿Cuál es tu banco?</string>
+    <string name="mpsdk_financial_institutions_not_found_error_message">No se encontraron Financial Institutions en la clase FinancialInstitutionsPresenter</string>
 
     <!-- Installments -->
     <string name="mpsdk_card_installments_title">¿En cuántas cuotas?</string>

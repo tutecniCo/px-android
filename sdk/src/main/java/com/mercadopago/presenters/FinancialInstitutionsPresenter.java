@@ -2,11 +2,12 @@ package com.mercadopago.presenters;
 
 import android.content.Context;
 
-import com.mercadopago.R;
 import com.mercadopago.callbacks.FailureRecovery;
-import com.mercadopago.core.MercadoPagoServices;
+import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.mvp.MvpPresenter;
+import com.mercadopago.providers.FinancialInstitutionsProvider;
 import com.mercadopago.views.FinancialInstitutionsActivityView;
 
 import java.util.List;
@@ -15,10 +16,8 @@ import java.util.List;
  * Created by marlanti on 3/13/17.
  */
 
-public class FinancialInstitutionsPresenter {
+public class FinancialInstitutionsPresenter extends MvpPresenter<FinancialInstitutionsActivityView, FinancialInstitutionsProvider> {
 
-    private FinancialInstitutionsActivityView mView;
-    private Context mContext;
     private FailureRecovery mFailureRecovery;
 
 
@@ -28,24 +27,12 @@ public class FinancialInstitutionsPresenter {
     private List<FinancialInstitution> mFinancialInstitutions;
 
 
-    public FinancialInstitutionsPresenter(Context context) {
-        this.mContext = context;
-    }
-
-    public void setView(FinancialInstitutionsActivityView view) {
-        this.mView = view;
-    }
-
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.mPaymentMethod = paymentMethod;
     }
 
     public void setFinancialInstitutions(List<FinancialInstitution> mFinancialInstitutions) {
         this.mFinancialInstitutions = mFinancialInstitutions;
-    }
-
-    public List<FinancialInstitution> getFinancialInstitutions() {
-        return mFinancialInstitutions;
     }
 
     public void setPublicKey(String publicKey) {
@@ -66,43 +53,63 @@ public class FinancialInstitutionsPresenter {
     }
 
 
-    public void validateActivityParameters() throws IllegalStateException {
+    public void validate() throws IllegalStateException {
         if (mPaymentMethod == null) {
-            mView.onInvalidStart("payment method is null");
-        } else if (!wereFinancialInstitutionsSet()) {
-            mView.onInvalidStart("financial institutions are null");
-        } else {
-            mView.onValidStart();
+            throw new IllegalStateException("payment method is null");
+        }
+        if (mPublicKey == null) {
+            throw new IllegalStateException("public key is null");
         }
     }
 
-    public void loadFinancialInstitutions() {
-        if (wereFinancialInstitutionsSet()) {
-            resolveFinancialInstitutions();
-        } else {
-            mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
-                    "no financialInstitutions found at FinancialInstitutionsActivity");
+    public void initialize() {
+        try {
+            validate();
+            showFinancialInstitutions();
+        } catch (IllegalStateException exception) {
+            String standardErrorMessage = getResourcesProvider().getStandardErrorMessageGotten();
+            getView().showError(standardErrorMessage, exception.getMessage());
         }
+    }
+
+    public void showFinancialInstitutions()
+    {
+        if(wereFinancialInstitutionsSet()){
+            resolveFinancialInstitutions();
+        }else{
+            getFinancialInstitutions();
+        }
+
     }
 
     private boolean wereFinancialInstitutionsSet() {
         return mFinancialInstitutions != null && !mFinancialInstitutions.isEmpty();
     }
 
+    private void getFinancialInstitutions() {
+        this.mFinancialInstitutions = getResourcesProvider().getFinancialInstitutions(mPaymentMethod);
+        resolveFinancialInstitutions();
+    }
 
     protected void resolveFinancialInstitutions() {
 
-        if (!wereFinancialInstitutionsSet()) {
-            mView.startErrorView(mContext.getString(R.string.mpsdk_standard_error_message),
-                    "no financialInstitutions found at FinancialInstitutionsActivity");
-        } else if (mFinancialInstitutions.size() == 1) {
-            mView.finishWithResult(mFinancialInstitutions.get(0));
+        if (mFinancialInstitutions == null || mFinancialInstitutions.isEmpty()) {
+            String standardErrorMessage = getResourcesProvider().getStandardErrorMessageGotten();
+            String errorDetail = getResourcesProvider().getEmptyFinancialInstitutionsErrorMessage();
+            getView().showError(standardErrorMessage, errorDetail);
+        }
+        if (mFinancialInstitutions.size() == 1) {
+            getView().finishWithResult(mFinancialInstitutions.get(0));
         } else {
-            mView.showHeader();
-            mView.initializeFinancialInstitutions(mFinancialInstitutions);
+            getView().initialize();
+            getView().showTimer();
+            getView().trackScreen();
+            String title = getResourcesProvider().getFinancialInstitutionsTitle();
+            getView().showHeader(title);
+            getView().showFinancialInstitutions(mFinancialInstitutions,getDpadSelectionCallback());
+
         }
     }
-
 
     public void recoverFromFailure() {
         if (mFailureRecovery != null) {
@@ -111,7 +118,16 @@ public class FinancialInstitutionsPresenter {
     }
 
     public void onItemSelected(int position) {
-        mView.finishWithResult(mFinancialInstitutions.get(position));
+        getView().finishWithResult(mFinancialInstitutions.get(position));
+    }
+
+    private OnSelectedCallback<Integer> getDpadSelectionCallback() {
+        return new OnSelectedCallback<Integer>() {
+            @Override
+            public void onSelected(Integer position) {
+                onItemSelected(position);
+            }
+        };
     }
 
 }
