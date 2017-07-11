@@ -40,6 +40,7 @@ public class Payment {
     private BigDecimal transactionAmount;
     private BigDecimal transactionAmountRefunded;
     private TransactionDetails transactionDetails;
+    private AdditionalInfo additionalInfo;
 
     public Boolean getBinaryMode() {
         return binaryMode;
@@ -303,6 +304,14 @@ public class Payment {
 
     public void setTransactionDetails(TransactionDetails transactionDetails) {
         this.transactionDetails = transactionDetails;
+    }
+
+    public AdditionalInfo getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(AdditionalInfo additionalInfo) {
+        this.additionalInfo = additionalInfo;
     }
 
     public class StatusCodes {
