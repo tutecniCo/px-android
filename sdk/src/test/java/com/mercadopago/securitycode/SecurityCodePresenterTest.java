@@ -36,9 +36,9 @@ public class SecurityCodePresenterTest {
     private static final String BACK_SECURITY_CODE = "back_security_code";
     private static final String NO_CARD_CREATION_OPTION = "all_parameters_set";
 
-    //If someone adds a new parameter and forgets to test it.
+    //If someone adds a new parameter and forgets to test it in Presenter.
     @Test
-    public void showErrorWhenInvalidParameters() {
+    public void showErrorWhenNoParametersSet() {
         MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(NO_PARAMETERS_SET, NO_CARD_CREATION_OPTION);
 
         SecurityCodeMockedProvider provider = mvp.getProvider();
@@ -128,6 +128,45 @@ public class SecurityCodePresenterTest {
         assertFalse(view.frontSecurityCodeShown);
     }
 
+
+    // TODO EN QUE CASO ME LLEGA EL TOKEN??
+    //TODO Hacer Los tres casos (if - elseif - catch) incluye: validateSecurityCodeFromToken, validateSecurityCodeFromToken, cloneToken--usa-->putSecurityCode, createToken
+    @Test
+    public void ifValidateSecurityCodeInputWithValidTokenThenCloneToken(){
+        //TODO ver que cloneToken llama a loadingView, y a putSecurityCode en success. hacer que el mockedProvider  le pueda setear a validateSecurityCodeFromToken que devuelve.
+        /*public void validateSecurityCodeInput() {
+            try {
+                if (mToken != null && validateSecurityCodeFromToken()) {
+                    cloneToken();
+                } else if (mCard != null) {
+                    SavedCardToken savedCardToken = new SavedCardToken(mCard.getId(), mSecurityCode);
+                    getResourcesProvider().validateSecurityCodeFromToken(savedCardToken, mCard);
+                    createToken(savedCardToken);
+                }
+            } catch (Exception e) {
+                getView().setErrorView(e.getMessage());
+            }
+        }*/
+    }
+
+    @Test
+    public void ifValidateSecurityCodeInputWithInvalidTokenThenSetErrorView(){
+        //TODO  hacer que el mockedProvider  le pueda setear a validateSecurityCodeFromToken que devuelve.
+
+//        assertTrue(view.showErrorView);
+    }
+
+    @Test
+    public void ifValidateSecurityCodeInputWithCardThenCreateToken(){
+        //TODO ver casos onSuccess y onFailure de CreateToken en dos tests distintos según lo que devuelva el mockedProvider.
+    }
+
+    @Test
+    public void ifValidateSecurityCodeInputWithInvalirCardOrSecurityCodeThenSetErrorView(){
+        //TODO hacer q el provider haga que validateSecurityCodeFromToken devuelva false.
+    }
+
+
     public boolean isErrorShown(SecurityCodeMockedView view) {
         return !TextUtil.isEmpty(view.errorMessage) && !TextUtil.isEmpty(view.errorDetail);
     }
@@ -165,7 +204,6 @@ public class SecurityCodePresenterTest {
 
         if (!emptyParameter.equals(NO_PARAMETERS_SET)) {
             if (!emptyParameter.equals(PAYMENT_METHOD_NOT_SET)) {
-
                 presenter.setPaymentMethod(paymentMethod);
             }
             if (!emptyParameter.equals(CARD_NOT_SET)) {
@@ -240,6 +278,7 @@ public class SecurityCodePresenterTest {
         private boolean initializeDone = false;
         private boolean backSecurityCodeShown = false;
         private boolean frontSecurityCodeShown = false;
+        private boolean showErrorView = false;
         private String errorDetail;
         private String errorMessage;
         private boolean timerShown = false;
@@ -263,7 +302,7 @@ public class SecurityCodePresenterTest {
 
         @Override
         public void setErrorView(String message) {
-
+            this.showErrorView = true;
         }
 
         @Override

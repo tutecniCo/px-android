@@ -147,7 +147,6 @@ public class SecurityCodePresenter extends MvpPresenter<SecurityCodeActivityView
                     mCardNumberLength = setting.getCardNumber().getLength();
                 } else {
                     mCardNumberLength = CARD_NUMBER_MAX_LENGTH;
-
                 }
             }
             getView().setSecurityCodeInputMaxLength(mSecurityCodeLength);
