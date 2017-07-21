@@ -1,6 +1,9 @@
 package com.mercadopago.securitycode;
 
+import com.mercadopago.mocks.CardInfos;
+import com.mercadopago.mocks.PaymentMethods;
 import com.mercadopago.model.Card;
+import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.SavedCardToken;
 import com.mercadopago.model.SecurityCode;
@@ -29,11 +32,14 @@ public class SecurityCodePresenterTest {
     private static final String CARD_NOT_SET = "card_not_set";
     private static final String TOKEN_NOT_SET = "token_not_set";
     private static final String CARD_AND_TOKEN_NOT_SET = "card_and_token_not_set";
+    private static final String FRONT_SECURITY_CODE = "front_security_code";
+    private static final String BACK_SECURITY_CODE = "back_security_code";
+    private static final String NO_CARD_CREATION_OPTION = "all_parameters_set";
 
     //If someone adds a new parameter and forgets to test it.
     @Test
     public void showErrorWhenInvalidParameters() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(NO_PARAMETERS_SET);
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(NO_PARAMETERS_SET, NO_CARD_CREATION_OPTION);
 
         SecurityCodeMockedProvider provider = mvp.getProvider();
         SecurityCodeMockedView view = mvp.getView();
@@ -48,7 +54,7 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifPaymentMethodNotSetShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(PAYMENT_METHOD_NOT_SET);
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(PAYMENT_METHOD_NOT_SET, NO_CARD_CREATION_OPTION);
 
         SecurityCodeMockedProvider provider = mvp.getProvider();
         SecurityCodeMockedView view = mvp.getView();
@@ -63,7 +69,7 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifCardAndTokenNotSetShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(CARD_AND_TOKEN_NOT_SET);
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(CARD_AND_TOKEN_NOT_SET, NO_CARD_CREATION_OPTION);
 
         SecurityCodeMockedProvider provider = mvp.getProvider();
         SecurityCodeMockedView view = mvp.getView();
@@ -78,7 +84,7 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void ifCardAndTokenSetShowError() {
-        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(ALL_PARAMETERS_SET);
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(ALL_PARAMETERS_SET, NO_CARD_CREATION_OPTION);
 
         SecurityCodeMockedProvider provider = mvp.getProvider();
         SecurityCodeMockedView view = mvp.getView();
@@ -91,28 +97,78 @@ public class SecurityCodePresenterTest {
         assertFalse(view.initializeDone);
     }
 
+    //Amex case
+    @Test
+    public void ifCardHasFrontSecurityCodeThenShowFrontCardView() {
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(ALL_PARAMETERS_SET, FRONT_SECURITY_CODE);
+
+        SecurityCodeMockedProvider provider = mvp.getProvider();
+        SecurityCodeMockedView view = mvp.getView();
+        SecurityCodePresenter presenter = mvp.getPresenter();
+
+        presenter.initializeSecurityCodeSettings();
+        presenter.setSecurityCodeCardType();
+
+        assertTrue(view.frontSecurityCodeShown);
+        assertFalse(view.backSecurityCodeShown);
+    }
+
+    @Test
+    public void ifCardHasBackSecurityCodeThenShowBackCardView() {
+        MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvp = getMVPStructure(ALL_PARAMETERS_SET, BACK_SECURITY_CODE);
+
+        SecurityCodeMockedProvider provider = mvp.getProvider();
+        SecurityCodeMockedView view = mvp.getView();
+        SecurityCodePresenter presenter = mvp.getPresenter();
+
+        presenter.initializeSecurityCodeSettings();
+        presenter.setSecurityCodeCardType();
+
+        assertTrue(view.backSecurityCodeShown);
+        assertFalse(view.frontSecurityCodeShown);
+    }
 
     public boolean isErrorShown(SecurityCodeMockedView view) {
         return !TextUtil.isEmpty(view.errorMessage) && !TextUtil.isEmpty(view.errorDetail);
     }
 
-    public MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> getMVPStructure(String emptyParameter) {
+    public MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> getMVPStructure(String emptyParameter, String cardCreationOption) {
         MVPStructure<SecurityCodePresenter, SecurityCodeMockedProvider, SecurityCodeMockedView, SecurityCode> mvpStructure = new MVPStructure<>();
 
+        //MVP Objets
         SecurityCodeMockedView view = new SecurityCodeMockedView();
-
         SecurityCodePresenter presenter = new SecurityCodePresenter();
         presenter.attachView(view);
         SecurityCodeMockedProvider provider = new SecurityCodeMockedProvider();
         presenter.attachResourcesProvider(provider);
 
+        //SecurityCodePresenter Parameters
+        Card card = new Card();
+        PaymentMethod paymentMethod = new PaymentMethod();
+        CardInfo cardInfo = null;
+
+        //Presenter Initialization
+        if (cardCreationOption.equals(FRONT_SECURITY_CODE)) {
+            cardInfo = CardInfos.getFrontSecurityCodeCardInfoMLA();
+            paymentMethod = PaymentMethods.getPaymentMethodOnWithFrontSecurityCode();
+
+            presenter.setCardInfo(cardInfo);
+            presenter.setPaymentMethod(paymentMethod);
+        }
+
+        if (cardCreationOption.equals(BACK_SECURITY_CODE)) {
+            cardInfo = CardInfos.getBackSecurityCodeCardInfoMLA();
+            paymentMethod = PaymentMethods.getPaymentMethodOn();
+            presenter.setCardInfo(cardInfo);
+            presenter.setPaymentMethod(paymentMethod);
+        }
+
         if (!emptyParameter.equals(NO_PARAMETERS_SET)) {
             if (!emptyParameter.equals(PAYMENT_METHOD_NOT_SET)) {
-                PaymentMethod paymentMethod = new PaymentMethod();
+
                 presenter.setPaymentMethod(paymentMethod);
             }
             if (!emptyParameter.equals(CARD_NOT_SET)) {
-                Card card = new Card();
                 presenter.setCard(card);
             }
             if (!emptyParameter.equals(TOKEN_NOT_SET)) {
@@ -120,7 +176,6 @@ public class SecurityCodePresenterTest {
                 presenter.setToken(token);
             }
             if (!emptyParameter.equals(CARD_AND_TOKEN_NOT_SET)) {
-                Card card = new Card();
                 presenter.setCard(card);
                 Token token = new Token();
                 presenter.setToken(token);
@@ -133,6 +188,7 @@ public class SecurityCodePresenterTest {
 
         return mvpStructure;
     }
+
 
     private class SecurityCodeMockedProvider implements SecurityCodeProvider {
 
@@ -242,12 +298,14 @@ public class SecurityCodePresenterTest {
 
         @Override
         public void showBackSecurityCodeCardView() {
-
+            backSecurityCodeShown = true;
+            frontSecurityCodeShown = false;
         }
 
         @Override
         public void showFrontSecurityCodeCardView() {
-
+            backSecurityCodeShown = false;
+            frontSecurityCodeShown = true;
         }
 
     }

@@ -16,4 +16,9 @@ public class PaymentMethods {
         String json = ResourcesUtil.getStringResource("payment_method_pagofacil.json");
         return JsonUtil.getInstance().fromJson(json, PaymentMethod.class);
     }
+
+    public static PaymentMethod getPaymentMethodOnWithFrontSecurityCode() {
+        String json = ResourcesUtil.getStringResource("payment_method_amex.json");
+        return JsonUtil.getInstance().fromJson(json, PaymentMethod.class);
+    }
 }
