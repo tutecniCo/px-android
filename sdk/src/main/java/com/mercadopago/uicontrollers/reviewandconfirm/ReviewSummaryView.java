@@ -59,6 +59,7 @@ public class ReviewSummaryView extends Reviewable {
     protected MPTextView mCFTTextView;
     protected MPTextView mCustomDescriptionTextView;
     protected MPTextView mCustomAmountTextView;
+    protected [FrameLayout] mCustomRow;
 
     protected OnConfirmPaymentCallback mCallback;
 

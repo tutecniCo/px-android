@@ -30,6 +30,7 @@ public class ReviewScreenPreference {
     private String summaryCustomDescription;
     private Integer summaryCustomDetailColor;
     private BigDecimal summaryCustomAmount;
+    private List<Reviewable> summaryReviewables;
 
     public ReviewScreenPreference(Builder builder) {
         this.title = builder.title;
@@ -43,6 +44,7 @@ public class ReviewScreenPreference {
         this.summaryCustomDescription = builder.summaryCustomDescription;
         this.summaryCustomDetailColor = builder.summaryCustomDetailColor;
         this.summaryCustomAmount = builder.summaryCustomAmount;
+        this.summaryReviewables = builder.summaryReviewables;
     }
 
     public boolean hasCustomReviewables() {
@@ -50,8 +52,16 @@ public class ReviewScreenPreference {
                 || (reviewables != null && !reviewables.isEmpty());
     }
 
+    public boolean hasCustomSummaryReviewables() {
+        return (summaryReviewables != null && !summaryReviewables.isEmpty());
+    }
+
     public List<Reviewable> getCustomReviewables() {
         return reviewables;
+    }
+
+    public List<Reviewable> getCustomSummaryReviewables() {
+        return summaryReviewables;
     }
 
     public String getReviewTitle() {
@@ -113,6 +123,13 @@ public class ReviewScreenPreference {
         this.reviewables.add(reviewable);
     }
 
+    public void addSummaryReviewable(@NonNull Reviewable reviewable) {
+        if(this.summaryReviewables == null) {
+            this.summaryReviewables = new ArrayList<>();
+        }
+        this.summaryReviewables.add(reviewable);
+    }
+
     public void setItemsReview(@NonNull Reviewable reviewable) {
         reviewable.setKey(ReviewKeys.ITEMS);
         this.itemsReview = reviewable;
@@ -134,6 +151,7 @@ public class ReviewScreenPreference {
         private Reviewable itemsReview;
         private List<String> reviewOrder;
         private Integer summaryCustomDetailColor;
+        private List<Reviewable> summaryReviewables;
 
         public Builder() {
             this.reviewables = new ArrayList<>();
@@ -151,6 +169,11 @@ public class ReviewScreenPreference {
 
         public Builder addReviewable(Reviewable customReviewable) {
             this.reviewables.add(customReviewable);
+            return this;
+        }
+
+        public Builder addSummaryReviewable(Reviewable customReviewable) {
+            this.summaryReviewables.add(customReviewable);
             return this;
         }
 
