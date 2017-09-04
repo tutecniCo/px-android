@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.OnConfirmPaymentCallback;
 import com.mercadopago.constants.ReviewKeys;
-import com.mercadopago.constants.Sites;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -26,7 +25,6 @@ import com.mercadopago.model.Site;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.uicontrollers.payercosts.PayerCostColumn;
 import com.mercadopago.util.CurrenciesUtil;
-import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.util.UnlockCardUtil;
@@ -58,8 +56,6 @@ public class ReviewSummaryView extends Reviewable {
     protected View mFirstSeparator;
     protected View mSecondSeparator;
     protected FrameLayout mPayerCostContainer;
-    protected FrameLayout mConfirmButton;
-    protected MPTextView mConfirmTextView;
     protected MPTextView mCFTTextView;
     protected MPTextView mCustomDescriptionTextView;
     protected MPTextView mCustomAmountTextView;
@@ -122,20 +118,11 @@ public class ReviewSummaryView extends Reviewable {
         mFirstSeparator = mView.findViewById(R.id.mpsdkFirstSeparator);
         mSecondSeparator = mView.findViewById(R.id.mpsdkSecondSeparator);
         mPayerCostContainer = (FrameLayout) mView.findViewById(R.id.mpsdkReviewSummaryPayerCostContainer);
-        mConfirmButton = (FrameLayout) mView.findViewById(R.id.mpsdkReviewSummaryConfirmButton);
-        mConfirmTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewButtonText);
         mCFTTextView = (MPTextView) mView.findViewById(R.id.mpsdkCFT);
         mUnlockCard = (LinearLayout) mView.findViewById(R.id.mpsdkCheckoutUnlockCard);
         mUnlockCardTextView = (MPTextView) mView.findViewById(R.id.mpsdkUnlockCard);
         mCustomDescriptionTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewSummaryCustomText);
         mCustomAmountTextView = (MPTextView) mView.findViewById(R.id.mpsdkReviewSummaryCustomAmount);
-        mConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCallback.confirmPayment();
-
-            }
-        });
     }
 
     private void startUnlockCardActivity() {
@@ -144,9 +131,7 @@ public class ReviewSummaryView extends Reviewable {
     }
 
     public void showUnlockCard() {
-
         mUnlockCard.setVisibility(View.VISIBLE);
-
         mUnlockCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +172,6 @@ public class ReviewSummaryView extends Reviewable {
     public void draw() {
         decorateButton();
         //Products
-        mConfirmTextView.setText(mConfirmationMessage);
         mProductsLabelText.setText(mProductDetailText);
         mProductsText.setText(CurrenciesUtil.getFormattedAmount(mAmount, mCurrencyId));
 
@@ -263,10 +247,6 @@ public class ReviewSummaryView extends Reviewable {
 
     private void decorateButton() {
         if (mDecorationPreference != null && mDecorationPreference.hasColors()) {
-            mConfirmButton.setBackgroundColor(mDecorationPreference.getBaseColor());
-            if (mDecorationPreference.isDarkFontEnabled()) {
-                mConfirmTextView.setTextColor(mDecorationPreference.getDarkFontColor(mContext));
-            }
             mUnlockCardTextView.setTextColor(mDecorationPreference.getBaseColor());
         }
     }
@@ -356,7 +336,7 @@ public class ReviewSummaryView extends Reviewable {
     }
 
     private void showPayerCostRow() {
-        PayerCostColumn payerCostColumn = new PayerCostColumn(mContext, mCurrencyId);
+        PayerCostColumn payerCostColumn = new PayerCostColumn(mContext, mSite);
         payerCostColumn.inflateInParent(mPayerCostContainer, true);
         payerCostColumn.initializeControls();
         payerCostColumn.drawPayerCostWithoutTotal(mPayerCost);

@@ -19,6 +19,7 @@ import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
+import com.mercadopago.preferences.ShoppingReviewPreference;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtil;
 
@@ -43,6 +44,7 @@ public class MercadoPagoCheckout {
     private ServicePreference servicePreference;
     private FlowPreference flowPreference;
     private PaymentResultScreenPreference paymentResultScreenPreference;
+    private ShoppingReviewPreference shoppingReviewPreference;
     private PaymentData paymentData;
     private PaymentResult paymentResult;
     private Boolean binaryMode;
@@ -60,6 +62,7 @@ public class MercadoPagoCheckout {
         this.paymentResultScreenPreference = builder.paymentResultScreenPreference;
         this.paymentResult = builder.paymentResult;
         this.reviewScreenPreference = builder.reviewScreenPreference;
+        this.shoppingReviewPreference = builder.shoppingReviewPreference;
         this.binaryMode = builder.binaryMode;
         this.discount = builder.discount;
 
@@ -104,10 +107,11 @@ public class MercadoPagoCheckout {
         if (checkoutPreference == null) {
             throw new IllegalStateException("Checkout preference required");
         }
-        if ((CallbackHolder.getInstance().hasPaymentCallback() || resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE)
+        if ((CallbackHolder.getInstance().hasPaymentCallback() || resultCode.equals(MercadoPagoCheckout.PAYMENT_RESULT_CODE))
                 && !this.checkoutPreference.hasId()
                 && (this.servicePreference == null || !this.servicePreference.hasCreatePaymentURL())) {
-            throw new IllegalStateException("Payment service or preference created with private key required to create a payment");
+            //TODO revisar
+//            throw new IllegalStateException("Payment service or preference created with private key required to create a payment");
         }
         if (hasTwoDiscountsSet()) {
             throw new IllegalStateException("payment data discount and discount set");
@@ -147,7 +151,6 @@ public class MercadoPagoCheckout {
         return this.discount != null;
     }
 
-
     private void startForResult(@NonNull Integer resultCode) {
         CallbackHolder.getInstance().clean();
         startCheckoutActivity(resultCode);
@@ -170,6 +173,7 @@ public class MercadoPagoCheckout {
         checkoutIntent.putExtra("paymentResultScreenPreference", JsonUtil.getInstance().toJson(paymentResultScreenPreference));
         checkoutIntent.putExtra("paymentResult", JsonUtil.getInstance().toJson(paymentResult));
         checkoutIntent.putExtra("reviewScreenPreference", JsonUtil.getInstance().toJson(reviewScreenPreference));
+        checkoutIntent.putExtra("shoppingReviewPreference", JsonUtil.getInstance().toJson(shoppingReviewPreference));
         checkoutIntent.putExtra("discount", JsonUtil.getInstance().toJson(discount));
         checkoutIntent.putExtra("binaryMode", binaryMode);
         checkoutIntent.putExtra("resultCode", resultCode);
@@ -179,12 +183,6 @@ public class MercadoPagoCheckout {
         } else {
             activity.startActivityForResult(checkoutIntent, MercadoPagoCheckout.CHECKOUT_REQUEST_CODE);
         }
-
-
-    }
-
-    private void startCheckoutActivity() {
-        startCheckoutActivity(Activity.RESULT_OK);
     }
 
     public static class Builder {
@@ -198,6 +196,7 @@ public class MercadoPagoCheckout {
         private FlowPreference flowPreference;
         private PaymentResultScreenPreference paymentResultScreenPreference;
         private ReviewScreenPreference reviewScreenPreference;
+        private ShoppingReviewPreference shoppingReviewPreference;
         private PaymentData paymentData;
         private PaymentResult paymentResult;
         private Discount discount;
@@ -254,6 +253,11 @@ public class MercadoPagoCheckout {
 
         public Builder setReviewScreenPreference(ReviewScreenPreference reviewScreenPreference) {
             this.reviewScreenPreference = reviewScreenPreference;
+            return this;
+        }
+
+        public Builder setShoppingReviewPreference(ShoppingReviewPreference shoppingReviewPreference) {
+            this.shoppingReviewPreference = shoppingReviewPreference;
             return this;
         }
 

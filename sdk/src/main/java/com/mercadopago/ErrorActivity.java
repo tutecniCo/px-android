@@ -7,6 +7,10 @@ import android.widget.TextView;
 
 import com.mercadopago.controllers.CheckoutErrorHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.ApiException;
+import com.mercadopago.px_tracking.model.ScreenViewEvent;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
@@ -14,6 +18,7 @@ import com.mercadopago.util.JsonUtil;
 public class ErrorActivity extends MercadoPagoBaseActivity {
 
     private MercadoPagoError mMercadoPagoError;
+    private String mPublicKey;
     private TextView mErrorMessageTextView;
     private View mRetryView;
     private View mExit;
@@ -23,7 +28,7 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
         super.onCreate(savedInstanceState);
         animateErrorScreenLaunch();
 
-        if(CheckoutErrorHandler.getInstance().hasCustomErrorLayout()) {
+        if (CheckoutErrorHandler.getInstance().hasCustomErrorLayout()) {
             setContentView(CheckoutErrorHandler.getInstance().getCustomErrorLayout());
         } else {
             setContentView(R.layout.mpsdk_activity_error);
@@ -32,6 +37,7 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
         getActivityParameters();
         if (validParameters()) {
             initializeControls();
+            trackScreen();
             fillData();
         } else {
             Intent intent = new Intent();
@@ -50,6 +56,40 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
 
     private void getActivityParameters() {
         this.mMercadoPagoError = JsonUtil.getInstance().fromJson(getIntent().getStringExtra(ErrorUtil.ERROR_EXTRA_KEY), MercadoPagoError.class);
+        this.mPublicKey = getIntent().getStringExtra(ErrorUtil.PUBLIC_KEY_EXTRA);
+    }
+
+    private void trackScreen() {
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, mPublicKey)
+                .setCheckoutVersion(BuildConfig.VERSION_NAME)
+                .setTrackingStrategy(TrackingUtil.FORCED_STRATEGY)
+                .build();
+
+        ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
+                .setScreenId(TrackingUtil.SCREEN_ID_ERROR)
+                .setScreenName(TrackingUtil.SCREEN_NAME_ERROR);
+
+        if (mMercadoPagoError != null) {
+
+            if (mMercadoPagoError.getApiException() != null) {
+                ApiException apiException = mMercadoPagoError.getApiException();
+
+                if (apiException.getStatus() != null) {
+                    builder.addMetaData(TrackingUtil.METADATA_ERROR_STATUS, String.valueOf(apiException.getStatus()));
+                }
+                if (apiException.getCause() != null && !apiException.getCause().isEmpty() && apiException.getCause().get(0).getCode() != null) {
+                    builder.addMetaData(TrackingUtil.METADATA_ERROR_CODE, String.valueOf(apiException.getCause().get(0).getCode()));
+                }
+            }
+
+            if (mMercadoPagoError.getRequestOrigin() != null && !mMercadoPagoError.getRequestOrigin().isEmpty()) {
+                builder.addMetaData(TrackingUtil.METADATA_ERROR_REQUEST, mMercadoPagoError.getRequestOrigin());
+            }
+        }
+
+        ScreenViewEvent event = builder.build();
+
+        mpTrackingContext.trackEvent(event);
     }
 
     private void initializeControls() {

@@ -5,8 +5,11 @@ import com.google.gson.reflect.TypeToken;
 
 import android.content.Context;
 
+import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
+import com.mercadopago.constants.PaymentTypes;
+import com.mercadopago.constants.Sites;
 import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServices;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
@@ -28,15 +31,21 @@ import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.ServicePreference;
+import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.JsonUtil;
+import com.mercadopago.util.MercadoPagoESC;
+import com.mercadopago.util.MercadoPagoESCImpl;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.TextUtils;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CheckoutProviderImpl implements CheckoutProvider {
 
@@ -44,8 +53,10 @@ public class CheckoutProviderImpl implements CheckoutProvider {
     private final Context context;
     private final MercadoPagoServices mercadoPagoServices;
     private final String publicKey;
+    private MercadoPagoESC mercadoPagoESC;
+    private String siteId;
 
-    public CheckoutProviderImpl(Context context, String publicKey, String privateKey, ServicePreference servicePreference) {
+    public CheckoutProviderImpl(Context context, String publicKey, String privateKey, ServicePreference servicePreference, boolean escEnabled) {
         if (TextUtils.isEmpty(publicKey) && TextUtils.isEmpty(privateKey)) {
             throw new IllegalStateException("Credentials not set");
         } else if (context == null) {
@@ -61,6 +72,12 @@ public class CheckoutProviderImpl implements CheckoutProvider {
                 .setPrivateKey(privateKey)
                 .setServicePreference(servicePreference)
                 .build();
+
+        this.mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
+    }
+
+    public void setSiteId(String siteId) {
+        this.siteId = siteId;
     }
 
     @Override
@@ -73,7 +90,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_PREFERENCE));
             }
         });
     }
@@ -88,7 +105,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                callback.onFailure(new MercadoPagoError(apiException));
+                callback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_CAMPAIGNS));
             }
         });
     }
@@ -104,7 +121,11 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
     @Override
     public void getPaymentMethodSearch(BigDecimal amount, final List<String> excludedPaymentTypes, final List<String> excludedPaymentMethods, Payer payer, Site site, final OnResourcesRetrievedCallback<PaymentMethodSearch> onPaymentMethodSearchRetrievedCallback, final OnResourcesRetrievedCallback<Customer> onCustomerRetrievedCallback) {
-        mercadoPagoServices.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
+
+        Set<String> excludedPaymentTypesSet = new HashSet<>(excludedPaymentTypes);
+        excludedPaymentTypesSet.addAll(getUnsupportedPaymentTypes(site));
+
+        mercadoPagoServices.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet), excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
                 if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
@@ -116,7 +137,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onPaymentMethodSearchRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onPaymentMethodSearchRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.PAYMENT_METHOD_SEARCH));
             }
         });
     }
@@ -137,7 +158,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onCustomerRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onCustomerRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_CUSTOMER));
 
                 //Return payment method search to avoid failure due to merchant server
                 onPaymentMethodSearchRetrievedCallback.onSuccess(paymentMethodSearch);
@@ -157,7 +178,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT));
             }
         });
     }
@@ -171,7 +192,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.GET_DIRECT_DISCOUNT));
             }
         });
     }
@@ -216,7 +237,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_PAYMENT));
             }
         });
     }
@@ -231,7 +252,7 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
             @Override
             public void failure(ApiException apiException) {
-                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException, ApiUtil.RequestOrigin.CREATE_PAYMENT));
             }
         });
     }
@@ -271,5 +292,29 @@ public class CheckoutProviderImpl implements CheckoutProvider {
 
         paymentBody.setTransactionId(transactionId);
         return paymentBody;
+    }
+
+    private List<String> getUnsupportedPaymentTypes(Site site) {
+
+        List<String> unsupportedTypesForSite = new ArrayList<>();
+        if (Sites.CHILE.getId().equals(site.getId())
+                || Sites.VENEZUELA.getId().equals(site.getId())
+                || Sites.COLOMBIA.getId().equals(site.getId())) {
+
+            unsupportedTypesForSite.add(PaymentTypes.TICKET);
+            unsupportedTypesForSite.add(PaymentTypes.ATM);
+            unsupportedTypesForSite.add(PaymentTypes.BANK_TRANSFER);
+        }
+        return unsupportedTypesForSite;
+    }
+
+    @Override
+    public void deleteESC(String cardId) {
+        mercadoPagoESC.deleteESC(cardId);
+    }
+
+    @Override
+    public boolean saveESC(String cardId, String value) {
+        return mercadoPagoESC.saveESC(cardId, value);
     }
 }

@@ -29,6 +29,7 @@ import java.util.List;
  */
 
 public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView, ReviewAndConfirmProvider> {
+
     private PaymentMethod mPaymentMethod;
     private PayerCost mPayerCost;
     private BigDecimal mAmount;
@@ -48,6 +49,7 @@ public class ReviewAndConfirmPresenter extends MvpPresenter<ReviewAndConfirmView
     public void initialize() {
         try {
             validate();
+            getView().trackScreen();
             showReviewAndConfirm();
         } catch (IllegalStateException exception) {
             getView().showError(exception.getMessage());

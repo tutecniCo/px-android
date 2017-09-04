@@ -3,6 +3,7 @@ package com.mercadopago.presenters;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.callbacks.FailureRecovery;
@@ -27,8 +28,11 @@ import com.mercadopago.model.SecurityCode;
 import com.mercadopago.model.Setting;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.PaymentPreference;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.uicontrollers.card.CardView;
 import com.mercadopago.uicontrollers.card.FrontCardView;
+import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.util.MercadoPagoUtil;
@@ -65,6 +69,7 @@ public class GuessingCardPresenter {
 
     //Activity parameters
     private String mPublicKey;
+    private String mSiteId;
     private PaymentRecovery mPaymentRecovery;
     private PaymentMethod mPaymentMethod;
     private List<PaymentMethod> mPaymentMethodList;
@@ -112,6 +117,7 @@ public class GuessingCardPresenter {
     private String mPrivateKey;
     private int mCurrentNumberLength;
     private Issuer mIssuer;
+    private MPTrackingContext mTrackingContext;
 
 
     public GuessingCardPresenter(Context context) {
@@ -141,6 +147,10 @@ public class GuessingCardPresenter {
 
     public void setPublicKey(String publicKey) {
         this.mPublicKey = publicKey;
+    }
+
+    public void setSiteId(String siteId) {
+        this.mSiteId = siteId;
     }
 
     public PaymentRecovery getPaymentRecovery() {
@@ -346,7 +356,11 @@ public class GuessingCardPresenter {
 
     public String getPaymentTypeId() {
         if (mPaymentMethodGuessingController == null) {
-            return null;
+            if (mPaymentPreference == null) {
+                return null;
+            } else {
+                return mPaymentPreference.getDefaultPaymentTypeId();
+            }
         } else {
             return mPaymentMethodGuessingController.getPaymentTypeId();
         }
@@ -560,7 +574,7 @@ public class GuessingCardPresenter {
                         getPaymentMethodsAsync();
                     }
                 });
-                mView.showApiExceptionError(apiException);
+                mView.showApiExceptionError(apiException, ApiUtil.RequestOrigin.GET_PAYMENT_METHODS);
             }
         });
     }
@@ -652,7 +666,7 @@ public class GuessingCardPresenter {
                         getIdentificationTypesAsync();
                     }
                 });
-                mView.showApiExceptionError(apiException);
+                mView.showApiExceptionError(apiException, ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES);
             }
         });
     }
@@ -988,15 +1002,37 @@ public class GuessingCardPresenter {
 
             @Override
             public void failure(ApiException apiException) {
-                setFailureRecovery(new FailureRecovery() {
-                    @Override
-                    public void recover() {
-                        createToken(onTokenCreated());
-                    }
-                });
-                mView.showApiExceptionError(apiException);
+                resolveTokenCreationError(apiException, ApiUtil.RequestOrigin.CREATE_TOKEN);
             }
         };
+    }
+
+    private void resolveTokenCreationError(ApiException apiException, String requestOrigin) {
+        if (wrongIdentificationNumber(apiException)) {
+            showIdentificationNumberError();
+        } else {
+            showError(apiException, requestOrigin);
+        }
+    }
+
+    private boolean wrongIdentificationNumber(ApiException apiException) {
+        return apiException.containsCause(ApiException.ErrorCodes.INVALID_CARD_HOLDER_IDENTIFICATION_NUMBER);
+    }
+
+    private void showIdentificationNumberError() {
+        mView.hideProgress();
+        mView.setErrorView(mContext.getString(R.string.mpsdk_invalid_field));
+        mView.setErrorIdentificationNumber();
+    }
+
+    private void showError(ApiException apiException, String requestOrigin) {
+        setFailureRecovery(new FailureRecovery() {
+            @Override
+            public void recover() {
+                createToken(onTokenCreated());
+            }
+        });
+        mView.showApiExceptionError(apiException, requestOrigin);
     }
 
     private void getIssuers(Callback<List<Issuer>> callback) {
@@ -1023,7 +1059,7 @@ public class GuessingCardPresenter {
                         getIssuers(onIssuersRetrieved());
                     }
                 });
-                mView.showApiExceptionError(apiException);
+                mView.showApiExceptionError(apiException, ApiUtil.RequestOrigin.GET_ISSUERS);
             }
         };
     }
@@ -1055,7 +1091,7 @@ public class GuessingCardPresenter {
                         getInstallments(onInstallmentsRetrieved());
                     }
                 });
-                mView.showApiExceptionError(apiException);
+                mView.showApiExceptionError(apiException, ApiUtil.RequestOrigin.GET_INSTALLMENTS);
             }
         };
     }
@@ -1072,5 +1108,39 @@ public class GuessingCardPresenter {
         } else {
             mView.finishCardFlow(mPaymentMethod, mToken, mDiscount, mDirectDiscountEnabled, mIssuer, payerCosts);
         }
+    }
+
+    public MPTrackingContext getTrackingContext() {
+        if (mTrackingContext == null) {
+            mTrackingContext = new MPTrackingContext.Builder(mContext, mPublicKey)
+                    .setCheckoutVersion(BuildConfig.VERSION_NAME)
+                    .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
+                    .build();
+        }
+        return mTrackingContext;
+    }
+
+    public void setTrackingContext(MPTrackingContext trackingContext) {
+        this.mTrackingContext = trackingContext;
+    }
+
+    public boolean shouldAskPaymentType(List<PaymentMethod> paymentMethodList) {
+
+        boolean paymentTypeUndefined = false;
+        String paymentType;
+
+
+        if (paymentMethodList == null || paymentMethodList.isEmpty()) {
+            paymentTypeUndefined = true;
+        } else {
+            paymentType = paymentMethodList.get(0).getPaymentTypeId();
+            for (PaymentMethod currentPaymentMethod : paymentMethodList) {
+                if (!paymentType.equals(currentPaymentMethod.getPaymentTypeId())) {
+                    paymentTypeUndefined = true;
+                    break;
+                }
+            }
+        }
+        return paymentTypeUndefined;
     }
 }

@@ -22,18 +22,22 @@ import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.ReviewSubscriber;
 import com.mercadopago.model.Reviewable;
 import com.mercadopago.model.Site;
-import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
+import com.mercadopago.tracker.MPTrackingContext;
+import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
+import com.mercadopago.util.InstallmentsUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 
@@ -59,6 +63,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     protected MPTextView mPaymentStatementDescriptionTextView;
     protected MPTextView mCongratulationsTitle;
     protected MPTextView mCongratulationsSubtitle;
+    private MPTextView mNoInstallmentsRateTextView;
     protected View mTopEmailSeparator;
     protected View mBottomEmailSeparator;
     protected ImageView mPaymentMethodImage;
@@ -93,6 +98,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     private String mPaymentTypeId;
     private String mPayerEmail;
     private Site mSite;
+    private Issuer mIssuer;
     private BigDecimal mAmount;
     private PaymentResultScreenPreference mPaymentResultScreenPreference;
     private ViewGroup mTitleBackground;
@@ -137,7 +143,6 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     }
 
     protected void setContentView() {
-        MPTracker.getInstance().trackScreen("RESULT", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
         setContentView(R.layout.mpsdk_activity_congrats);
     }
 
@@ -185,6 +190,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
 
     protected void onValidStart() {
         initializePaymentData();
+        trackScreen();
         setPaymentResultScreenPreferenceData();
         setPaymentResultScreenWithoutPreferenceData();
         setPaymentEmailDescription();
@@ -202,6 +208,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         if (paymentData != null) {
             PaymentMethod paymentMethod = paymentData.getPaymentMethod();
             mDiscount = paymentData.getDiscount();
+            mIssuer = paymentData.getIssuer();
 
             if (paymentData.getPayerCost() != null) {
                 mTotalAmount = paymentData.getPayerCost().getTotalAmount();
@@ -225,8 +232,33 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         }
     }
 
+    protected void trackScreen() {
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder(this, mMerchantPublicKey)
+                .setCheckoutVersion(BuildConfig.VERSION_NAME)
+                .setTrackingStrategy(TrackingUtil.FORCED_STRATEGY)
+                .build();
+
+
+        ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
+                .setScreenId(TrackingUtil.SCREEN_ID_PAYMENT_RESULT_APPROVED)
+                .setScreenName(TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_APPROVED)
+                .addMetaData(TrackingUtil.METADATA_PAYMENT_IS_EXPRESS, TrackingUtil.IS_EXPRESS_DEFAULT_VALUE)
+                .addMetaData(TrackingUtil.METADATA_PAYMENT_TYPE_ID, mPaymentTypeId)
+                .addMetaData(TrackingUtil.METADATA_PAYMENT_METHOD_ID, mPaymentMethodId)
+                .addMetaData(TrackingUtil.METADATA_PAYMENT_STATUS, mPaymentResult.getPaymentStatus())
+                .addMetaData(TrackingUtil.METADATA_PAYMENT_STATUS_DETAIL, mPaymentResult.getPaymentStatusDetail())
+                .addMetaData(TrackingUtil.METADATA_PAYMENT_ID, String.valueOf(mPaymentResult.getPaymentId()));
+
+        if (mIssuer != null && mIssuer.getId() != null) {
+            builder.addMetaData(TrackingUtil.METADATA_ISSUER_ID, String.valueOf(mIssuer.getId()));
+        }
+
+        ScreenViewEvent event = builder.build();
+        mpTrackingContext.trackEvent(event);
+    }
+
     protected void onInvalidStart(String errorMessage) {
-        ErrorUtil.startErrorActivity(this, getString(R.string.mpsdk_standard_error_message), errorMessage, false);
+        ErrorUtil.startErrorActivity(this, getString(R.string.mpsdk_standard_error_message), errorMessage, false, mMerchantPublicKey);
     }
 
     private void setPaymentResultScreenPreferenceData() {
@@ -299,7 +331,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         mSecondaryExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        finishWithResult(mPaymentResultScreenPreference.getSecondaryCongratsExitResultCode());
+                finishWithResult(mPaymentResultScreenPreference.getSecondaryCongratsExitResultCode());
             }
         });
     }
@@ -398,7 +430,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         if (mStatementDescription == null) {
             mPaymentStatementDescriptionTextView.setVisibility(View.GONE);
         } else {
-            String description = getResources().getString(R.string.mpsdk_text_state_acount_activity_congrat, mStatementDescription);
+            String description = String.format(getResources().getString(R.string.mpsdk_text_state_account_activity_congrats), mStatementDescription);
             mPaymentStatementDescriptionTextView.setText(description);
             mPaymentStatementDescriptionTextView.setVisibility(View.VISIBLE);
         }
@@ -407,12 +439,25 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     private void setInterestAmountDescription() {
         setTotalAmountDescription();
 
+
         if (hasInterests()) {
             mInterestAmountDescription.setVisibility(View.GONE);
         } else {
-            mInterestAmountDescription.setText(getString(R.string.mpsdk_zero_rate));
-            mInstallmentsDescription.setVisibility(View.VISIBLE);
+            if (!InstallmentsUtil.shouldWarnAboutBankInterests(mSite)) {
+                mInterestAmountDescription.setText(getString(R.string.mpsdk_zero_rate));
+                mInstallmentsDescription.setVisibility(View.VISIBLE);
+            } else {
+                mInterestAmountDescription.setVisibility(View.GONE);
+                warnAboutBankInterests();
+            }
         }
+
+    }
+
+    private void warnAboutBankInterests() {
+        mNoInstallmentsRateTextView = (MPTextView) findViewById(R.id.mpsdkNoInstallmentsRateTextView);
+        mNoInstallmentsRateTextView.setVisibility(View.VISIBLE);
+        mNoInstallmentsRateTextView.setText(R.string.mpsdk_interest_label);
     }
 
     private void setDiscountRow() {
@@ -466,7 +511,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
                 mAmountDescription.setVisibility(View.GONE);
             } else if (mPaymentTypeId.equals(PaymentTypes.ACCOUNT_MONEY)) {
                 StringBuffer sb = new StringBuffer();
-                if(mDiscount != null) {
+                if (mDiscount != null) {
                     mTotalAmount = mDiscount.getAmountWithDiscount(mTotalAmount);
                 }
                 sb.append(CurrenciesUtil.formatNumber(mTotalAmount, mCurrencyId));
@@ -624,8 +669,6 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
 
     @Override
     public void onBackPressed() {
-        MPTracker.getInstance().trackEvent("CONGRATS", "BACK_PRESSED", "2", mMerchantPublicKey, BuildConfig.VERSION_NAME, this);
-
         if (mBackPressedOnce) {
             finishWithOkResult();
         } else {

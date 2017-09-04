@@ -17,8 +17,9 @@ public class PaymentMethod {
     private BigDecimal minAllowedAmount;
     private BigDecimal maxAllowedAmount;
     private Integer accreditationTime;
-    private List<FinancialInstitution> financialInstitutions;
+    private String merchantAccountId;
 
+    private List<FinancialInstitution> financialInstitutions;
 
     public List<FinancialInstitution> getFinancialInstitutions() {
         return financialInstitutions;
@@ -104,16 +105,16 @@ public class PaymentMethod {
         return isAdditionalInfoNeeded("identification_number");
     }
 
-    public boolean isIdentificationOffRequired(){
+    public boolean isIdentificationOffRequired() {
         return isIdentificationNumberOffRequired() && isIdentificationTypeOffRequired();
     }
 
-    public boolean isEntityTypeRequired(){
+    public boolean isEntityTypeRequired() {
         return isAdditionalInfoNeeded("entity_type");
     }
 
-    public boolean isFinancialInstitutionsRequired(){
-        return financialInstitutions!= null && !financialInstitutions.isEmpty();
+    public boolean isFinancialInstitutionsRequired() {
+        return financialInstitutions != null && !financialInstitutions.isEmpty();
     }
 
     private boolean isAdditionalInfoNeeded(String param) {

@@ -25,7 +25,7 @@ public interface GuessingCardActivityView {
 
     void showInputContainer();
 
-    void showApiExceptionError(ApiException exception);
+    void showApiExceptionError(ApiException exception, String requestOrigin);
 
     void setCardNumberInputMaxLength(int length);
 
@@ -98,4 +98,6 @@ public interface GuessingCardActivityView {
     void finishCardFlow(PaymentMethod paymentMethod, Token token, Discount discount, Boolean directDiscountEnabled, Issuer issuer, PayerCost payerCost);
 
     void startDiscountActivity(BigDecimal transactionAmount);
+
+    void hideProgress();
 }

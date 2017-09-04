@@ -1,3 +1,41 @@
+## VERSION 3.4.1
+
+_31_08_2017_
+
+* HotFix: Time in millis in tracking
+* HotFix: Floating button in RyC
+
+## VERSION 3.4.0
+
+_30_08_2017_
+
+* New: Tracking screens (metrics v2)
+* New: Customization in Review and Confirm to support services
+* New: Support for new endpoints of installments and issuers
+* New: Tracking invalid ESC
+* Fix: Invalid ESC code changed
+* Fix: Check to open payment types screen
+* Fix: Image for account money in Brasil changed
+* Fix: Tracker initialization crash fixed
+
+
+## VERSION 3.3.0
+
+_15-08-2017_
+
+* New: Support for ESC library
+* New: Security Code Screen updated
+* New: Scroll button in Review and Confirm
+* Fix: Locale strings in Nougat
+* Fix: Identification with letters
+
+## VERSION 3.2.0
+
+_11-07-2017_
+
+* New: Rollout in Chile, Venezuela and Perú for card payments.
+* New: Rollout in Perú for offline payments.
+
 ## VERSION 3.1.0
 
 _23-06-2017_
