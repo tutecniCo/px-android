@@ -9,29 +9,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.FinancialInstitutionsAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.listeners.RecyclerItemClickListener;
-import com.mercadopago.model.ApiException;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.FinancialInstitutionsPresenter;
 import com.mercadopago.providers.FinancialInstitutionsProviderImpl;
 import com.mercadopago.uicontrollers.FontCache;
-import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.views.FinancialInstitutionsActivityView;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -77,7 +73,7 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
     }
 
     private void configurePresenter() {
-        if(mFinancialInstitutionsPresenter != null){
+        if (mFinancialInstitutionsPresenter != null) {
             mFinancialInstitutionsPresenter.attachView(this);
             FinancialInstitutionsProviderImpl resourcesProvider = new FinancialInstitutionsProviderImpl(this);
             mFinancialInstitutionsPresenter.attachResourcesProvider(resourcesProvider);
@@ -158,9 +154,8 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
     }
 
     @Override
-    public void trackScreen(){
-        MPTracker.getInstance().trackScreen("FINANCIAL_INSTITUTIONS", "2", mFinancialInstitutionsPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
+    public void trackScreen() {
+        //TODO add track screen
     }
 
 
@@ -220,7 +215,7 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
 
     @Override
     public void showError(String message, String errorDetail) {
-        ErrorUtil.startErrorActivity(mActivity, message, errorDetail, false);
+        ErrorUtil.startErrorActivity(mActivity, new MercadoPagoError(message, false), mFinancialInstitutionsPresenter.getPublicKey());
     }
 
     private void loadLowResViews() {
@@ -301,8 +296,8 @@ public class FinancialInstitutionsActivity extends MercadoPagoBaseActivity imple
 
     @Override
     public void onBackPressed() {
-        MPTracker.getInstance().trackEvent("FINANCIAL_INSTITUTIONS", "BACK_PRESSED", "2", mFinancialInstitutionsPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
+        //TODO add track screen
+
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);

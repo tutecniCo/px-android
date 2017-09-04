@@ -1,26 +1,24 @@
 package com.mercadopago;
 
 import android.content.Intent;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.EntityType;
 import com.mercadopago.model.FinancialInstitution;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
-import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.AdditionalStepVaultPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
+import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.statemachines.AdditionalStepVaultStateMachine;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.views.AdditionalStepVaultView;
-
-import java.security.PublicKey;
 
 
 /**
@@ -129,8 +127,7 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
     @Override
     public void onValidStart() {
-        MPTracker.getInstance().trackScreen("ADDITIONAL_STEP_VAULT_ACTIVITY", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
+        //TODO add track screen
         mPresenter.checkFlow();
     }
 
@@ -295,6 +292,6 @@ public class AdditionalStepVaultActivity extends MercadoPagoBaseActivity impleme
 
     @Override
     public void onError(String message) {
-        ErrorUtil.startErrorActivity(this, message, false);
+        ErrorUtil.startErrorActivity(this, new MercadoPagoError(message, false), mPresenter.getPublicKey());
     }
 }

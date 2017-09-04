@@ -3,7 +3,6 @@ package com.mercadopago.presenters;
 import com.mercadopago.BuildConfig;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Site;
-import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.providers.AdditionalStepVaultProviderImpl;
 import com.mercadopago.statemachines.AdditionalStepVaultStateMachine;
@@ -142,8 +141,7 @@ public class AdditionalStepVaultPresenter extends MvpPresenter<AdditionalStepVau
     }
 
     public void onBackPressed() {
-        MPTracker.getInstance().trackEvent("ADDITIONAL_STEP_VAULT_ACTIVITY", "BACK_PRESSED", "2", mPublicKey,
-                BuildConfig.VERSION_NAME, getResourcesProvider().getContext());
+        //TODO add track screen
         state = state.onBackPressed(this);
     }
 

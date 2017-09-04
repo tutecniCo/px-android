@@ -30,11 +30,11 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
+import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.listeners.card.CardIdentificationNumberTextWatcher;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Identification;
 import com.mercadopago.model.IdentificationType;
-import com.mercadopago.mptracker.MPTracker;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.presenters.IdentificationPresenter;
@@ -44,7 +44,6 @@ import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.TextUtil;
 import com.mercadopago.views.IdentificationActivityView;
 
 import java.lang.reflect.Type;
@@ -328,8 +327,8 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void onValidStart() {
-        MPTracker.getInstance().trackScreen("IDENTIFICATION_NUMBER", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
+        //TODO add track screen
+
         mPresenter.initializeMercadoPago();
         mPresenter.loadIdentificationTypes();
         initializeViews();
@@ -649,12 +648,12 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void showApiExceptionError(ApiException exception) {
-        ApiUtil.showApiExceptionError(mActivity, exception);
+        ApiUtil.showApiExceptionError(mActivity, exception, mPresenter.getPublicKey(), ApiUtil.RequestOrigin.GET_IDENTIFICATION_TYPES);
     }
 
     @Override
     public void startErrorView(String message, String errorDetail) {
-        ErrorUtil.startErrorActivity(mActivity, message, errorDetail, false);
+        ErrorUtil.startErrorActivity(mActivity, new MercadoPagoError(message, false), mPresenter.getPublicKey());
     }
 
 
@@ -765,8 +764,7 @@ public class IdentificationActivity extends MercadoPagoBaseActivity implements I
 
     @Override
     public void onBackPressed() {
-        MPTracker.getInstance().trackEvent("IDENTIFICATION_ACTIVITY", "BACK_PRESSED", "2", mPresenter.getPublicKey(),
-                BuildConfig.VERSION_NAME, this);
+        //TODO add track
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);
         setResult(RESULT_CANCELED, returnIntent);
