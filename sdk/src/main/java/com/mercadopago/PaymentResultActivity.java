@@ -3,7 +3,9 @@ package com.mercadopago;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import com.mercadopago.components.CongratsHeaderComponent;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.PaymentResult;
@@ -13,6 +15,7 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentResultPresenter;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.providers.PaymentResultProviderImpl;
+import com.mercadopago.renderers.CongratsHeaderRenderer;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.views.PaymentResultView;
@@ -42,12 +45,17 @@ public class PaymentResultActivity extends Activity implements PaymentResultView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            mPresenter = new PaymentResultPresenter();
-            getActivityParameters();
-            configurePresenter();
-            mPresenter.initialize();
-        }
+//        if (savedInstanceState == null) {
+//            mPresenter = new PaymentResultPresenter();
+//            getActivityParameters();
+//            configurePresenter();
+//            mPresenter.initialize();
+//        }
+        CongratsHeaderRenderer congratsHeaderRenderer = new CongratsHeaderRenderer(this);
+        CongratsHeaderComponent congratsHeaderComponent = new CongratsHeaderComponent("Hola Mundo!", "Soy un subtitulo!");
+        View congratsHeader = congratsHeaderRenderer.render(congratsHeaderComponent);
+        setContentView(congratsHeader);
+
     }
 
     @Override
