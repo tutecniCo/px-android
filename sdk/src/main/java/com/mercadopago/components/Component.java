@@ -4,7 +4,7 @@ package com.mercadopago.components;
  * Created by vaserber on 10/17/17.
  */
 
-public abstract class Component {
+public abstract class Component<T> {
 
     private final ActionDispatcher dispatcher;
 
@@ -15,4 +15,6 @@ public abstract class Component {
     public ActionDispatcher getDispatcher() {
         return dispatcher;
     }
+
+    public abstract void setProps(T props);
 }

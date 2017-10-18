@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionsListener;
+import com.mercadopago.components.ComponentProps;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
@@ -11,6 +12,7 @@ import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.paymentresult.LogAction;
+import com.mercadopago.paymentresult.PaymentResultProps;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.views.PaymentResultView;

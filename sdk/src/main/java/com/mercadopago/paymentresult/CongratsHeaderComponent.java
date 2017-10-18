@@ -7,16 +7,16 @@ import com.mercadopago.components.Component;
  * Created by vaserber on 10/13/17.
  */
 
-public class CongratsHeaderComponent extends Component {
+public class CongratsHeaderComponent extends Component<PaymentResultProps> {
 
     private final String title;
     private final SubtitleComponent subtitleComponent;
 
-    public CongratsHeaderComponent(String title, String subtitle, ActionDispatcher dispatcher) {
+    public CongratsHeaderComponent(PaymentResultProps props, ActionDispatcher dispatcher) {
         super(dispatcher);
-        this.title = title;
-        if (subtitle != null) {
-            this.subtitleComponent = new SubtitleComponent(subtitle, dispatcher);
+        this.title = props.title;
+        if (props.subtitle != null) {
+            this.subtitleComponent = new SubtitleComponent(props.subtitle, dispatcher);
         } else {
             this.subtitleComponent = null;
         }
@@ -32,5 +32,10 @@ public class CongratsHeaderComponent extends Component {
 
     public SubtitleComponent getSubtitleComponent() {
         return subtitleComponent;
+    }
+
+    @Override
+    public void setProps(PaymentResultProps props) {
+
     }
 }

@@ -2,7 +2,7 @@ package com.mercadopago.components;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.util.Log;
+
 
 /**
  * Created by vaserber on 10/17/17.
@@ -21,6 +21,10 @@ public class ComponentManager implements ActionDispatcher {
     public void setComponent(@NonNull final Renderer component) {
         root = component;
         activity.setContentView(root.render());
+    }
+
+    public void setProps(@NonNull final Props props) {
+        root.component.setProps(props);
     }
 
     public void setActionsListener(final ActionsListener actionsListener) {
