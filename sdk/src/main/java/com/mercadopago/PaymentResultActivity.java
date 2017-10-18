@@ -3,9 +3,12 @@ package com.mercadopago;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.mercadopago.components.CongratsHeaderComponent;
+import com.mercadopago.components.ComponentManager;
+import com.mercadopago.components.RendererFactory;
+import com.mercadopago.paymentresult.CongratsHeaderComponent;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.PaymentResult;
@@ -15,14 +18,14 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentResultPresenter;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.providers.PaymentResultProviderImpl;
-import com.mercadopago.renderers.CongratsHeaderRenderer;
+import com.mercadopago.paymentresult.CongratsHeaderRenderer;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.views.PaymentResultView;
 
 import java.math.BigDecimal;
 
-public class PaymentResultActivity extends Activity implements PaymentResultView {
+public class PaymentResultActivity extends AppCompatActivity implements PaymentResultView {
 
     public static final String PAYER_ACCESS_TOKEN_BUNDLE = "mMerchantPublicKey";
     public static final String MERCHANT_PUBLIC_KEY_BUNDLE = "mpayerAccessToken";
@@ -42,20 +45,22 @@ public class PaymentResultActivity extends Activity implements PaymentResultView
     private PaymentResultScreenPreference mPaymentResultScreenPreference;
     private ServicePreference mServicePreference;
 
+    private ComponentManager componentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (savedInstanceState == null) {
-//            mPresenter = new PaymentResultPresenter();
+        if (savedInstanceState == null) {
+            //TODO revisar
+            mPresenter = new PaymentResultPresenter();
 //            getActivityParameters();
-//            configurePresenter();
+            configurePresenter();
 //            mPresenter.initialize();
-//        }
-        CongratsHeaderRenderer congratsHeaderRenderer = new CongratsHeaderRenderer(this);
-        CongratsHeaderComponent congratsHeaderComponent = new CongratsHeaderComponent("Hola Mundo!", "Soy un subtitulo!");
-        View congratsHeader = congratsHeaderRenderer.render(congratsHeaderComponent);
-        setContentView(congratsHeader);
+        }
 
+        componentManager = new ComponentManager(this);
+        componentManager.setActionsListener(mPresenter);
+        componentManager.setComponent(RendererFactory.congratsHeaderRenderer(this, componentManager));
     }
 
     @Override

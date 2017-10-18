@@ -1,10 +1,16 @@
 package com.mercadopago.presenters;
 
+import android.util.Log;
+
+import com.mercadopago.components.Action;
+import com.mercadopago.components.ActionsListener;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
+import com.mercadopago.components.ActionDispatcher;
+import com.mercadopago.paymentresult.LogAction;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.views.PaymentResultView;
@@ -13,7 +19,7 @@ import java.math.BigDecimal;
 
 import static com.mercadopago.util.TextUtils.isEmpty;
 
-public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, PaymentResultProvider> {
+public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, PaymentResultProvider> implements ActionsListener {
     private Boolean discountEnabled;
     private PaymentResult paymentResult;
     private Site site;
@@ -75,7 +81,6 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, Paym
         }
     }
 
-
     private Boolean isStatusValid() {
         return !isEmpty(paymentResult.getPaymentStatus());
     }
@@ -98,5 +103,12 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, Paym
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public void onAction(final Action action) {
+        if (action instanceof LogAction) {
+            Log.d("log", ((LogAction) action).text);
+        }
     }
 }

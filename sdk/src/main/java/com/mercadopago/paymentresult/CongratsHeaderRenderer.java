@@ -1,4 +1,4 @@
-package com.mercadopago.renderers;
+package com.mercadopago.paymentresult;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mercadopago.R;
-import com.mercadopago.components.CongratsHeaderComponent;
+import com.mercadopago.components.Renderer;
+import com.mercadopago.components.RendererFactory;
 
 /**
  * Created by vaserber on 10/13/17.
@@ -18,11 +19,11 @@ public class CongratsHeaderRenderer extends Renderer<CongratsHeaderComponent> {
     private TextView congratsTitle;
     private ViewGroup subtitleLayout;
     private View containerView;
-    private final SubtitleRenderer subtitleRenderer;
+    private final Renderer subtitleRenderer;
 
-    public CongratsHeaderRenderer(Context context) {
-        super(context);
-        subtitleRenderer = new SubtitleRenderer(context);
+    public CongratsHeaderRenderer(CongratsHeaderComponent component, Context context) {
+        super(component, context);
+        subtitleRenderer = RendererFactory.congratsSubtitleRenderer(context, component.getSubtitleComponent());
     }
 
     @Override
@@ -33,10 +34,10 @@ public class CongratsHeaderRenderer extends Renderer<CongratsHeaderComponent> {
     }
 
     @Override
-    public View render(CongratsHeaderComponent congratsHeaderComponent) {
-        congratsTitle.setText(congratsHeaderComponent.getTitle());
-        if (congratsHeaderComponent.hasSubtitle()) {
-            View subtitle = renderSubtitle(congratsHeaderComponent);
+    public View render() {
+        congratsTitle.setText(component.getTitle());
+        if (component.hasSubtitle()) {
+            View subtitle = renderSubtitle(component);
             this.subtitleLayout.addView(subtitle);
         }
 
@@ -44,7 +45,7 @@ public class CongratsHeaderRenderer extends Renderer<CongratsHeaderComponent> {
     }
 
     private View renderSubtitle(CongratsHeaderComponent congratsHeaderComponent) {
-        return subtitleRenderer.render(congratsHeaderComponent.getSubtitleComponent());
+        return subtitleRenderer.render();
     }
 }
 
