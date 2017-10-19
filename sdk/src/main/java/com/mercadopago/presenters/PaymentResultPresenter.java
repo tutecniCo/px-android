@@ -9,6 +9,8 @@ import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
+import com.mercadopago.paymentresult.DecreaseCountAction;
+import com.mercadopago.paymentresult.IncreaseCountAction;
 import com.mercadopago.paymentresult.LogAction;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.util.MercadoPagoUtil;
@@ -94,6 +96,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     public void setPaymentResult(PaymentResult paymentResult) {
         this.paymentResult = paymentResult;
+        getView().setPropPaymentResult(paymentResult);
     }
 
     public void setSite(Site site) {
@@ -108,6 +111,10 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     public void onAction(final Action action) {
         if (action instanceof LogAction) {
             Log.d("log", ((LogAction) action).text);
+        } else if (action instanceof IncreaseCountAction) {
+            getView().increaseCounter();
+        } else if (action instanceof DecreaseCountAction) {
+            getView().decreaseCounter();
         }
     }
 }

@@ -8,7 +8,11 @@ import java.math.BigDecimal;
 
 public interface PaymentResultPropsView extends MvpView {
 
-    void setPaymentResult(PaymentResult paymentResult);
+    void setPropPaymentResult(PaymentResult paymentResult);
+
+    void increaseCounter();
+
+    void decreaseCounter();
 
     void showError(String errorMessage);
 

@@ -17,10 +17,6 @@ public class SubtitleRenderer extends Renderer<SubtitleComponent> {
     private View subtitleView;
     private TextView subtitleTextView;
 
-    public SubtitleRenderer(SubtitleComponent component, Context context) {
-        super(component, context);
-    }
-
     public View render() {
         subtitleTextView.setText(component.getSubtitle());
         return subtitleView;

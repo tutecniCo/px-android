@@ -15,18 +15,13 @@ import com.mercadopago.paymentresult.SubtitleRenderer;
 
 public class RendererFactory {
 
-    public static Renderer<CongratsHeaderComponent>  congratsHeaderRenderer(final Context context, ActionDispatcher dispatcher) {
-        CongratsHeaderComponent congratsHeaderComponent = new CongratsHeaderComponent(
-            new PaymentResultProps("Hola Mundo!", "Soy un subtitulo!"),
-            dispatcher
-        );
-        CongratsHeaderRenderer congratsHeaderRenderer = new CongratsHeaderRenderer(congratsHeaderComponent, context);
-        return congratsHeaderRenderer;
-    }
-
     public static Renderer<SubtitleComponent>  congratsSubtitleRenderer(final Context context,
                                                                         final SubtitleComponent component) {
-        SubtitleRenderer subtitleRenderer = new SubtitleRenderer(component, context);
+        SubtitleRenderer subtitleRenderer = new SubtitleRenderer();
+        subtitleRenderer.setContext(context);
+        subtitleRenderer.setComponent(component);
+        subtitleRenderer.init();
+
         return subtitleRenderer;
     }
 }

@@ -17,15 +17,16 @@ public class PaymentResultPropsMutator implements Mutator, PaymentResultPropsVie
     private MutatorPropsListener propsListener;
 
     //Componente props with default values
-    private PaymentResultProps props = new PaymentResultProps(null, null);
+    private PaymentResultProps props = new PaymentResultProps(0, null, null);
 
     @Override
-    public void setPaymentResult(@NonNull final PaymentResult paymentResult) {
+    public void setPropPaymentResult(@NonNull final PaymentResult paymentResult) {
 
-        props.toBuilder().setTitle(paymentResult.getPaymentStatus())
+        props = props.toBuilder().setTitle(paymentResult.getPaymentStatus())
                 .setSubtitle(paymentResult.getPaymentData()
                         .getPaymentMethod().getName()).build();
 
+        notifyPropsChanged();
     }
 
     @Override
@@ -41,5 +42,23 @@ public class PaymentResultPropsMutator implements Mutator, PaymentResultPropsVie
     @Override
     public void setPropsListener(@NonNull final MutatorPropsListener listener) {
         this.propsListener = listener;
+    }
+
+    @Override
+    public void increaseCounter() {
+        props = props.toBuilder().setCount(props.count + 1).build();
+        notifyPropsChanged();
+    }
+
+    @Override
+    public void decreaseCounter() {
+        props = props.toBuilder().setCount(props.count - 1).build();
+        notifyPropsChanged();
+    }
+
+    private void notifyPropsChanged() {
+        if (propsListener != null) {
+            propsListener.onProps(props);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.mercadopago.components;
 
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.view.View;
 
 import com.mercadopago.paymentresult.SubtitleComponent;
@@ -12,10 +13,19 @@ import com.mercadopago.paymentresult.SubtitleComponent;
 public abstract class Renderer<T extends Component> {
 
     protected T component;
+    protected Context context;
 
-    public Renderer(T component, Context context) {
-        this.component = component;
+    @CallSuper
+    public void init() {
         bindViews(context);
+    }
+
+    public void setComponent(T component) {
+        this.component = component;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public abstract View render();

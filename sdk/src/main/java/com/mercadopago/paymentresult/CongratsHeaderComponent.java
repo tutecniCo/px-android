@@ -12,15 +12,21 @@ import com.mercadopago.components.Component;
 public class CongratsHeaderComponent extends Component<PaymentResultProps> {
 
     private SubtitleComponent subtitleComponent;
-    private PaymentResultProps props;
 
-    public CongratsHeaderComponent(@NonNull final PaymentResultProps props, @NonNull final ActionDispatcher dispatcher) {
+    public CongratsHeaderComponent(@NonNull final ActionDispatcher dispatcher) {
         super(dispatcher);
-        this.setProps(props);
     }
 
+//    public CongratsHeaderComponent() {
+//        super(props);
+//    }
+
+//    public CongratsHeaderComponent(@NonNull final PaymentResultProps props, @NonNull final ActionDispatcher dispatcher) {
+//        super(props, dispatcher);
+//    }
+
     public String getTitle() {
-        return this.props.title;
+        return this.getProps().title;
     }
 
     public boolean hasSubtitle() {
@@ -32,10 +38,11 @@ public class CongratsHeaderComponent extends Component<PaymentResultProps> {
     }
 
     @Override
-    public void setProps(@NonNull final PaymentResultProps props) {
+    public void applyProps(@NonNull final PaymentResultProps props) {
         // hay diferencias ? evitar render si son iguales !!! deep compare
         // o usar persisten data structures
-        this.props = props;
+        this.setProps(props);
+
         if (props.subtitle != null) {
             this.subtitleComponent = new SubtitleComponent(props.subtitle, getDispatcher());
         } else {

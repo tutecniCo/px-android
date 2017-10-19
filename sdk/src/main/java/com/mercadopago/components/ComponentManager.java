@@ -17,31 +17,34 @@ import java.util.Map;
  * Created by vaserber on 10/17/17.
  */
 
-public class ComponentManager implements ActionDispatcher {
+public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListener<T> {
 
     private Activity activity;
     private Component root;
     private ActionsListener actionsListener;
-    private Map<Class, Class> renderersRegistry = new HashMap<>();
+    private Map<Class, Class> rendererRegistry = new HashMap<>();
+    private Mutator mutator;
+    private Renderer renderer;
 
     public ComponentManager(@NonNull final Activity activity) {
         this.activity = activity;
-
-        renderersRegistry.put(CongratsHeaderComponent.class, CongratsHeaderRenderer.class);
-        renderersRegistry.put(SubtitleComponent.class, SubtitleRenderer.class);
+        rendererRegistry.put(CongratsHeaderComponent.class, CongratsHeaderRenderer.class);
+        rendererRegistry.put(SubtitleComponent.class, SubtitleRenderer.class);
     }
 
     public void setComponent(@NonNull final Component component) {
-
         root = component;
-        Renderer renderer = null;
-
         try {
-            renderer = (Renderer) renderersRegistry.get(root.getClass()).newInstance();
+            renderer = (Renderer) rendererRegistry.get(root.getClass()).newInstance();
+            renderer.setComponent(component);
+            renderer.setContext(activity);
+            renderer.init();
         } catch (Exception e) {
             Log.e("error", e.getMessage(), e);
         }
+    }
 
+    public void render() {
         if (renderer != null) {
             activity.setContentView(renderer.render());
         }
@@ -56,5 +59,16 @@ public class ComponentManager implements ActionDispatcher {
         if (actionsListener != null) {
             actionsListener.onAction(action);
         }
+    }
+
+    public void setMutator(Mutator mutator) {
+        this.mutator = mutator;
+        this.mutator.setPropsListener(this);
+    }
+
+    @Override
+    public void onProps(T props) {
+        root.setProps(props);
+        render();
     }
 }
