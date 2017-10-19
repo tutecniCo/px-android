@@ -2,6 +2,15 @@ package com.mercadopago.components;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.mercadopago.paymentresult.CongratsHeaderComponent;
+import com.mercadopago.paymentresult.CongratsHeaderRenderer;
+import com.mercadopago.paymentresult.SubtitleComponent;
+import com.mercadopago.paymentresult.SubtitleRenderer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -11,20 +20,31 @@ import android.support.annotation.NonNull;
 public class ComponentManager implements ActionDispatcher {
 
     private Activity activity;
-    private Renderer root;
+    private Component root;
     private ActionsListener actionsListener;
+    private Map<Class, Class> renderersRegistry = new HashMap<>();
 
     public ComponentManager(@NonNull final Activity activity) {
         this.activity = activity;
+
+        renderersRegistry.put(CongratsHeaderComponent.class, CongratsHeaderRenderer.class);
+        renderersRegistry.put(SubtitleComponent.class, SubtitleRenderer.class);
     }
 
-    public void setComponent(@NonNull final Renderer component) {
+    public void setComponent(@NonNull final Component component) {
+
         root = component;
-        activity.setContentView(root.render());
-    }
+        Renderer renderer = null;
 
-    public void setProps(@NonNull final Props props) {
-        root.component.setProps(props);
+        try {
+            renderer = (Renderer) renderersRegistry.get(root.getClass()).newInstance();
+        } catch (Exception e) {
+            Log.e("error", e.getMessage(), e);
+        }
+
+        if (renderer != null) {
+            activity.setContentView(renderer.render());
+        }
     }
 
     public void setActionsListener(final ActionsListener actionsListener) {

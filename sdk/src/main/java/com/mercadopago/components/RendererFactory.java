@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.mercadopago.paymentresult.CongratsHeaderComponent;
 import com.mercadopago.paymentresult.CongratsHeaderRenderer;
+import com.mercadopago.paymentresult.PaymentResultProps;
 import com.mercadopago.paymentresult.SubtitleComponent;
 import com.mercadopago.paymentresult.SubtitleRenderer;
 
@@ -15,7 +16,10 @@ import com.mercadopago.paymentresult.SubtitleRenderer;
 public class RendererFactory {
 
     public static Renderer<CongratsHeaderComponent>  congratsHeaderRenderer(final Context context, ActionDispatcher dispatcher) {
-        CongratsHeaderComponent congratsHeaderComponent = new CongratsHeaderComponent("Hola Mundo!", "Soy un subtitulo!", dispatcher);
+        CongratsHeaderComponent congratsHeaderComponent = new CongratsHeaderComponent(
+            new PaymentResultProps("Hola Mundo!", "Soy un subtitulo!"),
+            dispatcher
+        );
         CongratsHeaderRenderer congratsHeaderRenderer = new CongratsHeaderRenderer(congratsHeaderComponent, context);
         return congratsHeaderRenderer;
     }

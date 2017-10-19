@@ -4,24 +4,21 @@ import android.util.Log;
 
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionsListener;
-import com.mercadopago.components.ComponentProps;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
-import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.paymentresult.LogAction;
-import com.mercadopago.paymentresult.PaymentResultProps;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.views.PaymentResultView;
+import com.mercadopago.views.PaymentResultPropsView;
 
 import java.math.BigDecimal;
 
 import static com.mercadopago.util.TextUtils.isEmpty;
 
-public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, PaymentResultProvider> implements ActionsListener {
+public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView, PaymentResultProvider> implements ActionsListener {
     private Boolean discountEnabled;
     private PaymentResult paymentResult;
     private Site site;
@@ -49,14 +46,14 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, Paym
 
     private void onValidStart() {
         if (paymentResult.getPaymentStatusDetail() != null && paymentResult.getPaymentStatusDetail().equals(Payment.StatusCodes.STATUS_DETAIL_PENDING_WAITING_PAYMENT)) {
-            getView().showInstructions(site, amount, paymentResult);
+//            getView().showInstructions(site, amount, paymentResult);
         } else if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_IN_PROCESS) ||
                 paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_PENDING)) {
-            getView().showPending(paymentResult);
+//            getView().showPending(paymentResult);
         } else if (isCardOrAccountMoney()) {
             startPaymentsOnResult();
         } else if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED)) {
-            getView().showRejection(paymentResult);
+//            getView().showRejection(paymentResult);
         }
     }
 
@@ -71,12 +68,12 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultView, Paym
 
     private void startPaymentsOnResult() {
         if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED)) {
-            getView().showCongrats(site, amount, paymentResult, discountEnabled);
+//            getView().showCongrats(site, amount, paymentResult, discountEnabled);
         } else if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED)) {
             if (isStatusDetailValid() && paymentResult.getPaymentStatusDetail().equals(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE)) {
-                getView().showCallForAuthorize(site, paymentResult);
+//                getView().showCallForAuthorize(site, paymentResult);
             } else {
-                getView().showRejection(paymentResult);
+//                getView().showRejection(paymentResult);
             }
         } else {
             getView().showError(getResourcesProvider().getStandardErrorMessage());
