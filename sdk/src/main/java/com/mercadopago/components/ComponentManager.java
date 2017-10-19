@@ -68,7 +68,7 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
 
     @Override
     public void onProps(T props) {
-        root.setProps(props);
+        root.applyProps(props);
         render();
     }
 }

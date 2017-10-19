@@ -19,6 +19,7 @@ public abstract class Component<T> {
     public Component(@NonNull final T props, @NonNull final ActionDispatcher dispatcher) {
         this.props = props;
         this.dispatcher = dispatcher;
+        applyProps(props);
     }
 
     public ActionDispatcher getDispatcher() {
