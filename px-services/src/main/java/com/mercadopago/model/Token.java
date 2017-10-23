@@ -1,16 +1,12 @@
 package com.mercadopago.model;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.Date;
 
 /**
  * Created by mromar on 10/20/17.
  */
 
-public class Token implements CardInformation {
+public class Token {
 
     private String id;
     private String publicKey;
@@ -31,44 +27,20 @@ public class Token implements CardInformation {
     private Cardholder cardholder;
     private String esc;
 
-    public Integer getSecurityCodeLength() {
-        return securityCodeLength;
+    public String getId() {
+        return id;
     }
 
-    public void setSecurityCodeLength(Integer securityCodeLength) {
-        this.securityCodeLength = securityCodeLength;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Integer getExpirationMonth() {
-        return expirationMonth;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setExpirationMonth(Integer expirationMonth) {
-        this.expirationMonth = expirationMonth;
-    }
-
-    public Integer getExpirationYear() {
-        return expirationYear;
-    }
-
-    public void setExpirationYear(Integer expirationYear) {
-        this.expirationYear = expirationYear;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public String getCardId() {
@@ -127,20 +99,44 @@ public class Token implements CardInformation {
         this.truncCardNumber = truncCardNumber;
     }
 
-    public String getId() {
-        return id;
+    public Integer getSecurityCodeLength() {
+        return securityCodeLength;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSecurityCodeLength(Integer securityCodeLength) {
+        this.securityCodeLength = securityCodeLength;
     }
 
-    public String getPublicKey() {
-        return publicKey;
+    public Integer getExpirationMonth() {
+        return expirationMonth;
     }
 
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
+    public void setExpirationMonth(Integer expirationMonth) {
+        this.expirationMonth = expirationMonth;
+    }
+
+    public Integer getExpirationYear() {
+        return expirationYear;
+    }
+
+    public void setExpirationYear(Integer expirationYear) {
+        this.expirationYear = expirationYear;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 
     public String getFirstSixDigits() {
@@ -159,7 +155,7 @@ public class Token implements CardInformation {
         this.lastFourDigits = lastFourDigits;
     }
 
-    public Cardholder getCardHolder() {
+    public Cardholder getCardholder() {
         return cardholder;
     }
 
@@ -174,17 +170,4 @@ public class Token implements CardInformation {
     public void setEsc(String esc) {
         this.esc = esc;
     }
-
-    public static Token parseJson(String json) {
-
-        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-        return gson.fromJson(json, Token.class);
-    }
-
-    public String toJson() {
-
-        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-        return gson.toJson(this);
-    }
-
 }

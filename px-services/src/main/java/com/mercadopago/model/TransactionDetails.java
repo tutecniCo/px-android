@@ -13,8 +13,8 @@ public class TransactionDetails {
     private BigDecimal installmentAmount;
     private BigDecimal netReceivedAmount;
     private BigDecimal overpaidAmount;
-    private String paymentMethodReferenceId;
     private BigDecimal totalPaidAmount;
+    private String paymentMethodReferenceId;
 
     public String getExternalResourceUrl() {
         return externalResourceUrl;
@@ -56,19 +56,19 @@ public class TransactionDetails {
         this.overpaidAmount = overpaidAmount;
     }
 
-    public String getPaymentMethodReferenceId() {
-        return paymentMethodReferenceId;
-    }
-
-    public void setPaymentMethodReferenceId(String paymentMethodReferenceId) {
-        this.paymentMethodReferenceId = paymentMethodReferenceId;
-    }
-
     public BigDecimal getTotalPaidAmount() {
         return totalPaidAmount;
     }
 
     public void setTotalPaidAmount(BigDecimal totalPaidAmount) {
         this.totalPaidAmount = totalPaidAmount;
+    }
+
+    public String getPaymentMethodReferenceId() {
+        return paymentMethodReferenceId;
+    }
+
+    public void setPaymentMethodReferenceId(String paymentMethodReferenceId) {
+        this.paymentMethodReferenceId = paymentMethodReferenceId;
     }
 }

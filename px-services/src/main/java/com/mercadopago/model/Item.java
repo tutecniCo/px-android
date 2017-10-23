@@ -17,33 +17,6 @@ public class Item {
     private String title;
     private BigDecimal unitPrice;
 
-
-    public Item(String description, Integer quantity, BigDecimal unitPrice) {
-        this.description = description;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-    }
-
-    public Item(String description, Integer quantity, BigDecimal unitPrice, String pictureUrl) {
-        this.description = description;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.pictureUrl = pictureUrl;
-    }
-
-    public Item(String description, BigDecimal amount) {
-        this.description = description;
-        this.quantity = 1;
-        this.unitPrice = amount;
-    }
-
-    public Item(String description, BigDecimal amount, String pictureUrl) {
-        this.description = description;
-        this.quantity = 1;
-        this.unitPrice = amount;
-        this.pictureUrl = pictureUrl;
-    }
-
     public String getCategoryId() {
         return categoryId;
     }

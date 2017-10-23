@@ -8,18 +8,13 @@ import java.util.List;
 
 public class PaymentMethodSearchItem {
 
-    private static final String TYPE_PAYMENT_METHOD = "payment_method";
-    private static final String TYPE_PAYMENT_TYPE = "payment_type";
-    private static final String TYPE_GROUP = "group";
-
     private String id;
-    private String type;
+    private PaymentMethodSearchItemType type;
     private String description;
     private String comment;
     private List<PaymentMethodSearchItem> children;
     private String childrenHeader;
     private Boolean showIcon;
-
 
     public String getId() {
         return id;
@@ -29,11 +24,11 @@ public class PaymentMethodSearchItem {
         this.id = id;
     }
 
-    public String getType() {
+    public PaymentMethodSearchItemType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(PaymentMethodSearchItemType type) {
         this.type = type;
     }
 
@@ -62,34 +57,18 @@ public class PaymentMethodSearchItem {
     }
 
     public String getChildrenHeader() {
-        return this.childrenHeader;
+        return childrenHeader;
     }
 
-    public boolean hasChildren() {
-        return children != null && children.size() != 0;
+    public void setChildrenHeader(String childrenHeader) {
+        this.childrenHeader = childrenHeader;
     }
 
-    public boolean hasDescription() {
-        return description != null && !description.isEmpty();
+    public Boolean getShowIcon() {
+        return showIcon;
     }
 
-    public boolean isIconRecommended() {
-        return showIcon != null ? showIcon : false;
-    }
-
-    public boolean hasComment() {
-        return comment != null && !comment.isEmpty();
-    }
-
-    public boolean isPaymentType() {
-        return type != null && type.equals(TYPE_PAYMENT_TYPE);
-    }
-
-    public boolean isPaymentMethod() {
-        return type != null && type.equals(TYPE_PAYMENT_METHOD);
-    }
-
-    public boolean isGroup() {
-        return type != null && type.equals(TYPE_GROUP);
+    public void setShowIcon(Boolean showIcon) {
+        this.showIcon = showIcon;
     }
 }

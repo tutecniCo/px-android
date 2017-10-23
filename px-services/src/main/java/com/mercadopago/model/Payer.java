@@ -7,22 +7,14 @@ package com.mercadopago.model;
 
 public class Payer {
 
-
     private String id;
     private String accessToken;
     private Identification identification;
     private String type;
+    private String entityType;
     private String email;
     private String firstName;
     private String lastName;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getId() {
         return id;
@@ -30,6 +22,14 @@ public class Payer {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public Identification getIdentification() {
@@ -48,12 +48,20 @@ public class Payer {
         this.type = type;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public String getEntityType() {
+        return entityType;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {

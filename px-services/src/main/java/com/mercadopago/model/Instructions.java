@@ -1,6 +1,5 @@
 package com.mercadopago.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -8,38 +7,23 @@ import java.util.List;
  */
 
 public class Instructions {
+
     private AmountInfo amountInfo;
     private List<Instruction> instructions;
+
+    public AmountInfo getAmountInfo() {
+        return amountInfo;
+    }
+
+    public void setAmountInfo(AmountInfo amountInfo) {
+        this.amountInfo = amountInfo;
+    }
 
     public List<Instruction> getInstructions() {
         return instructions;
     }
 
-    private class AmountInfo {
-        private BigDecimal amount;
-        private String symbol;
-        private int decimalPlaces;
-        private Character decimalSeparator;
-        private Character thousandsSeparator;
-
-        public BigDecimal getAmount() {
-            return amount;
-        }
-
-        public String getSymbol() {
-            return symbol;
-        }
-
-        public int getDecimalPlaces() {
-            return decimalPlaces;
-        }
-
-        public Character getDecimalSeparator() {
-            return decimalSeparator;
-        }
-
-        public Character getThousandsSeparator() {
-            return thousandsSeparator;
-        }
+    public void setInstructions(List<Instruction> instructions) {
+        this.instructions = instructions;
     }
 }

@@ -22,6 +22,7 @@ public class PaymentMethod {
     private BigDecimal maxAllowedAmount;
     private Integer accreditationTime;
     private String merchantAccountId;
+    private List<FinancialInstitution> financialInstitutions;
 
     public List<String> getAdditionalInfoNeeded() {
         return additionalInfoNeeded;
@@ -53,59 +54,6 @@ public class PaymentMethod {
 
     public void setPaymentTypeId(String paymentTypeId) {
         this.paymentTypeId = paymentTypeId;
-    }
-
-    public List<Setting> getSettings() {
-        return settings;
-    }
-
-    public void setSettings(List<Setting> settings) {
-        this.settings = settings;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    public boolean isIssuerRequired() {
-
-        return isAdditionalInfoNeeded("issuer_id");
-    }
-
-    public boolean isSecurityCodeRequired(String bin) {
-        Setting setting = Setting.getSettingByBin(settings, bin);
-        if ((setting != null) && (setting.getSecurityCode() != null) &&
-                (setting.getSecurityCode().getLength() != 0)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isIdentificationTypeRequired() {
-        return isAdditionalInfoNeeded("cardholder_identification_type");
-    }
-
-    public boolean isIdentificationNumberRequired() {
-        return isAdditionalInfoNeeded("cardholder_identification_number");
-    }
-
-    private boolean isAdditionalInfoNeeded(String param) {
-
-        if ((additionalInfoNeeded != null) && (additionalInfoNeeded.size() > 0)) {
-            for (int i = 0; i < additionalInfoNeeded.size(); i++) {
-                if (additionalInfoNeeded.get(i).equals(param)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean isValidForBin(String bin) {
-
-        return (Setting.getSettingByBin(this.getSettings(), bin) != null);
     }
 
     public String getStatus() {
@@ -140,6 +88,14 @@ public class PaymentMethod {
         this.deferredCapture = deferredCapture;
     }
 
+    public List<Setting> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(List<Setting> settings) {
+        this.settings = settings;
+    }
+
     public BigDecimal getMinAllowedAmount() {
         return minAllowedAmount;
     }
@@ -156,11 +112,27 @@ public class PaymentMethod {
         this.maxAllowedAmount = maxAllowedAmount;
     }
 
+    public Integer getAccreditationTime() {
+        return accreditationTime;
+    }
+
     public void setAccreditationTime(Integer accreditationTime) {
         this.accreditationTime = accreditationTime;
     }
 
-    public Integer getAccreditationTime() {
-        return accreditationTime;
+    public String getMerchantAccountId() {
+        return merchantAccountId;
+    }
+
+    public void setMerchantAccountId(String merchantAccountId) {
+        this.merchantAccountId = merchantAccountId;
+    }
+
+    public List<FinancialInstitution> getFinancialInstitutions() {
+        return financialInstitutions;
+    }
+
+    public void setFinancialInstitutions(List<FinancialInstitution> financialInstitutions) {
+        this.financialInstitutions = financialInstitutions;
     }
 }

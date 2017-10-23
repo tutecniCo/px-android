@@ -1,6 +1,5 @@
 package com.mercadopago.model;
 
-import java.util.List;
 
 /**
  * Created by mromar on 10/20/17.
@@ -34,24 +33,5 @@ public class Setting {
 
     public void setSecurityCode(SecurityCode securityCode) {
         this.securityCode = securityCode;
-    }
-
-    public static Setting getSettingByBin(List<Setting> settings, String bin) {
-
-        Setting selectedSetting = null;
-
-        if (settings != null && settings.size() > 0 ) {
-
-            for (Setting setting : settings) {
-
-                if (!"".equals(bin) && bin.matches(setting.getBin().getPattern() + ".*") &&
-                        (setting.getBin().getExclusionPattern() == null || setting.getBin().getExclusionPattern().isEmpty()
-                                || !bin.matches(setting.getBin().getExclusionPattern() + ".*"))) {
-                    selectedSetting = setting;
-                }
-            }
-        }
-
-        return selectedSetting;
     }
 }

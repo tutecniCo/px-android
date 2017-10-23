@@ -1,5 +1,7 @@
 package com.mercadopago.model;
 
+import java.util.List;
+
 /**
  * Created by mromar on 10/20/17.
  */

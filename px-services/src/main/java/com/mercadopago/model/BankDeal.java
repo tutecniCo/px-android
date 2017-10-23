@@ -22,6 +22,14 @@ public class BankDeal {
     private String recommendedMessage;
     private BigDecimal totalFinancialCost;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Date getDateExpired() {
         return dateExpired;
     }
@@ -36,14 +44,6 @@ public class BankDeal {
 
     public void setDateStarted(Date dateStarted) {
         this.dateStarted = dateStarted;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public List<Integer> getInstallments() {
@@ -70,6 +70,14 @@ public class BankDeal {
         this.legals = legals;
     }
 
+    public Picture getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Picture picture) {
+        this.picture = picture;
+    }
+
     public int getMaxInstallments() {
         return maxInstallments;
     }
@@ -84,14 +92,6 @@ public class BankDeal {
 
     public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
         this.paymentMethods = paymentMethods;
-    }
-
-    public Picture getPicture() {
-        return picture;
-    }
-
-    public void setPicture(Picture picture) {
-        this.picture = picture;
     }
 
     public String getRecommendedMessage() {
