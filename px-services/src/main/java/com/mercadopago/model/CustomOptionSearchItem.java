@@ -7,35 +7,35 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class CustomOptionSearchItem {
-    private String description;
+
     private String id;
-
+    private String description;
     @SerializedName("payment_type_id")
-    private String type;
+    private String paymentTypeId;
     private String paymentMethodId;
-
-    public String getDescription() {
-        return description;
-    }
 
     public String getId() {
         return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public void setPaymentTypeId(String paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
     }
 
     public String getPaymentMethodId() {

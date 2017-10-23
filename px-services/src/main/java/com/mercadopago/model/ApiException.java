@@ -1,7 +1,5 @@
 package com.mercadopago.model;
 
-import com.mercadopago.util.ApiUtil;
-
 import java.util.List;
 
 /**
@@ -14,17 +12,6 @@ public class ApiException {
     private String error;
     private String message;
     private Integer status;
-
-    public ApiException() {
-    }
-
-    public ApiException(String message, Integer status, String error, List<Cause> cause) {
-
-        this.message = message;
-        this.status = status;
-        this.error = error;
-        this.cause = cause;
-    }
 
     public List<Cause> getCause() {
         return cause;
@@ -56,24 +43,6 @@ public class ApiException {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public boolean isRecoverable() {
-        return getStatus() == null || getStatus() != ApiUtil.StatusCodes.NOT_FOUND
-                && (getCause() == null || getCause().isEmpty());
-    }
-
-    public boolean containsCause(String code) {
-        boolean found = false;
-        if (cause != null && code != null) {
-            for (Cause currentCause : this.cause) {
-                if (code.equals(currentCause.getCode())) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-        return found;
     }
 
     public class ErrorCodes {

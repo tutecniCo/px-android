@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by mromar on 10/20/17.
  */
 
-public class Card implements CardInformation {
+public class Card {
 
     private Cardholder cardHolder;
     private String customerId;
@@ -73,11 +73,6 @@ public class Card implements CardInformation {
         return firstSixDigits;
     }
 
-    @Override
-    public Integer getSecurityCodeLength() {
-        return securityCode == null ? null : securityCode.getLength();
-    }
-
     public void setFirstSixDigits(String firstSixDigits) {
         this.firstSixDigits = firstSixDigits;
     }
@@ -120,18 +115,5 @@ public class Card implements CardInformation {
 
     public void setSecurityCode(SecurityCode securityCode) {
         this.securityCode = securityCode;
-    }
-
-    public boolean isSecurityCodeRequired() {
-
-        if (securityCode != null) {
-            if (securityCode.getLength() != 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 }

@@ -7,8 +7,8 @@ package com.mercadopago.model;
 public class Picture {
 
     private String id;
-    private String secureUrl;
     private String size;
+    private String secureUrl;
     private String url;
 
     public String getId() {
@@ -19,20 +19,20 @@ public class Picture {
         this.id = id;
     }
 
-    public String getSecureUrl() {
-        return secureUrl;
-    }
-
-    public void setSecureUrl(String secureUrl) {
-        this.secureUrl = secureUrl;
-    }
-
     public String getSize() {
         return size;
     }
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getSecureUrl() {
+        return secureUrl;
+    }
+
+    public void setSecureUrl(String secureUrl) {
+        this.secureUrl = secureUrl;
     }
 
     public String getUrl() {

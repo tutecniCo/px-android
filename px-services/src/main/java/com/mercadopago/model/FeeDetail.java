@@ -35,8 +35,4 @@ public class FeeDetail {
     public void setType(String type) {
         this.type = type;
     }
-
-    public Boolean isFinancialFree(){
-        return type != null && type.equals("financing_fee");
-    }
 }

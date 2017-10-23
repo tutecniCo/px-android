@@ -12,7 +12,7 @@ public class Customer {
 
     private Address address;
     private List<Card> cards;
-    private Long defaultCard;
+    private String defaultCard;
     private String description;
     private Date dateCreated;
     private Date dateLastUpdated;
@@ -42,12 +42,20 @@ public class Customer {
         this.cards = cards;
     }
 
-    public Long getDefaultCard() {
+    public String getDefaultCard() {
         return defaultCard;
     }
 
-    public void setDefaultCard(Long defaultCard) {
+    public void setDefaultCard(String defaultCard) {
         this.defaultCard = defaultCard;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getDateCreated() {
@@ -64,14 +72,6 @@ public class Customer {
 
     public void setDateLastUpdated(Date dateLastUpdated) {
         this.dateLastUpdated = dateLastUpdated;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getEmail() {

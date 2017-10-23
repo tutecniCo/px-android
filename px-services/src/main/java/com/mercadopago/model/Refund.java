@@ -13,7 +13,7 @@ public class Refund {
 
     private BigDecimal amount;
     private Date dateCreated;
-    private Long id;
+    private String id;
     private JsonObject metadata;
     private long paymentId;
     private String source;
@@ -35,11 +35,11 @@ public class Refund {
         this.dateCreated = dateCreated;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

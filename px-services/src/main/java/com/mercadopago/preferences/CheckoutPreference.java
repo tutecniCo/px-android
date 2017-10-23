@@ -118,6 +118,7 @@ public class CheckoutPreference {
             valid = false;
         } else if (item.getCurrencyId() == null) {
             valid = false;
+        }
         } else if ((!CurrenciesUtil.isValidCurrency(item.getCurrencyId()))) {
             valid = false;
         }
@@ -211,36 +212,36 @@ public class CheckoutPreference {
         }
     }
 
-    public List<String> getExcludedPaymentTypes() {
-        if (paymentPreference != null)
-            return paymentPreference.getExcludedPaymentTypes();
-        else
-            return null;
-    }
+//    public List<String> getExcludedPaymentTypes() {
+//        if (paymentPreference != null)
+//            return paymentPreference.getExcludedPaymentTypes();
+//        else
+//            return null;
+//    }
 
-    public String getDefaultPaymentMethodId() {
-        if (paymentPreference != null) {
-            return paymentPreference.getDefaultPaymentMethodId();
-        } else {
-            return null;
-        }
-    }
+//    public String getDefaultPaymentMethodId() {
+//        if (paymentPreference != null) {
+//            return paymentPreference.getDefaultPaymentMethodId();
+//        } else {
+//            return null;
+//        }
+//    }
 
-    public PaymentPreference getPaymentPreference() {
-        return paymentPreference;
-    }
+//    public PaymentPreference getPaymentPreference() {
+//        return paymentPreference;
+//    }
 
-    public Site getSite() {
-        Site site = null;
-        if (localPreferenceSite == null) {
-
-            site = Sites.getById(siteId);
-
-        } else {
-            site = localPreferenceSite;
-        }
-        return site;
-    }
+//    public Site getSite() {
+//        Site site = null;
+//        if (localPreferenceSite == null) {
+//
+//            site = Sites.getById(siteId);
+//
+//        } else {
+//            site = localPreferenceSite;
+//        }
+//        return site;
+//    }
 
     public boolean hasId() {
         return getId() != null;

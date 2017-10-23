@@ -7,7 +7,7 @@ package com.mercadopago.model;
 public class Bin {
 
     private String exclusionPattern;
-    private String installmentsPattern;
+    private String installmentPattern;
     private String pattern;
 
     public String getExclusionPattern() {
@@ -18,12 +18,12 @@ public class Bin {
         this.exclusionPattern = exclusionPattern;
     }
 
-    public String getInstallmentsPattern() {
-        return installmentsPattern;
+    public String getInstallmentPattern() {
+        return installmentPattern;
     }
 
-    public void setInstallmentsPattern(String installmentsPattern) {
-        this.installmentsPattern = installmentsPattern;
+    public void setInstallmentPattern(String installmentPattern) {
+        this.installmentPattern = installmentPattern;
     }
 
     public String getPattern() {

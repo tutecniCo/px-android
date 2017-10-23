@@ -6,16 +6,8 @@ package com.mercadopago.model;
 
 public class Cardholder {
 
-    private Identification identification;
     private String name;
-
-    public Identification getIdentification() {
-        return identification;
-    }
-
-    public void setIdentification(Identification identification) {
-        this.identification = identification;
-    }
+    private Identification identification;
 
     public String getName() {
         return name;
@@ -23,5 +15,13 @@ public class Cardholder {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Identification getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(Identification identification) {
+        this.identification = identification;
     }
 }

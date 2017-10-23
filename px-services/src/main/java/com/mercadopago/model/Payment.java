@@ -25,6 +25,7 @@ public class Payment {
     private Long differentialPricingId;
     private String externalReference;
     private List<FeeDetail> feeDetails;
+    private String id;
     private Integer installments;
     private Integer issuerId;
     private Boolean liveMode;
@@ -43,6 +44,7 @@ public class Payment {
     private BigDecimal transactionAmount;
     private BigDecimal transactionAmountRefunded;
     private TransactionDetails transactionDetails;
+    private String tokenId;
 
     public Boolean getBinaryMode() {
         return binaryMode;
@@ -156,11 +158,11 @@ public class Payment {
         this.feeDetails = feeDetails;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -308,29 +310,39 @@ public class Payment {
         this.transactionDetails = transactionDetails;
     }
 
-    public class StatusCodes {
-        public static final String STATUS_APPROVED = "approved";
-        public static final String STATUS_IN_PROCESS = "in_process";
-        public static final String STATUS_REJECTED = "rejected";
-        public static final String STATUS_PENDING = "pending";
+    public String getTokenId() {
+        return tokenId;
+    }
 
-        public static final String STATUS_DETAIL_INVALID_ESC = "invalid_esc";
-        public static final String STATUS_DETAIL_ACCREDITED = "accredited";
-        public static final String STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE = "cc_rejected_call_for_authorize";
-        public static final String STATUS_DETAIL_PENDING_CONTINGENCY = "pending_contingency";
-        public static final String STATUS_DETAIL_PENDING_REVIEW_MANUAL = "pending_review_manual";
-        public static final String STATUS_DETAIL_PENDING_WAITING_PAYMENT = "pending_waiting_payment";
-        public static final String STATUS_DETAIL_CC_REJECTED_OTHER_REASON = "cc_rejected_other_reason";
-        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_OTHER = "cc_rejected_bad_filled_other";
-        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_CARD_NUMBER = "cc_rejected_bad_filled_card_number";
-        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_SECURITY_CODE = "cc_rejected_bad_filled_security_code";
-        public static final String STATUS_DETAIL_CC_REJECTED_BAD_FILLED_DATE = "cc_rejected_bad_filled_date";
-        public static final String STATUS_DETAIL_REJECTED_HIGH_RISK = "rejected_high_risk";
-        public static final String STATUS_DETAIL_CC_REJECTED_INSUFFICIENT_AMOUNT = "cc_rejected_insufficient_amount";
-        public static final String STATUS_DETAIL_CC_REJECTED_MAX_ATTEMPTS = "cc_rejected_max_attempts";
-        public static final String STATUS_DETAIL_CC_REJECTED_DUPLICATED_PAYMENT = "cc_rejected_duplicated_payment";
-        public static final String STATUS_DETAIL_CC_REJECTED_CARD_DISABLED = "cc_rejected_card_disabled";
-        public static final String STATUS_DETAIL_REJECTED_REJECTED_BY_BANK = "rejected_by_bank";
-        public static final String STATUS_DETAIL_REJECTED_REJECTED_INSUFFICIENT_DATA = "rejected_insufficient_data";
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public class Status {
+        public static final String APPROVED = "approved";
+        public static final String IN_PROCESS = "in_process";
+        public static final String REJECTED = "rejected";
+        public static final String PENDING = "pending";
+    }
+
+    public class StatusDetail {
+        public static final String INVALID_ESC = "invalid_esc";
+        public static final String ACCREDITED = "accredited";
+        public static final String REJECTED_CALL_FOR_AUTHORIZE = "cc_rejected_call_for_authorize";
+        public static final String PENDING_CONTINGENCY = "pending_contingency";
+        public static final String PENDING_REVIEW_MANUAL = "pending_review_manual";
+        public static final String PENDING_WAITING_PAYMENT = "pending_waiting_payment";
+        public static final String REJECTED_OTHER_REASON = "cc_rejected_other_reason";
+        public static final String REJECTED_BAD_FILLED_OTHER = "cc_rejected_bad_filled_other";
+        public static final String REJECTED_BAD_FILLED_CARD_NUMBER = "cc_rejected_bad_filled_card_number";
+        public static final String REJECTED_BAD_FILLED_SECURITY_CODE = "cc_rejected_bad_filled_security_code";
+        public static final String REJECTED_BAD_FILLED_DATE = "cc_rejected_bad_filled_date";
+        public static final String REJECTED_HIGH_RISK = "rejected_high_risk";
+        public static final String REJECTED_INSUFFICIENT_AMOUNT = "cc_rejected_insufficient_amount";
+        public static final String REJECTED_MAX_ATTEMPTS = "cc_rejected_max_attempts";
+        public static final String REJECTED_DUPLICATED_PAYMENT = "cc_rejected_duplicated_payment";
+        public static final String REJECTED_CARD_DISABLED = "cc_rejected_card_disabled";
+        public static final String REJECTED_REJECTED_BY_BANK = "rejected_by_bank";
+        public static final String REJECTED_REJECTED_INSUFFICIENT_DATA = "rejected_insufficient_data";
     }
 }

@@ -13,21 +13,6 @@ public class Currency {
     private Character decimalSeparator;
     private Character thousandsSeparator;
 
-    public Currency() {
-
-    }
-
-    public Currency(String id, String description, String symbol,
-                    int decimalPlaces, Character decimalSeparator, Character thousandsSeparator) {
-
-        this.id = id;
-        this.description = description;
-        this.symbol = symbol;
-        this.decimalPlaces = decimalPlaces;
-        this.decimalSeparator = decimalSeparator;
-        this.thousandsSeparator = thousandsSeparator;
-    }
-
     public String getId() {
         return id;
     }
@@ -74,12 +59,5 @@ public class Currency {
 
     public void setThousandsSeparator(Character thousandsSeparator) {
         this.thousandsSeparator = thousandsSeparator;
-    }
-
-    @Override
-    public String toString() {
-        return "Currency [id=" + id + ", description=" + description
-                + ", symbol=" + symbol + ", decimalPlaces=" + decimalPlaces
-                + "]";
     }
 }
