@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
+import com.mercadopago.paymentresult.actions.DecreaseCountAction;
+import com.mercadopago.paymentresult.actions.IncreaseCountAction;
 
 /**
  * Created by vaserber on 10/13/17.

@@ -11,17 +11,19 @@ import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.paymentresult.CongratsHeaderComponent;
+import com.mercadopago.paymentresult.PaymentResultNavigator;
 import com.mercadopago.paymentresult.PaymentResultPropsMutator;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentResultPresenter;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.providers.PaymentResultProviderImpl;
+import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 
 import java.math.BigDecimal;
 
-public class PaymentResultActivity extends AppCompatActivity {
+public class PaymentResultActivity extends AppCompatActivity implements PaymentResultNavigator {
 
     public static final String PAYER_ACCESS_TOKEN_BUNDLE = "mMerchantPublicKey";
     public static final String MERCHANT_PUBLIC_KEY_BUNDLE = "mpayerAccessToken";
@@ -43,6 +45,7 @@ public class PaymentResultActivity extends AppCompatActivity {
 
     private ComponentManager componentManager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +54,7 @@ public class PaymentResultActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             //TODO revisar
-            mPresenter = new PaymentResultPresenter();
+            mPresenter = new PaymentResultPresenter(this);
 //            getActivityParameters();
 
             //Configure
@@ -70,77 +73,78 @@ public class PaymentResultActivity extends AppCompatActivity {
 
         // test
         getActivityParameters();
+        mPresenter.initialize();
     }
 
-//    @Override
-//    public void showCongrats(Site site, BigDecimal amount, PaymentResult paymentResult, Boolean discountEnabled) {
-//        new MercadoPagoComponents.Activities.CongratsActivityBuilder()
-//                .setMerchantPublicKey(mMerchantPublicKey)
-//                .setActivity(this)
-//                .setCongratsDisplay(mCongratsDisplay)
-//                .setServicePreference(mServicePreference)
-//                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
-//                .setSite(site)
-//                .setAmount(amount)
-//                .setDiscountEnabled(discountEnabled)
-//                .setPaymentResult(paymentResult)
-//                .startActivity();
-//    }
+    @Override
+    public void showCongrats(Site site, BigDecimal amount, PaymentResult paymentResult, Boolean discountEnabled) {
+        new MercadoPagoComponents.Activities.CongratsActivityBuilder()
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setActivity(this)
+                .setCongratsDisplay(mCongratsDisplay)
+                .setServicePreference(mServicePreference)
+                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
+                .setSite(site)
+                .setAmount(amount)
+                .setDiscountEnabled(discountEnabled)
+                .setPaymentResult(paymentResult)
+                .startActivity();
+    }
 
-//    @Override
-//    public void showCallForAuthorize(Site site, PaymentResult paymentResult) {
-//        new MercadoPagoComponents.Activities.CallForAuthorizeActivityBuilder()
-//                .setMerchantPublicKey(mMerchantPublicKey)
-//                .setActivity(this)
-//                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
-//                .setPaymentResult(paymentResult)
-//                .setSite(site)
-//                .startActivity();
-//    }
-//
-//    @Override
-//    public void showRejection(PaymentResult paymentResult) {
-//        new MercadoPagoComponents.Activities.RejectionActivityBuilder()
-//                .setMerchantPublicKey(mMerchantPublicKey)
-//                .setActivity(this)
-//                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
-//                .setPaymentResult(paymentResult)
-//                .startActivity();
-//    }
-//
-//    @Override
-//    public void showPending(PaymentResult paymentResult) {
-//        new MercadoPagoComponents.Activities.PendingActivityBuilder()
-//                .setMerchantPublicKey(mMerchantPublicKey)
-//                .setActivity(this)
-//                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
-//                .setPaymentResult(paymentResult)
-//                .startActivity();
-//    }
-//
-//    @Override
-//    public void showInstructions(Site site, BigDecimal amount, PaymentResult paymentResult) {
-//        new MercadoPagoComponents.Activities.InstructionsActivityBuilder()
-//                .setMerchantPublicKey(mMerchantPublicKey)
-//                .setPayerAccessToken(mPayerAccessToken)
-//                .setActivity(this)
-//                .setServicePreference(mServicePreference)
-//                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
-//                .setSite(site)
-//                .setAmount(amount)
-//                .setPaymentResult(paymentResult)
-//                .startActivity();
-//    }
-//
-//    @Override
-//    public void showError(String errorMessage) {
-//        ErrorUtil.startErrorActivity(this, getString(R.string.mpsdk_standard_error_message), false, mMerchantPublicKey);
-//    }
-//
-//    @Override
-//    public void showError(String errorMessage, String errorDetail) {
-//        ErrorUtil.startErrorActivity(this, errorMessage, errorDetail, false, mMerchantPublicKey);
-//    }
+    @Override
+    public void showCallForAuthorize(Site site, PaymentResult paymentResult) {
+        new MercadoPagoComponents.Activities.CallForAuthorizeActivityBuilder()
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setActivity(this)
+                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
+                .setPaymentResult(paymentResult)
+                .setSite(site)
+                .startActivity();
+    }
+
+    @Override
+    public void showRejection(PaymentResult paymentResult) {
+        new MercadoPagoComponents.Activities.RejectionActivityBuilder()
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setActivity(this)
+                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
+                .setPaymentResult(paymentResult)
+                .startActivity();
+    }
+
+    @Override
+    public void showPending(PaymentResult paymentResult) {
+        new MercadoPagoComponents.Activities.PendingActivityBuilder()
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setActivity(this)
+                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
+                .setPaymentResult(paymentResult)
+                .startActivity();
+    }
+
+    @Override
+    public void showInstructions(Site site, BigDecimal amount, PaymentResult paymentResult) {
+        new MercadoPagoComponents.Activities.InstructionsActivityBuilder()
+                .setMerchantPublicKey(mMerchantPublicKey)
+                .setPayerAccessToken(mPayerAccessToken)
+                .setActivity(this)
+                .setServicePreference(mServicePreference)
+                .setPaymentResultScreenPreference(mPaymentResultScreenPreference)
+                .setSite(site)
+                .setAmount(amount)
+                .setPaymentResult(paymentResult)
+                .startActivity();
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        ErrorUtil.startErrorActivity(this, getString(R.string.mpsdk_standard_error_message), false, mMerchantPublicKey);
+    }
+
+    @Override
+    public void showError(String errorMessage, String errorDetail) {
+        ErrorUtil.startErrorActivity(this, errorMessage, errorDetail, false, mMerchantPublicKey);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

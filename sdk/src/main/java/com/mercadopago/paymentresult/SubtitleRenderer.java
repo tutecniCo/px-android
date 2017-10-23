@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
+import com.mercadopago.paymentresult.actions.LogAction;
 
 /**
  * Created by vaserber on 10/13/17.

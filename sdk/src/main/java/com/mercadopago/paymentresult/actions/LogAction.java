@@ -1,4 +1,4 @@
-package com.mercadopago.paymentresult;
+package com.mercadopago.paymentresult.actions;
 
 import com.mercadopago.components.Action;
 

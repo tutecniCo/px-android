@@ -1,5 +1,6 @@
 package com.mercadopago.presenters;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mercadopago.components.Action;
@@ -9,9 +10,10 @@ import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
-import com.mercadopago.paymentresult.DecreaseCountAction;
-import com.mercadopago.paymentresult.IncreaseCountAction;
-import com.mercadopago.paymentresult.LogAction;
+import com.mercadopago.paymentresult.PaymentResultNavigator;
+import com.mercadopago.paymentresult.actions.DecreaseCountAction;
+import com.mercadopago.paymentresult.actions.IncreaseCountAction;
+import com.mercadopago.paymentresult.actions.LogAction;
 import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.views.PaymentResultPropsView;
@@ -25,6 +27,11 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     private PaymentResult paymentResult;
     private Site site;
     private BigDecimal amount;
+    private PaymentResultNavigator navigator;
+
+    public PaymentResultPresenter(@NonNull final PaymentResultNavigator navigator) {
+        this.navigator = navigator;
+    }
 
     public void initialize() {
         try {
@@ -48,18 +55,18 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     private void onValidStart() {
         if (paymentResult.getPaymentStatusDetail() != null && paymentResult.getPaymentStatusDetail().equals(Payment.StatusCodes.STATUS_DETAIL_PENDING_WAITING_PAYMENT)) {
-//            getView().showInstructions(site, amount, paymentResult);
+            navigator.showInstructions(site, amount, paymentResult);
         } else if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_IN_PROCESS) ||
                 paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_PENDING)) {
-//            getView().showPending(paymentResult);
+            navigator.showPending(paymentResult);
         } else if (isCardOrAccountMoney()) {
             startPaymentsOnResult();
         } else if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED)) {
-//            getView().showRejection(paymentResult);
+            navigator.showRejection(paymentResult);
         }
     }
 
-    protected void onInvalidStart(String errorDetail) {
+    protected void onInvalidStart(final String errorDetail) {
         getView().showError(getResourcesProvider().getStandardErrorMessage(), errorDetail);
     }
 
@@ -70,12 +77,12 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
 
     private void startPaymentsOnResult() {
         if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED)) {
-//            getView().showCongrats(site, amount, paymentResult, discountEnabled);
+            navigator.showCongrats(site, amount, paymentResult, discountEnabled);
         } else if (paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED)) {
             if (isStatusDetailValid() && paymentResult.getPaymentStatusDetail().equals(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE)) {
-//                getView().showCallForAuthorize(site, paymentResult);
+                navigator.showCallForAuthorize(site, paymentResult);
             } else {
-//                getView().showRejection(paymentResult);
+                navigator.showRejection(paymentResult);
             }
         } else {
             getView().showError(getResourcesProvider().getStandardErrorMessage());
@@ -90,20 +97,20 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         return !isEmpty(paymentResult.getPaymentStatusDetail());
     }
 
-    public void setDiscountEnabled(Boolean discountEnabled) {
+    public void setDiscountEnabled(final Boolean discountEnabled) {
         this.discountEnabled = discountEnabled;
     }
 
-    public void setPaymentResult(PaymentResult paymentResult) {
+    public void setPaymentResult(final PaymentResult paymentResult) {
         this.paymentResult = paymentResult;
         getView().setPropPaymentResult(paymentResult);
     }
 
-    public void setSite(Site site) {
+    public void setSite(final Site site) {
         this.site = site;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
 
