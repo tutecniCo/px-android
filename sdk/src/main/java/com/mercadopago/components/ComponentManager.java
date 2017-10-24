@@ -12,11 +12,6 @@ import com.mercadopago.paymentresult.SubtitleRenderer;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * Created by vaserber on 10/17/17.
- */
-
 public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListener<T> {
 
     private Activity activity;
