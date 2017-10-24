@@ -6,5 +6,5 @@ package com.mercadopago.components;
 
 public interface Mutator {
 
-    void setPropsListener(MutatorPropsListener listener);
+    void setPropsListener(final MutatorPropsListener listener);
 }

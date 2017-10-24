@@ -1,27 +1,34 @@
 package com.mercadopago.components;
 
 import android.content.Context;
-import android.view.View;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.mercadopago.paymentresult.CongratsHeaderComponent;
-import com.mercadopago.paymentresult.CongratsHeaderRenderer;
-import com.mercadopago.paymentresult.PaymentResultProps;
-import com.mercadopago.paymentresult.SubtitleComponent;
-import com.mercadopago.paymentresult.SubtitleRenderer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by vaserber on 10/18/17.
+ * Created by vaserber on 10/20/17.
  */
 
 public class RendererFactory {
 
-    public static Renderer<SubtitleComponent>  congratsSubtitleRenderer(final Context context,
-                                                                        final SubtitleComponent component) {
-        SubtitleRenderer subtitleRenderer = new SubtitleRenderer();
-        subtitleRenderer.setContext(context);
-        subtitleRenderer.setComponent(component);
-        subtitleRenderer.init();
+    private static final Map<Class, Class> rendererRegistry = new HashMap<>();
 
-        return subtitleRenderer;
+
+    public static void register(@NonNull final Class component, @NonNull final Class renderer) {
+        rendererRegistry.put(component, renderer);
+    }
+
+    public static Renderer create(@NonNull final Context context, @NonNull final Component component) {
+        Renderer renderer = null;
+        try {
+            renderer = (Renderer) rendererRegistry.get(component.getClass()).newInstance();
+            renderer.setComponent(component);
+            renderer.setContext(context);
+        } catch (Exception e) {
+            Log.e("error", e.getMessage(), e);
+        }
+        return renderer;
     }
 }

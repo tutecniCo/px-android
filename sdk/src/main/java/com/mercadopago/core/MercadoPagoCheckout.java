@@ -7,9 +7,12 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.CheckoutActivity;
 import com.mercadopago.callbacks.CallbackHolder;
+import com.mercadopago.components.RendererFactory;
 import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.controllers.CustomServicesHandler;
+import com.mercadopago.hooks.CheckoutHooks;
+import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
@@ -69,6 +72,8 @@ public class MercadoPagoCheckout {
         CustomReviewablesHandler.getInstance().clear();
         customizeCheckoutReview(reviewScreenPreference);
         customizePaymentResultReview(paymentResultScreenPreference);
+
+        HooksStore.getInstance().setCheckoutHooks(builder.checkoutHooks);
     }
 
     private void customizeServices(ServicePreference servicePreference) {
@@ -196,6 +201,7 @@ public class MercadoPagoCheckout {
         private PaymentData paymentData;
         private PaymentResult paymentResult;
         private Discount discount;
+        private CheckoutHooks checkoutHooks;
 
         public Builder setActivity(Activity activity) {
             this.activity = activity;
@@ -257,6 +263,15 @@ public class MercadoPagoCheckout {
             return this;
         }
 
+        public Builder setCheckoutHooks(@NonNull final CheckoutHooks checkoutHooks) {
+            this.checkoutHooks = checkoutHooks;
+            return this;
+        }
+
+        public void registerComponent(@NonNull final Class component, @NonNull final Class renderer) {
+            RendererFactory.register(component, renderer);
+        }
+
         public void startForPaymentData() {
             MercadoPagoCheckout mercadoPagoCheckout = new MercadoPagoCheckout(this);
             mercadoPagoCheckout.startForResult(MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE);
@@ -266,5 +281,6 @@ public class MercadoPagoCheckout {
             MercadoPagoCheckout mercadoPagoCheckout = new MercadoPagoCheckout(this);
             mercadoPagoCheckout.startForResult(MercadoPagoCheckout.PAYMENT_RESULT_CODE);
         }
+
     }
 }

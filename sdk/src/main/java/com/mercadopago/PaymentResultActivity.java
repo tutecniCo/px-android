@@ -1,18 +1,13 @@
 package com.mercadopago;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-import com.mercadopago.components.Component;
-import com.mercadopago.components.ComponentManager;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
-import com.mercadopago.paymentresult.CongratsHeaderComponent;
-import com.mercadopago.paymentresult.PaymentResultNavigator;
-import com.mercadopago.paymentresult.PaymentResultPropsMutator;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentResultPresenter;
@@ -20,10 +15,11 @@ import com.mercadopago.providers.PaymentResultProvider;
 import com.mercadopago.providers.PaymentResultProviderImpl;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
+import com.mercadopago.views.PaymentResultView;
 
 import java.math.BigDecimal;
 
-public class PaymentResultActivity extends AppCompatActivity implements PaymentResultNavigator {
+public class PaymentResultActivity extends Activity implements PaymentResultView {
 
     public static final String PAYER_ACCESS_TOKEN_BUNDLE = "mMerchantPublicKey";
     public static final String MERCHANT_PUBLIC_KEY_BUNDLE = "mpayerAccessToken";
@@ -43,37 +39,15 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
     private PaymentResultScreenPreference mPaymentResultScreenPreference;
     private ServicePreference mServicePreference;
 
-    private ComponentManager componentManager;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final PaymentResultPropsMutator mutator = new PaymentResultPropsMutator();
-
         if (savedInstanceState == null) {
-            //TODO revisar
-            mPresenter = new PaymentResultPresenter(this);
-//            getActivityParameters();
-
-            //Configure
-            PaymentResultProvider provider = new PaymentResultProviderImpl(this);
-            mPresenter.attachView(mutator);
-            mPresenter.attachResourcesProvider(provider);
-//            mPresenter.initialize();
+            mPresenter = new PaymentResultPresenter();
+            getActivityParameters();
+            configurePresenter();
+            mPresenter.initialize();
         }
-
-        componentManager = new ComponentManager(this);
-        final Component root = new CongratsHeaderComponent(componentManager);
-
-        componentManager.setActionsListener(mPresenter);
-        componentManager.setComponent(root);
-        componentManager.setMutator(mutator);
-
-        // test
-        getActivityParameters();
-        mPresenter.initialize();
     }
 
     @Override
@@ -213,6 +187,12 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         } else {
             finishWithCancelResult(data);
         }
+    }
+
+    private void configurePresenter() {
+        PaymentResultProvider provider = new PaymentResultProviderImpl(this);
+        mPresenter.attachView(this);
+        mPresenter.attachResourcesProvider(provider);
     }
 
     private void resolveTimerObserverResult(int resultCode) {
