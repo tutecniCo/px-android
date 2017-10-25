@@ -1,3 +1,4 @@
+/*
 package com.mercadopago.services;
 
 import com.mercadopago.adapters.MPCall;
@@ -13,9 +14,11 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+*/
 /**
  * Created by mromar on 10/20/17.
- */
+ *//*
+
 
 public interface GatewayService {
 
@@ -33,4 +36,4 @@ public interface GatewayService {
 
     @PUT("/v1/card_tokens/{token_id}")
     MPCall<Token> getToken(@Path(value = "token_id") String tokenId, @Query("public_key") String publicKey, @Query("access_token") String privateKey, @Body SecurityCodeIntent securityCodeIntent);
-}
+}*/
