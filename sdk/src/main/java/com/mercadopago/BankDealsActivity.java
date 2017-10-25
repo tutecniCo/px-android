@@ -13,7 +13,7 @@ import com.mercadopago.adapters.BankDealsAdapter;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
-import com.mercadopago.core.MercadoPagoServices;
+import com.mercadopago.core.MercadoPagoServicesAdapter;
 import com.mercadopago.decorations.DividerItemDecoration;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.BankDeal;
@@ -36,7 +36,7 @@ public class BankDealsActivity extends MercadoPagoActivity {
     protected String mMerchantPublicKey;
 
     // Local vars
-    protected MercadoPagoServices mMercadoPago;
+    protected MercadoPagoServicesAdapter mMercadoPago;
     protected RecyclerView mRecyclerView;
     protected DecorationPreference mDecorationPreference;
     protected Toolbar mToolbar;
@@ -48,7 +48,7 @@ public class BankDealsActivity extends MercadoPagoActivity {
     protected void onValidStart() {
         trackInitialScreen();
 
-        mMercadoPago = new MercadoPagoServices.Builder()
+        mMercadoPago = new MercadoPagoServicesAdapter.Builder()
                 .setContext(getActivity())
                 .setPublicKey(mMerchantPublicKey)
                 .setPrivateKey(mPayerAccessToken)

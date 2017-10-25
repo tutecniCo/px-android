@@ -9,7 +9,6 @@ import com.mercadopago.model.Item;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.Site;
 import com.mercadopago.util.CurrenciesUtil;
-import com.mercadopago.util.TextUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class CheckoutPreference {
     private Payer payer;
 
     @SerializedName("payment_methods")
-    private PaymentPreference paymentPreference;
+    private com.mercadopago.preferences.PaymentPreference paymentPreference;
 
     private Date expirationDateTo;
     private Date expirationDateFrom;
@@ -48,7 +47,7 @@ public class CheckoutPreference {
         payer.setAccessToken(builder.payerAccessToken);
         this.payer = payer;
 
-        PaymentPreference paymentPreference = new PaymentPreference();
+        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(builder.excludedPaymentTypes);
         paymentPreference.setExcludedPaymentMethodIds(builder.excludedPaymentMethods);
         paymentPreference.setMaxAcceptedInstallments(builder.maxInstallments);
@@ -146,7 +145,7 @@ public class CheckoutPreference {
         this.expirationDateFrom = date;
     }
 
-    public void setPaymentPreference(PaymentPreference paymentPreference) {
+    public void setPaymentPreference(com.mercadopago.preferences.PaymentPreference paymentPreference) {
         this.paymentPreference = paymentPreference;
     }
 
@@ -228,7 +227,7 @@ public class CheckoutPreference {
         }
     }
 
-    public PaymentPreference getPaymentPreference() {
+    public com.mercadopago.preferences.PaymentPreference getPaymentPreference() {
         return paymentPreference;
     }
 
@@ -349,7 +348,7 @@ public class CheckoutPreference {
             return this;
         }
 
-        public CheckoutPreference build() {
+        public com.mercadopago.preferences.CheckoutPreference build() {
 
             if (items == null || items.isEmpty())
                 throw new IllegalStateException("Items required");
@@ -359,7 +358,7 @@ public class CheckoutPreference {
                 addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
             }
 
-            return new CheckoutPreference(this);
+            return new com.mercadopago.preferences.CheckoutPreference(this);
         }
     }
 }

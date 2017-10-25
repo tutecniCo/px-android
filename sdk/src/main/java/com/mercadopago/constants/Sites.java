@@ -22,22 +22,22 @@ public class Sites {
 
     public static Site getById(String siteId) {
         Site site;
-        if (siteId.equals(Sites.ARGENTINA.getId())) {
-            site = Sites.ARGENTINA;
-        } else if (siteId.equals(Sites.BRASIL.getId())) {
-            site = Sites.BRASIL;
-        } else if (siteId.equals(Sites.CHILE.getId())) {
-            site = Sites.CHILE;
-        } else if (siteId.equals(Sites.MEXICO.getId())) {
-            site = Sites.MEXICO;
-        } else if (siteId.equals(Sites.COLOMBIA.getId())) {
-            site = Sites.COLOMBIA;
-        } else if (siteId.equals(Sites.VENEZUELA.getId())) {
-            site = Sites.VENEZUELA;
-        } else if (siteId.equals(Sites.USA.getId())) {
-            site = Sites.USA;
-        } else if (siteId.equals(Sites.PERU.getId())) {
-            site = Sites.PERU;
+        if (siteId.equals(com.mercadopago.constants.Sites.ARGENTINA.getId())) {
+            site = com.mercadopago.constants.Sites.ARGENTINA;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.BRASIL.getId())) {
+            site = com.mercadopago.constants.Sites.BRASIL;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.CHILE.getId())) {
+            site = com.mercadopago.constants.Sites.CHILE;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.MEXICO.getId())) {
+            site = com.mercadopago.constants.Sites.MEXICO;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.COLOMBIA.getId())) {
+            site = com.mercadopago.constants.Sites.COLOMBIA;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.VENEZUELA.getId())) {
+            site = com.mercadopago.constants.Sites.VENEZUELA;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.USA.getId())) {
+            site = com.mercadopago.constants.Sites.USA;
+        } else if (siteId.equals(com.mercadopago.constants.Sites.PERU.getId())) {
+            site = com.mercadopago.constants.Sites.PERU;
         } else {
             site = null;
         }

@@ -4,20 +4,18 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Modifier;
-
 public class JsonUtil {
 
-    private static JsonUtil mInstance = null;
+    private static com.mercadopago.util.JsonUtil mInstance = null;
     private Gson mGson;
 
     protected JsonUtil() {
         mGson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     }
 
-    public static JsonUtil getInstance() {
+    public static com.mercadopago.util.JsonUtil getInstance() {
         if (mInstance == null) {
-            mInstance = new JsonUtil();
+            mInstance = new com.mercadopago.util.JsonUtil();
         }
         return mInstance;
     }

@@ -23,56 +23,56 @@ public class CheckoutPreferenceTest {
 
     @Test
     public void testWhenValidatePreferenceWithTwoItemsWithDifferentCurrencyIdReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithTwoItemsWithDifferentCurrencyId();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithTwoItemsWithDifferentCurrencyId();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithTwoItemsIfOneHasCurrencyNullReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithTwoItemsOneHasCurrencyNull();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithTwoItemsOneHasCurrencyNull();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithTwoItemsWithIncorrectCurrencyReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithTwoItemsWithIncorrectCurrencyId();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithTwoItemsWithIncorrectCurrencyId();
         Assert.assertFalse(preference.itemsValid());
     }
 
     ///////////////////PAYMENTS_TYPES tests///////////////////
     public void testWhenValidatePreferenceWithAllPaymentsTypesExcludedReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithAllPaymentTypesExcluded();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithAllPaymentTypesExcluded();
         Assert.assertFalse(preference.validPaymentTypeExclusion());
     }
 
     @Test
     public void testWhenValidatePreferenceWithSomePaymentsTypesExcludedReturnTrue() {
-        CheckoutPreference preference = getPreferenceWithSomePaymentTypesExcluded();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithSomePaymentTypesExcluded();
         assertTrue(preference.validPaymentTypeExclusion());
     }
 
     ///////////////////INSTALLMENTS tests///////////////////
     @Test
     public void testWhenValidatePreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumberReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumber();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumber();
         Assert.assertFalse(preference.validInstallmentsPreference());
     }
 
     @Test
     public void testWhenValidatePreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumberReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber();
         Assert.assertFalse(preference.validInstallmentsPreference());
     }
 
     @Test
     public void testWhenValidatePreferenceWithMaxInstallmentsNumberPositiveReturnTrue() {
-        CheckoutPreference preference = getPreferenceWithPositiveInstallmentsNumber();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithPositiveInstallmentsNumber();
         assertTrue(preference.validInstallmentsPreference());
     }
 
     @Test
     public void testWhenValidatePreferenceWithNegativeMaxInstallmentsNumberReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNegativeInstallmentsNumbers();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNegativeInstallmentsNumbers();
         Assert.assertFalse(preference.validInstallmentsPreference());
     }
 
@@ -80,7 +80,7 @@ public class CheckoutPreferenceTest {
 
     @Test
     public void testWhenValidatePreferenceValidNoThrowExceptionReturnTrue() {
-        CheckoutPreference preference = getPreferenceWithOneItemValidActiveAndSomePaymentTypesExcluded();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithOneItemValidActiveAndSomePaymentTypesExcluded();
         Boolean valid = true;
 
         try {
@@ -95,7 +95,7 @@ public class CheckoutPreferenceTest {
 
     @Test
     public void testWhenValidatePreferenceWithAllPaymentTypesExcludedThrowExceptionReturnTrue() {
-        CheckoutPreference preference = getPreferenceWithOneItemValidActiveButAllPaymentTypesExcluded();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithOneItemValidActiveButAllPaymentTypesExcluded();
 
         try {
             preference.validate();
@@ -106,7 +106,7 @@ public class CheckoutPreferenceTest {
 
     @Test
     public void testWhenValidatePreferenceWithInstallmentsDefaultNumberAndInstallmentsNumberNegativeThrowExceptionReturnTrue() {
-        CheckoutPreference preference = getPreferenceWithOneItemValidButInstallmenstsDefaultNumberAndInstallmentsNumberNegative();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithOneItemValidButInstallmenstsDefaultNumberAndInstallmentsNumberNegative();
 
         try {
             preference.validate();
@@ -117,7 +117,7 @@ public class CheckoutPreferenceTest {
 
     @Test
     public void testWhenValidatePreferenceWithPreferenceExpiredThrowExceptionReturnTrue() {
-        CheckoutPreference preference = getPreferenceWithOneItemValidButPreferenceExpired();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithOneItemValidButPreferenceExpired();
 
         try {
             preference.validate();
@@ -128,7 +128,7 @@ public class CheckoutPreferenceTest {
 
     @Test (expected = IllegalStateException.class)
     public void testWhenValidatePreferenceWithNoItemsThrowException() {
-        new CheckoutPreference.Builder()
+        new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .build();
@@ -138,49 +138,49 @@ public class CheckoutPreferenceTest {
     ///////////////////ITEMS tests///////////////////
     @Test
     public void testWhenValidatePreferenceWithTwoItemsWithoutUnitPriceReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithTwoItemsWithoutUnitPrice();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithTwoItemsWithoutUnitPrice();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithNullUnitPriceItemReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNullUnitPriceItem();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNullUnitPriceItem();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithZeroItemQuantityReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithZeroItemQuantity();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithZeroItemQuantity();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithNegativeItemQuantityReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNegativeItemQuantity();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNegativeItemQuantity();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithNullItemQuantityReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNullItemQuantity();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNullItemQuantity();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWhenValidatePreferenceWithNullItemIdReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNullItemId();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNullItemId();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test
     public void testWenValidatePreferenceWithNullItemsListReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNullItems();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNullItems();
         Assert.assertFalse(preference.itemsValid());
     }
 
     @Test (expected = IllegalStateException.class)
     public void testWhenValidatePreferenceWithEmptyItemsListThrowException() {
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItems(new ArrayList<Item>())
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -191,41 +191,41 @@ public class CheckoutPreferenceTest {
     ///////////////////DATES tests///////////////////
     @Test
     public void testWhenPreferenceIsActiveReturnTrue() {
-        CheckoutPreference preference = getActivePreference();
+        com.mercadopago.preferences.CheckoutPreference preference = getActivePreference();
         assertTrue(preference.isActive());
     }
 
     @Test
     public void testWhenPreferenceIsNotActiveReturnFalse() {
-        CheckoutPreference preference = getInactivePreference();
+        com.mercadopago.preferences.CheckoutPreference preference = getInactivePreference();
         Assert.assertFalse(preference.isActive());
     }
 
     @Test
     public void testWhenPreferenceIsNotExpiredReturnFalse() {
-        CheckoutPreference preference = getNotExpiredPreference();
+        com.mercadopago.preferences.CheckoutPreference preference = getNotExpiredPreference();
         Assert.assertFalse(preference.isExpired());
     }
 
     @Test
     public void testWhenPreferenceIsExpiredReturnTrue() {
-        CheckoutPreference preference = getExpiredPreference();
+        com.mercadopago.preferences.CheckoutPreference preference = getExpiredPreference();
 
         assertTrue(preference.isExpired());
     }
 
     @Test
     public void testWhenValidatePreferenceWithNullExpirationDateToReturnFalse() {
-        CheckoutPreference preference = getPreferenceWithNullExpirationDateTo();
+        com.mercadopago.preferences.CheckoutPreference preference = getPreferenceWithNullExpirationDateTo();
         Assert.assertFalse(preference.isExpired());
     }
 
     ///////////////////Getters preferences with different DATES///////////////////
-    private CheckoutPreference getActivePreference() {
+    private com.mercadopago.preferences.CheckoutPreference getActivePreference() {
         Date pastDate = new Date();
         pastDate.setTime((new Date().getTime()) - 1000 * 60 * 60);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(new Item("item", 1, BigDecimal.ONE))
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -235,10 +235,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getInactivePreference() {
+    private com.mercadopago.preferences.CheckoutPreference getInactivePreference() {
         GregorianCalendar calendar = new GregorianCalendar(2100, 3, 3); //Date should be after that today
         Date date = calendar.getTime();
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(new Item("item", 1, BigDecimal.ONE))
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -247,10 +247,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getNotExpiredPreference() {
+    private com.mercadopago.preferences.CheckoutPreference getNotExpiredPreference() {
         GregorianCalendar calendar = new GregorianCalendar(2100, 7, 3); //Date should be after that today
         Date date = calendar.getTime();
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(new Item("item", 1, BigDecimal.ONE))
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -259,10 +259,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getExpiredPreference() {
+    private com.mercadopago.preferences.CheckoutPreference getExpiredPreference() {
         GregorianCalendar calendar = new GregorianCalendar(2015, 3, 3); //Date should be before that today
         Date date = calendar.getTime();
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .addItem(new Item("item", 1, BigDecimal.ONE))
                 .setSite(Sites.ARGENTINA)
@@ -271,16 +271,16 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNullExpirationDateFrom() {
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNullExpirationDateFrom() {
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .build();
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNullExpirationDateTo() {
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNullExpirationDateTo() {
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .addItem(new Item("item", 1, BigDecimal.ONE))
                 .setSite(Sites.ARGENTINA)
@@ -289,14 +289,14 @@ public class CheckoutPreferenceTest {
     }
 
     ///////////////////Getters preferences with different CURRENCY///////////////////
-    private CheckoutPreference getPreferenceWithTwoItemsWithSameCurrencyId() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithTwoItemsWithSameCurrencyId() {
         Item itemA = new Item("123", BigDecimal.TEN);
         Item itemB = new Item("456", BigDecimal.TEN);
 
         itemA.setCurrencyId("ARS");
         itemB.setCurrencyId("ARS");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .addItem(itemA)
@@ -306,14 +306,14 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithTwoItemsWithDifferentCurrencyId() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithTwoItemsWithDifferentCurrencyId() {
         Item itemA = new Item("123", BigDecimal.TEN);
         Item itemB = new Item("456", BigDecimal.TEN);
 
         itemA.setCurrencyId("US$");
         itemB.setCurrencyId("ARS");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .addItem(itemA)
@@ -323,13 +323,13 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithTwoItemsOneHasCurrencyNull() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithTwoItemsOneHasCurrencyNull() {
         Item itemA = new Item("123", BigDecimal.ONE);
         Item itemB = new Item("123", BigDecimal.TEN);
 
         itemA.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .addItem(itemA)
@@ -339,14 +339,14 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithTwoItemsWithIncorrectCurrencyId() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithTwoItemsWithIncorrectCurrencyId() {
         Item itemA = new Item("123", BigDecimal.TEN);
         Item itemB = new Item("456", BigDecimal.TEN);
 
         itemA.setCurrencyId("USD");
         itemB.setCurrencyId("PesoARG");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .addItem(itemA)
@@ -357,14 +357,14 @@ public class CheckoutPreferenceTest {
     }
 
     ///////////////////Getters preferences with different ITEMS///////////////////
-    private CheckoutPreference getPreferenceWithTwoItems() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithTwoItems() {
         Item itemA = new Item("123", BigDecimal.TEN);
         Item itemB = new Item("456", BigDecimal.TEN);
 
         itemA.setCurrencyId("USD");
         itemB.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .addItem(itemA)
@@ -374,11 +374,11 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithTwoItemsWithoutUnitPrice() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithTwoItemsWithoutUnitPrice() {
         Item itemA = new Item("123", BigDecimal.TEN);
         Item itemB = new Item("456", BigDecimal.TEN);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .addItem(itemA)
@@ -388,12 +388,12 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNegativeUnitPriceItem() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNegativeUnitPriceItem() {
         Item item = new Item("123", BigDecimal.TEN);
 
         item.setUnitPrice(new BigDecimal(-1));
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -402,11 +402,11 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNullUnitPriceItem() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNullUnitPriceItem() {
 
         Item item = new Item("123", null);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -415,10 +415,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithZeroItemQuantity() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithZeroItemQuantity() {
         Item item = new Item("123", BigDecimal.ZERO);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -427,10 +427,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNegativeItemQuantity() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNegativeItemQuantity() {
         Item item = new Item("123", BigDecimal.ONE.negate());
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -439,10 +439,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNullItemQuantity() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNullItemQuantity() {
         Item item = new Item("123", null);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -451,10 +451,10 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNullItemId() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNullItemId() {
         Item item = new Item("123", BigDecimal.ONE.negate());
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -463,8 +463,8 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNullItems() {
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNullItems() {
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(new Item("item", 1, BigDecimal.ONE))
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -474,8 +474,8 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithEmptyItems() {
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithEmptyItems() {
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
                 .build();
@@ -483,7 +483,7 @@ public class CheckoutPreferenceTest {
     }
 
     ///////////////////Getters preferences with different PAYMENTS_TYPES///////////////////
-    private CheckoutPreference getPreferenceWithAllPaymentTypesExcluded() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithAllPaymentTypesExcluded() {
 
         ArrayList<String> paymentTypes= new ArrayList<>();
         Item item = new Item("123", BigDecimal.ONE);
@@ -492,7 +492,7 @@ public class CheckoutPreferenceTest {
 
         item.setUnitPrice(new BigDecimal(2));
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(item)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -502,13 +502,13 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithSomePaymentTypesExcluded() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithSomePaymentTypesExcluded() {
 
         Item itemA = new Item("123", BigDecimal.ONE);
         itemA.setCurrencyId("USD");
 
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -521,13 +521,13 @@ public class CheckoutPreferenceTest {
     }
 
     ///////////////////Getters preferences with different INSTALLMENT///////////////////
-    private CheckoutPreference getPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber() {
         Item itemA = new Item("123", BigDecimal.ONE);
 
         itemA.setUnitPrice(new BigDecimal(2));
         itemA.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -538,12 +538,12 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumber() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithPositiveDefaultInstallmentsNumberAndNegativeMaxInstallmentsNumber() {
 
         Item itemA = new Item("123", BigDecimal.ONE);
         itemA.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("email@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -554,13 +554,13 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithPositiveInstallmentsNumber() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithPositiveInstallmentsNumber() {
 
         Item itemA = new Item("123", BigDecimal.ONE);
         itemA.setUnitPrice(new BigDecimal(2));
         itemA.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -571,12 +571,12 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithNegativeInstallmentsNumbers() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithNegativeInstallmentsNumbers() {
         Item itemA = new Item("123", BigDecimal.ONE);
         itemA.setUnitPrice(new BigDecimal(2));
         itemA.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -588,7 +588,7 @@ public class CheckoutPreferenceTest {
     }
 
     ///////////////////Getters preferences with different EXCEPTIONS///////////////////
-    private CheckoutPreference getPreferenceWithOneItemValidActiveAndSomePaymentTypesExcluded() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithOneItemValidActiveAndSomePaymentTypesExcluded() {
 
         ArrayList<String> paymentTypes= new ArrayList<>();
         Item itemA = new Item("123", BigDecimal.ONE);
@@ -599,7 +599,7 @@ public class CheckoutPreferenceTest {
         Date pastDate = new Date();
         pastDate.setTime((new Date().getTime()) - 1000 * 60 * 60);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -614,7 +614,7 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithOneItemValidActiveButAllPaymentTypesExcluded() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithOneItemValidActiveButAllPaymentTypesExcluded() {
 
         ArrayList<String> paymentTypes= new ArrayList<>();
         Item itemA = new Item("123", BigDecimal.ONE);
@@ -625,7 +625,7 @@ public class CheckoutPreferenceTest {
         Date pastDate = new Date();
         pastDate.setTime((new Date().getTime()) - 1000 * 60 * 60);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -637,7 +637,7 @@ public class CheckoutPreferenceTest {
     }
 
 
-    private CheckoutPreference getPreferenceWithOneItemValidButInstallmenstsDefaultNumberAndInstallmentsNumberNegative() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithOneItemValidButInstallmenstsDefaultNumberAndInstallmentsNumberNegative() {
 
         Item itemA = new Item("123", BigDecimal.ONE);
 
@@ -647,7 +647,7 @@ public class CheckoutPreferenceTest {
         Date pastDate = new Date();
         pastDate.setTime((new Date().getTime()) - 1000 * 60 * 60);
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -659,7 +659,7 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithOneItemValidButPreferenceExpired() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithOneItemValidButPreferenceExpired() {
         Item itemA = new Item("123", BigDecimal.ONE);
 
         itemA.setUnitPrice(new BigDecimal(2));
@@ -668,7 +668,7 @@ public class CheckoutPreferenceTest {
         GregorianCalendar calendar = new GregorianCalendar(2015, 3, 3); //Date should be before that today
         Date date = calendar.getTime();
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)
@@ -678,14 +678,14 @@ public class CheckoutPreferenceTest {
         return preference;
     }
 
-    private CheckoutPreference getPreferenceWithOneItemValidButPreferenceInactive() {
+    private com.mercadopago.preferences.CheckoutPreference getPreferenceWithOneItemValidButPreferenceInactive() {
 
         Item itemA = new Item("123", BigDecimal.ONE);
 
         itemA.setUnitPrice(new BigDecimal(2));
         itemA.setCurrencyId("USD");
 
-        CheckoutPreference preference = new CheckoutPreference.Builder()
+        com.mercadopago.preferences.CheckoutPreference preference = new com.mercadopago.preferences.CheckoutPreference.Builder()
                 .addItem(itemA)
                 .setPayerEmail("test@gmail.com")
                 .setSite(Sites.ARGENTINA)

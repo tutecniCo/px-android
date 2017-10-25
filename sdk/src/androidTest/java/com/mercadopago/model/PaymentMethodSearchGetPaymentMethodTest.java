@@ -31,7 +31,7 @@ public class PaymentMethodSearchGetPaymentMethodTest {
         });
     }
 
-    public PaymentMethodSearch paymentMethodSearch;
+    public com.mercadopago.model.PaymentMethodSearch paymentMethodSearch;
 
     public String mItemId;
 
@@ -49,7 +49,7 @@ public class PaymentMethodSearchGetPaymentMethodTest {
 
     @Test
     public void testGetPaymentMethodByItem() {
-        PaymentMethodSearchItem item = new PaymentMethodSearchItem();
+        com.mercadopago.model.PaymentMethodSearchItem item = new com.mercadopago.model.PaymentMethodSearchItem();
         item.setId(mItemId);
 
         PaymentMethod paymentMethod = paymentMethodSearch.getPaymentMethodBySearchItem(item);
@@ -62,7 +62,7 @@ public class PaymentMethodSearchGetPaymentMethodTest {
         }
     }
 
-    private PaymentMethodSearch getPaymentMethodSearch() {
+    private com.mercadopago.model.PaymentMethodSearch getPaymentMethodSearch() {
         String paymentMethodSearchJson = StaticMock.getPaymentMethodSearchWithoutCustomOptionsAsJson();
         return JsonUtil.getInstance().fromJson(paymentMethodSearchJson, PaymentMethodSearch.class);
     }

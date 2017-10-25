@@ -155,7 +155,7 @@ public class CurrenciesUtil {
     }
 
     public static boolean isValidCurrency(String currencyId) {
-        return !TextUtil.isEmpty(currencyId) && currenciesList.containsKey(currencyId);
+        return !com.mercadopago.util.TextUtil.isEmpty(currencyId) && currenciesList.containsKey(currencyId);
     }
 
     public static List<Currency> getAllCurrencies() {

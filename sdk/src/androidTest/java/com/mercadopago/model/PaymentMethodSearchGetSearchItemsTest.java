@@ -31,7 +31,7 @@ public class PaymentMethodSearchGetSearchItemsTest {
         });
     }
 
-    public PaymentMethodSearch paymentMethodSearch;
+    public com.mercadopago.model.PaymentMethodSearch paymentMethodSearch;
 
     public String mItemId;
 
@@ -49,11 +49,11 @@ public class PaymentMethodSearchGetSearchItemsTest {
 
     @Test
     public void testGetItemByPaymentMethod() {
-        PaymentMethod paymentMethod = new PaymentMethod();
+        com.mercadopago.model.PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId(mPaymentMethodId);
         paymentMethod.setPaymentTypeId(mPaymentTypeId);
 
-        PaymentMethodSearchItem item = paymentMethodSearch.getSearchItemByPaymentMethod(paymentMethod);
+        com.mercadopago.model.PaymentMethodSearchItem item = paymentMethodSearch.getSearchItemByPaymentMethod(paymentMethod);
 
         if(item != null) {
             Assert.assertEquals(mItemId, item.getId());
@@ -63,7 +63,7 @@ public class PaymentMethodSearchGetSearchItemsTest {
     }
 
 
-    private PaymentMethodSearch getPaymentMethodSearch() {
+    private com.mercadopago.model.PaymentMethodSearch getPaymentMethodSearch() {
         String paymentMethodSearchJson = StaticMock.getPaymentMethodSearchWithoutCustomOptionsAsJson();
         return JsonUtil.getInstance().fromJson(paymentMethodSearchJson, PaymentMethodSearch.class);
 
