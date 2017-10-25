@@ -42,10 +42,10 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
         }
     }
 
-    public void setMutator(Mutator mutator) {
-        this.mutator = mutator;
-        this.mutator.setPropsListener(this);
-    }
+//    public void setMutator(Mutator mutator) {
+//        this.mutator = mutator;
+//        this.mutator.setPropsListener(this);
+//    }
 
     @Override
     public void onProps(T props) {
