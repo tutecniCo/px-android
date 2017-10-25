@@ -15,7 +15,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testConstructor() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         assertTrue(cardToken.getCardNumber().equals(StaticMock.DUMMY_CARD_NUMBER));
         assertTrue(cardToken.getExpirationMonth() == StaticMock.DUMMY_EXPIRATION_MONTH);
         assertTrue(cardToken.getExpirationYear() == StaticMock.DUMMY_EXPIRATION_YEAR_LONG);
@@ -27,14 +27,14 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testValidate() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validate(true));
     }
 
     public void testValidateNoSecurityCode() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validate(false));
     }
@@ -42,14 +42,14 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     // * Card number
     public void testCardNumber() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validateCardNumber());
     }
 
     public void testCardNumberEmpty() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("");
 
         assertTrue(!cardToken.validateCardNumber());
@@ -57,7 +57,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberMinLength() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("4444");
 
         assertTrue(!cardToken.validateCardNumber());
@@ -65,7 +65,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberMaxLength() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("44440000444400004444");
 
         assertTrue(!cardToken.validateCardNumber());
@@ -73,8 +73,8 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberWithPaymentMethod() {
 
-        CardToken cardToken = StaticMock.getCardToken();
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateCardNumber(paymentMethod);
@@ -85,9 +85,9 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberWithPaymentMethodEmptyCardNumber() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("");
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateCardNumber(paymentMethod);
@@ -102,9 +102,9 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberWithPaymentMethodInvalidBin() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("5300888800009999");
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateCardNumber(paymentMethod);
@@ -119,9 +119,9 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberWithPaymentMethodInvalidLength() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("466057001125");
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateCardNumber(paymentMethod);
@@ -136,9 +136,9 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testCardNumberWithPaymentMethodInvalidLuhn() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("4660888888888888");
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateCardNumber(paymentMethod);
@@ -154,14 +154,14 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     // * Security code
     public void testSecurityCode() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validateSecurityCode());
     }
 
     public void testSecurityCodeEmpty() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setSecurityCode("");
 
         assertTrue(!cardToken.validateSecurityCode());
@@ -169,7 +169,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testSecurityCodeMinLength() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setSecurityCode("4");
 
         assertTrue(!cardToken.validateSecurityCode());
@@ -177,7 +177,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testSecurityCodeMaxLength() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setSecurityCode("44444");
 
         assertTrue(!cardToken.validateSecurityCode());
@@ -185,8 +185,8 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testSecurityCodeWithPaymentMethod() {
 
-        CardToken cardToken = StaticMock.getCardToken();
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateSecurityCode(paymentMethod);
@@ -197,9 +197,9 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testSecurityCodeWithPaymentMethodInvalidBin() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("5300888800009999");
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
+        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
             cardToken.validateSecurityCode(paymentMethod);
@@ -214,7 +214,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
 
     public void testSecurityCodeWithPaymentMethodInvalidLength() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setSecurityCode("4444");
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
@@ -237,7 +237,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDate() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validateExpiryDate());
     }
@@ -245,7 +245,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDateShortYear() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setExpirationYear(18);
 
         assertTrue(cardToken.validateExpiryDate());
@@ -254,7 +254,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDateNullMonth() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setExpirationMonth(null);
 
         assertFalse(cardToken.validateExpiryDate());
@@ -263,7 +263,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDateWrongMonth() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setExpirationMonth(13);
 
         assertFalse(cardToken.validateExpiryDate());
@@ -272,7 +272,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDateNullYear() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setExpirationYear(null);
 
         assertFalse(cardToken.validateExpiryDate());
@@ -281,7 +281,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDateWrongYear() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setExpirationYear(2000);
 
         assertFalse(cardToken.validateExpiryDate());
@@ -290,7 +290,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testExpiryDateWrongShortYear() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setExpirationYear(10);
 
         assertFalse(cardToken.validateExpiryDate());
@@ -301,7 +301,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentification() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validateIdentification());
     }
@@ -309,7 +309,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNullCardholder() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardholder(null);
 
         assertFalse(cardToken.validateIdentification());
@@ -318,7 +318,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNullIdentification() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.getCardholder().setIdentification(null);
 
         assertFalse(cardToken.validateIdentification());
@@ -327,7 +327,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationEmptyType() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.getCardholder().getIdentification().setType("");
 
         assertFalse(cardToken.validateIdentification());
@@ -336,7 +336,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationEmptyNumber() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.getCardholder().getIdentification().setNumber("");
 
         assertFalse(cardToken.validateIdentification());
@@ -345,9 +345,9 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNumber() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
-        IdentificationType type = StaticMock.getIdentificationType();
+        com.mercadopago.model.IdentificationType type = StaticMock.getIdentificationType();
 
         assertTrue(cardToken.validateIdentificationNumber(type));
     }
@@ -355,8 +355,8 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNumberWrongLength() {
 
-        CardToken cardToken;
-        IdentificationType type;
+        com.mercadopago.model.CardToken cardToken;
+        com.mercadopago.model.IdentificationType type;
 
         cardToken = StaticMock.getCardToken();
         cardToken.getCardholder().getIdentification().setNumber("123456");
@@ -372,7 +372,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNumberNullIdType() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validateIdentificationNumber(null));
     }
@@ -380,8 +380,8 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNumberNullCardholderValues() {
 
-        CardToken cardToken;
-        IdentificationType type;
+        com.mercadopago.model.CardToken cardToken;
+        com.mercadopago.model.IdentificationType type;
 
         cardToken = StaticMock.getCardToken();
         cardToken.setCardholder(null);
@@ -402,7 +402,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testIdentificationNumberNullMinMaxLength() {
 
-        CardToken cardToken;
+        com.mercadopago.model.CardToken cardToken;
         IdentificationType type;
 
         cardToken = StaticMock.getCardToken();
@@ -421,7 +421,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testCardholderName() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
 
         assertTrue(cardToken.validateCardholderName());
     }
@@ -429,7 +429,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testCardholderNameEmpty() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.getCardholder().setName("");
 
         assertFalse(cardToken.validateCardholderName());
@@ -438,7 +438,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testCardholderNameNull() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.getCardholder().setName(null);
 
         assertFalse(cardToken.validateCardholderName());
@@ -447,7 +447,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testCardholderNameCardholderNull() {
 
-        CardToken cardToken = StaticMock.getCardToken();
+        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardholder(null);
 
         assertFalse(cardToken.validateCardholderName());
@@ -458,19 +458,19 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
     
     public void testLuhn() {
 
-        assertTrue(CardToken.checkLuhn(StaticMock.DUMMY_CARD_NUMBER));
+        assertTrue(com.mercadopago.model.CardToken.checkLuhn(StaticMock.DUMMY_CARD_NUMBER));
     }
 
     
     public void testLuhnNullOrEmptyCardNumber() {
 
-        assertFalse(CardToken.checkLuhn(null));
-        assertFalse(CardToken.checkLuhn(""));
+        assertFalse(com.mercadopago.model.CardToken.checkLuhn(null));
+        assertFalse(com.mercadopago.model.CardToken.checkLuhn(""));
     }
 
     
     public void testLuhnWrongCardNumber() {
 
-        assertFalse(CardToken.checkLuhn("1111000000000000"));
+        assertFalse(com.mercadopago.model.CardToken.checkLuhn("1111000000000000"));
     }
 }

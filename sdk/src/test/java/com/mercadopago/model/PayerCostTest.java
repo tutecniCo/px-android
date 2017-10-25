@@ -13,7 +13,7 @@ public class PayerCostTest {
 
     @Test
     public void substringTEARateWhenGetTea() {
-        PayerCost payerCost = getPayerCostWithLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithLabels();
 
         String tea = "69,73%";
         assertTrue(payerCost.getTEAPercent().equals(tea));
@@ -21,7 +21,7 @@ public class PayerCostTest {
 
     @Test
     public void substringCFTRateWhenGetCft() {
-        PayerCost payerCost = getPayerCostWithLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithLabels();
 
         String cft = "88,33%";
         assertTrue(payerCost.getCFTPercent().equals(cft));
@@ -29,49 +29,49 @@ public class PayerCostTest {
 
     @Test
     public void hasRatesTrueWhenPayerCostHasLabelRates() {
-        PayerCost payerCost = getPayerCostWithLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithLabels();
 
         assertTrue(payerCost.hasRates());
     }
 
     @Test
     public void hasRatesFalseWhenPayerCostHasNotLabelRates() {
-        PayerCost payerCost = getPayerCostWithoutLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithoutLabels();
 
         assertFalse(payerCost.hasRates());
     }
 
     @Test
     public void hasTEATrueWhenPayerCostHasTEALabel() {
-        PayerCost payerCost = getPayerCostWithLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithLabels();
 
         assertTrue(payerCost.hasTEA());
     }
 
     @Test
     public void hasCFTTrueWhenPayerCostHasCFTLabel() {
-        PayerCost payerCost = getPayerCostWithLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithLabels();
 
         assertTrue(payerCost.hasCFT());
     }
 
     @Test
     public void hasTEAFalseWhenPayerCostHasNotTEALabel() {
-        PayerCost payerCost = getPayerCostWithoutLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithoutLabels();
 
         assertFalse(payerCost.hasTEA());
     }
 
     @Test
     public void hasCFTFalseWhenPayerCostHasNotCFTLabel() {
-        PayerCost payerCost = getPayerCostWithoutLabels();
+        com.mercadopago.model.PayerCost payerCost = getPayerCostWithoutLabels();
 
         assertFalse(payerCost.hasCFT());
     }
 
-    private PayerCost getPayerCostWithLabels() {
+    private com.mercadopago.model.PayerCost getPayerCostWithLabels() {
         String label = "CFT_88,33%|TEA_69,73%";
-        PayerCost payerCost = new PayerCost();
+        com.mercadopago.model.PayerCost payerCost = new com.mercadopago.model.PayerCost();
         List<String> labels = new ArrayList<String>();
 
         payerCost.setInstallments(3);
@@ -83,8 +83,8 @@ public class PayerCostTest {
         return payerCost;
     }
 
-    private PayerCost getPayerCostWithoutLabels() {
-        PayerCost payerCost = new PayerCost();
+    private com.mercadopago.model.PayerCost getPayerCostWithoutLabels() {
+        com.mercadopago.model.PayerCost payerCost = new com.mercadopago.model.PayerCost();
 
         payerCost.setInstallments(3);
         payerCost.setInstallmentRate(new BigDecimal(10.97));

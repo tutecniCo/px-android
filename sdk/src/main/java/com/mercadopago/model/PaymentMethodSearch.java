@@ -10,22 +10,22 @@ import java.util.List;
  */
 public class PaymentMethodSearch {
 
-    private List<PaymentMethodSearchItem> groups;
+    private List<com.mercadopago.model.PaymentMethodSearchItem> groups;
 
     @SerializedName("custom_options")
     private List<CustomSearchItem> customSearchItems;
 
-    private List<PaymentMethod> paymentMethods;
+    private List<com.mercadopago.model.PaymentMethod> paymentMethods;
 
-    private List<Card> cards;
+    private List<com.mercadopago.model.Card> cards;
 
     private AccountMoney accountMoney;
 
-    public List<PaymentMethodSearchItem> getGroups() {
+    public List<com.mercadopago.model.PaymentMethodSearchItem> getGroups() {
         return groups;
     }
 
-    public List<PaymentMethod> getPaymentMethods() {
+    public List<com.mercadopago.model.PaymentMethod> getPaymentMethods() {
         return paymentMethods;
     }
 
@@ -33,10 +33,10 @@ public class PaymentMethodSearch {
         return this.groups != null && !this.groups.isEmpty();
     }
 
-    public PaymentMethod getPaymentMethodBySearchItem(PaymentMethodSearchItem item) {
-        PaymentMethod requiredPaymentMethod = null;
+    public com.mercadopago.model.PaymentMethod getPaymentMethodBySearchItem(com.mercadopago.model.PaymentMethodSearchItem item) {
+        com.mercadopago.model.PaymentMethod requiredPaymentMethod = null;
         if (paymentMethods != null && item != null && item.getId() != null) {
-            for (PaymentMethod currentPaymentMethod : paymentMethods) {
+            for (com.mercadopago.model.PaymentMethod currentPaymentMethod : paymentMethods) {
                 if (itemMatchesPaymentMethod(item, currentPaymentMethod)) {
                     requiredPaymentMethod = currentPaymentMethod;
                     requiredPaymentMethod.setPaymentTypeId(getPaymentTypeIdFromItem(item, currentPaymentMethod));
@@ -46,7 +46,7 @@ public class PaymentMethodSearch {
         return requiredPaymentMethod;
     }
 
-    private String getPaymentTypeIdFromItem(PaymentMethodSearchItem item, PaymentMethod paymentMethod) {
+    private String getPaymentTypeIdFromItem(com.mercadopago.model.PaymentMethodSearchItem item, com.mercadopago.model.PaymentMethod paymentMethod) {
         //Remove payment method id from item id and the splitter
         String paymentType;
         String itemIdWithoutPaymentMethod = item.getId().replaceFirst(paymentMethod.getId(), "");
@@ -58,12 +58,12 @@ public class PaymentMethodSearch {
         return paymentType;
     }
 
-    private boolean itemMatchesPaymentMethod(PaymentMethodSearchItem item, PaymentMethod paymentMethod) {
+    private boolean itemMatchesPaymentMethod(com.mercadopago.model.PaymentMethodSearchItem item, com.mercadopago.model.PaymentMethod paymentMethod) {
         return item.getId().startsWith(paymentMethod.getId());
     }
 
-    public PaymentMethodSearchItem getSearchItemByPaymentMethod(PaymentMethod selectedPaymentMethod) {
-        PaymentMethodSearchItem requiredItem = null;
+    public com.mercadopago.model.PaymentMethodSearchItem getSearchItemByPaymentMethod(com.mercadopago.model.PaymentMethod selectedPaymentMethod) {
+        com.mercadopago.model.PaymentMethodSearchItem requiredItem = null;
         if (selectedPaymentMethod != null) {
 
             requiredItem = searchItemMatchingPaymentMethod(selectedPaymentMethod);
@@ -72,13 +72,13 @@ public class PaymentMethodSearch {
         return requiredItem;
     }
 
-    private PaymentMethodSearchItem searchItemMatchingPaymentMethod(PaymentMethod paymentMethod) {
+    private com.mercadopago.model.PaymentMethodSearchItem searchItemMatchingPaymentMethod(com.mercadopago.model.PaymentMethod paymentMethod) {
         return searchItemInList(groups, paymentMethod);
     }
 
-    private PaymentMethodSearchItem searchItemInList(List<PaymentMethodSearchItem> list, PaymentMethod paymentMethod) {
-        PaymentMethodSearchItem requiredItem = null;
-        for (PaymentMethodSearchItem currentItem : list) {
+    private com.mercadopago.model.PaymentMethodSearchItem searchItemInList(List<com.mercadopago.model.PaymentMethodSearchItem> list, com.mercadopago.model.PaymentMethod paymentMethod) {
+        com.mercadopago.model.PaymentMethodSearchItem requiredItem = null;
+        for (com.mercadopago.model.PaymentMethodSearchItem currentItem : list) {
 
             //Case like "pagofacil", without the payment type in the item id.
             if (itemMatchesPaymentMethod(currentItem, paymentMethod) && currentItem.getId().equals(paymentMethod.getId())) {
@@ -103,8 +103,8 @@ public class PaymentMethodSearch {
         return requiredItem;
     }
 
-    public PaymentMethod getPaymentMethodById(String paymentMethodId) {
-        PaymentMethod foundPaymentMethod = null;
+    public com.mercadopago.model.PaymentMethod getPaymentMethodById(String paymentMethodId) {
+        com.mercadopago.model.PaymentMethod foundPaymentMethod = null;
         if (paymentMethods != null) {
             for (PaymentMethod paymentMethod : paymentMethods) {
                 if (paymentMethod.getId().equals(paymentMethodId)) {
@@ -116,10 +116,10 @@ public class PaymentMethodSearch {
         return foundPaymentMethod;
     }
 
-    public Card getCardById(String cardId) {
-        Card foundCard = null;
+    public com.mercadopago.model.Card getCardById(String cardId) {
+        com.mercadopago.model.Card foundCard = null;
         if (cards != null) {
-            for (Card card : cards) {
+            for (com.mercadopago.model.Card card : cards) {
                 if (card.getId().equals(cardId)) {
                     foundCard = card;
                     break;
@@ -137,7 +137,7 @@ public class PaymentMethodSearch {
         return customSearchItems != null && !customSearchItems.isEmpty();
     }
 
-    public List<Card> getCards() {
+    public List<com.mercadopago.model.Card> getCards() {
         return cards;
     }
 
@@ -149,7 +149,7 @@ public class PaymentMethodSearch {
         return cards != null && !cards.isEmpty();
     }
 
-    public void setCards(List<Card> cards, String lastFourDigitsText) {
+    public void setCards(List<com.mercadopago.model.Card> cards, String lastFourDigitsText) {
         if (cards != null) {
             this.customSearchItems = new ArrayList<>();
             this.cards = new ArrayList<>();

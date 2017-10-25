@@ -16,7 +16,7 @@ public class ServicePreferenceTest {
 
     @Test
     public void testSetAggregatorAsProcessingModeAndEnableBankDealsAndEnableEmailConfirmationCell() {
-        ServicePreference servicePreference = new ServicePreference.Builder()
+        com.mercadopago.preferences.ServicePreference servicePreference = new com.mercadopago.preferences.ServicePreference.Builder()
                 .setAggregatorAsProcessingMode()
                 .build();
         assertTrue(servicePreference.getProcessingModeString().equals(ProcessingModes.AGGREGATOR));
@@ -26,7 +26,7 @@ public class ServicePreferenceTest {
 
     @Test
     public void testSetGatewayAsProcessingModeAndDisableBankDealsAndDisableEmailConfirmationCell() {
-        ServicePreference servicePreference = new ServicePreference.Builder()
+        com.mercadopago.preferences.ServicePreference servicePreference = new com.mercadopago.preferences.ServicePreference.Builder()
                 .setGatewayAsProcessingMode()
                 .build();
         assertTrue(servicePreference.getProcessingModeString().equals(ProcessingModes.GATEWAY));
@@ -36,7 +36,7 @@ public class ServicePreferenceTest {
 
     @Test
     public void testSetHybridAsProcessingModeAndDisableBankDealsAndDisableEmailConfirmationCell() {
-        ServicePreference servicePreference = new ServicePreference.Builder()
+        com.mercadopago.preferences.ServicePreference servicePreference = new com.mercadopago.preferences.ServicePreference.Builder()
                 .setHybridAsProcessingMode()
                 .build();
         assertTrue(servicePreference.getProcessingModeString().equals(ProcessingModes.HYBRID));

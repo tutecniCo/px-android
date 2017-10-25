@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 25
@@ -23,7 +22,7 @@ android {
     }
     buildTypes {
         debug {
-            testCoverageEnabled true
+            //testCoverageEnabled true
             multiDexEnabled true
             versionNameSuffix " Debug"
             debuggable true

@@ -15,7 +15,7 @@ public class PaymentMethodSearchItem {
     private String type;
     private String description;
     private String comment;
-    private List<PaymentMethodSearchItem> children;
+    private List<com.mercadopago.model.PaymentMethodSearchItem> children;
     private String childrenHeader;
     private Boolean showIcon;
 
@@ -52,11 +52,11 @@ public class PaymentMethodSearchItem {
         this.comment = comment;
     }
 
-    public List<PaymentMethodSearchItem> getChildren() {
+    public List<com.mercadopago.model.PaymentMethodSearchItem> getChildren() {
         return children;
     }
 
-    public void setChildren(List<PaymentMethodSearchItem> children) {
+    public void setChildren(List<com.mercadopago.model.PaymentMethodSearchItem> children) {
         this.children = children;
     }
 

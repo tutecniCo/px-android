@@ -31,25 +31,3 @@ allprojects {
         jcenter()
     }
 }
-
-task jacocoRootReport(type: JacocoReport) {
-    dependsOn "sdk:jacocoFullTestReport",
-            "px-tracking:jacocoFullTestReport"
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    classDirectories = files(coverageClassDirectories)
-    executionData = files(tasks.getByPath("sdk:jacocoFullTestReport").executionData,
-            tasks.getByPath("px-tracking:jacocoFullTestReport").executionData
-    )
-
-    reports {
-        html.enabled = true
-        xml.enabled = false
-        csv.enabled = false
-    }
-    onlyIf = {
-        true
-    }
-
-}

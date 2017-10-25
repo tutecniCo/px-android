@@ -53,7 +53,7 @@ android {
     }
     buildTypes {
         debug {
-            testCoverageEnabled true
+            //testCoverageEnabled true
             multiDexEnabled true
             versionNameSuffix " Debug"
             debuggable true
@@ -117,6 +117,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     devCompile project(path: ':px-tracking', configuration:'devDebug')
     prodCompile project(path: ':px-tracking', configuration:'prodDebug')
+    compile project(':px-services')
+
 }
 
 configurations {

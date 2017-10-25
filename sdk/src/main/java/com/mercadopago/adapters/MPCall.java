@@ -7,6 +7,6 @@ import com.mercadopago.callbacks.Callback;
 public interface MPCall<T> {
     void cancel();
     void enqueue(Callback<T> callback);
-    MPCall<T> clone();
+    com.mercadopago.adapters.MPCall<T> clone();
 }
 
