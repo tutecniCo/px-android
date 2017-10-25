@@ -27,6 +27,10 @@ public class HooksStore<T> {
         return checkoutHooks;
     }
 
+    public boolean hasCheckoutHooks() {
+        return checkoutHooks != null;
+    }
+
     public void setCheckoutHooks(@NonNull final CheckoutHooks checkoutHooks) {
         this.checkoutHooks = checkoutHooks;
     }
@@ -37,5 +41,13 @@ public class HooksStore<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public void setHook(Hook hook) {
+        this.hook = hook;
+    }
+
+    public Hook getHook() {
+        return hook;
     }
 }

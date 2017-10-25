@@ -8,6 +8,9 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.hooks.Hook;
+import com.mercadopago.hooks.HookActivity;
+import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -247,7 +250,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         }
     }
 
-    private void resolvePaymentVaultRequest(int resultCode, Intent data) {
+    private void resolvePaymentVaultRequest(final int resultCode, final Intent data) {
+
         if (resultCode == RESULT_OK) {
             Discount discount = JsonUtil.getInstance().fromJson(data.getStringExtra("discount"), Discount.class);
             Issuer issuer = JsonUtil.getInstance().fromJson(data.getStringExtra("issuer"), Issuer.class);
@@ -257,11 +261,13 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             Card card = JsonUtil.getInstance().fromJson(data.getStringExtra("card"), Card.class);
             Payer payer = JsonUtil.getInstance().fromJson(data.getStringExtra("payer"), Payer.class);
             PaymentMethodSearch paymentMethodSearch = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethodSearch"), PaymentMethodSearch.class);
+
             if (paymentMethodSearch != null) {
                 mCheckoutPresenter.setPaymentMethodSearch(paymentMethodSearch);
             }
 
             mCheckoutPresenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, discount, card, payer);
+
         } else if (isErrorResult(data)) {
             MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
             mCheckoutPresenter.onPaymentMethodSelectionError(mercadoPagoError);
@@ -521,5 +527,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showProgress() {
         LayoutUtil.showProgressLayout(this);
+    }
+
+    @Override
+    public void showHook(final Hook hook) {
+        startActivityForResult(HookActivity.getIntent(this),
+                MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK);
     }
 }

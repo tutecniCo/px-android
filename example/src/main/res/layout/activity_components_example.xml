@@ -247,33 +247,6 @@
                 android:onClick="resetSelection"
                 android:text="@string/reset"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/mpsdk_warm_grey"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"/>
-
-            <com.mercadopago.customviews.MPTextView
-                android:layout_marginTop="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_gravity="center"
-                android:textColor="@color/mpsdk_color_link"
-                android:textSize="15dp"
-                android:clickable="true"
-                android:onClick="resetSelection"
-                android:text="Payment method hook"/>
-
-            <com.mercadopago.customviews.MPButton
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/mpsdk_button_height"
-                android:layout_marginTop="25dp"
-                android:text="@string/pay"
-                android:onClick="onPayButtonClicked"
-                style="@style/mpsdk_button_normal"/>
-
         </LinearLayout>
 
     </ScrollView>

@@ -34,6 +34,7 @@
     <string name="checkout_description">¡Son solo 5 minutos! En ese tiempo, estarás probando Nuestro Checkout en tu aplicación.</string>
     <string name="pick_color">¡Elije un color!</string>
     <string name="dark_font">Fuente oscura</string>
+    <string name="enable_hooks">Habilitar hooks</string>
     <string name="title_activity_checkout_example">Nuestro checkout</string>
     <string name="components_title">Arma tu propio checkout</string>
     <string name="components_description">Utiliza los componentes que te provee nuestra librería para armar un checkout a tu gusto.</string>

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.Component;
+import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
 
 /**
@@ -28,10 +29,10 @@ public class PaymentMethodConfirm extends Component<PaymentMethodConfirm.Props> 
     }
 
     public static class Props {
-        private PaymentResult paymentResult;
+        private PaymentData paymentData;
 
-        public Props(final PaymentResult paymentResult) {
-            this.paymentResult = paymentResult;
+        public Props(@NonNull final PaymentData paymentData) {
+            this.paymentData = paymentData;
         }
     }
 }

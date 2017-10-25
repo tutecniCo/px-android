@@ -6,6 +6,9 @@ import com.mercadopago.controllers.Timer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.hooks.Hook;
+import com.mercadopago.hooks.HookActivity;
+import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
@@ -32,7 +35,6 @@ import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.CheckoutView;
@@ -461,6 +463,18 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private void onPaymentMethodSelected() {
         mPaymentMethodEditionRequested = false;
+
+        if (HooksStore.getInstance().hasCheckoutHooks()) {
+            final PaymentData paymentData = createPaymentData();
+            final Hook hook = HooksStore.getInstance().getCheckoutHooks()
+                    .onPaymentMethodSelected(paymentData);
+            HooksStore.getInstance().setHook(hook);
+            if (hook != null) {
+                getView().showHook(hook);
+                return;
+            }
+        }
+
         if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {

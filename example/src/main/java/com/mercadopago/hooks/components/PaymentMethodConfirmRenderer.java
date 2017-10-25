@@ -14,7 +14,7 @@ public class PaymentMethodConfirmRenderer extends Renderer<PaymentMethodConfirm>
 
     @Override
     public View render() {
-        final View view = LayoutInflater.from(context).inflate(R.layout.mpsdk_activity_hooks, null);
+        final View view = LayoutInflater.from(context).inflate(R.layout.mpsdk_example_component_hook, null);
 
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override

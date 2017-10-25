@@ -3,6 +3,7 @@ package com.mercadopago.examples.checkout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,12 +13,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.examples.R;
 import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.hooks.CheckoutHooks;
+import com.mercadopago.hooks.DefaultCheckoutHooks;
+import com.mercadopago.hooks.ExampleHooks;
+import com.mercadopago.hooks.Hook;
+import com.mercadopago.hooks.components.PaymentMethodConfirm;
+import com.mercadopago.hooks.components.PaymentMethodConfirmRenderer;
 import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentResult;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.JsonUtil;
@@ -32,6 +41,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
     private Integer mDefaultColor;
     private CheckBox mDarkFontEnabled;
+    private CheckBox mHooksEnabled;
     private ImageView mColorSample;
     private Integer mSelectedColor;
     private CheckBox mVisaExcluded;
@@ -51,6 +61,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mRegularLayout = findViewById(R.id.regularLayout);
         mDarkFontEnabled = (CheckBox) findViewById(R.id.darkFontEnabled);
+        mHooksEnabled = (CheckBox) findViewById(R.id.hooks_enabled);
         mColorSample = (ImageView) findViewById(R.id.colorSample);
         mVisaExcluded = (CheckBox) findViewById(R.id.visaExcluded);
         mCashExcluded = (CheckBox) findViewById(R.id.cashExcluded);
@@ -69,17 +80,25 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
     private void startMercadoPagoCheckout() {
 
-
         //TODO: meter el hook aca!!!!
 
-        new MercadoPagoCheckout.Builder()
-                .setActivity(this)
-                .setPublicKey(mPublicKey)
-                .setCheckoutPreference(getCheckoutPreference())
-                .setDecorationPreference(getCurrentDecorationPreference())
-                .startForPayment();
-    }
+        final MercadoPagoCheckout.Builder builder = new MercadoPagoCheckout.Builder()
+            .setActivity(this)
+            .setPublicKey(mPublicKey)
+            .setCheckoutPreference(getCheckoutPreference())
+            .setDecorationPreference(getCurrentDecorationPreference());
 
+            if (mHooksEnabled.isChecked()) {
+
+                builder.registerComponent(
+                    PaymentMethodConfirm.class,
+                    PaymentMethodConfirmRenderer.class);
+
+                builder.setCheckoutHooks(new ExampleHooks());
+            }
+
+            builder.startForPayment();
+    }
 
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference(mCheckoutPreferenceId);
@@ -131,6 +150,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         mColorSample.setBackgroundColor(mDefaultColor);
         mDarkFontEnabled.setChecked(false);
         mDarkFontEnabled.setEnabled(false);
+        mHooksEnabled.setChecked(false);
         mVisaExcluded.setChecked(false);
         mCashExcluded.setChecked(false);
     }
