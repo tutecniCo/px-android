@@ -3,7 +3,6 @@ package com.mercadopago.preferences;
 
 import com.google.gson.annotations.SerializedName;
 import com.mercadopago.constants.PaymentTypes;
-import com.mercadopago.constants.Sites;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
 import com.mercadopago.model.Item;
 import com.mercadopago.model.Payer;
@@ -120,11 +119,16 @@ public class CheckoutPreference {
         } else if (item.getCurrencyId() == null) {
             valid = false;
         }
-        } else if ((!CurrenciesUtil.isValidCurrency(item.getCurrencyId()))) {
-            valid = false;
-        }
-        return valid;
     }
+
+    else if((!CurrenciesUtil.isValidCurrency(item.getCurrencyId())))
+
+    {
+        valid = false;
+    }
+
+    return valid;
+}
 
 
     public Boolean isExpired() {
@@ -248,119 +252,119 @@ public class CheckoutPreference {
         return getId() != null;
     }
 
-    public static class Builder {
-        private List<Item> items;
-        private List<String> excludedPaymentMethods;
-        private List<String> excludedPaymentTypes;
-        private Integer maxInstallments;
-        private Integer defaultInstallments;
-        private String payerEmail;
-        private Date expirationDateTo;
-        private Date expirationDateFrom;
-        private Site localPreferenceSite;
-        private String payerAccessToken;
-        private boolean excludeAccountMoney = true;
+public static class Builder {
+    private List<Item> items;
+    private List<String> excludedPaymentMethods;
+    private List<String> excludedPaymentTypes;
+    private Integer maxInstallments;
+    private Integer defaultInstallments;
+    private String payerEmail;
+    private Date expirationDateTo;
+    private Date expirationDateFrom;
+    private Site localPreferenceSite;
+    private String payerAccessToken;
+    private boolean excludeAccountMoney = true;
 
-        public Builder() {
-            items = new ArrayList<>();
-            excludedPaymentMethods = new ArrayList<>();
-            excludedPaymentTypes = new ArrayList<>();
-        }
-
-        public Builder addItem(Item item) {
-            if (item != null) {
-                this.items.add(item);
-            }
-            return this;
-        }
-
-        public Builder addItems(List<Item> items) {
-            if (items != null) {
-                this.items.addAll(items);
-            }
-            return this;
-        }
-
-        public Builder addExcludedPaymentMethod(String paymentMethodId) {
-            if (paymentMethodId != null) {
-                this.excludedPaymentMethods.add(paymentMethodId);
-            }
-            return this;
-        }
-
-        public Builder addExcludedPaymentMethods(List<String> paymentMethodIds) {
-            if (paymentMethodIds != null) {
-                this.excludedPaymentMethods.addAll(paymentMethodIds);
-            }
-            return this;
-        }
-
-        public Builder addExcludedPaymentType(String paymentTypeId) {
-            if (paymentTypeId != null) {
-                this.excludedPaymentTypes.add(paymentTypeId);
-            }
-            return this;
-        }
-
-        public Builder addExcludedPaymentTypes(List<String> paymentTypeIds) {
-            if (paymentTypeIds != null) {
-                this.excludedPaymentTypes.addAll(paymentTypeIds);
-            }
-            return this;
-        }
-
-        public Builder setMaxInstallments(Integer maxInstallments) {
-            this.maxInstallments = maxInstallments;
-            return this;
-        }
-
-        public Builder setDefaultInstallments(Integer defaultInstallments) {
-            this.defaultInstallments = defaultInstallments;
-            return this;
-        }
-
-        public Builder setPayerEmail(String payerEmail) {
-            this.payerEmail = payerEmail;
-            return this;
-        }
-
-        public Builder setSite(Site site) {
-            this.localPreferenceSite = site;
-            return this;
-        }
-
-        public Builder setExpirationDate(Date date) {
-            this.expirationDateTo = date;
-            return this;
-        }
-
-        public Builder setActiveFrom(Date date) {
-            this.expirationDateFrom = date;
-            return this;
-        }
-
-        public Builder setPayerAccessToken(String payerAccessToken) {
-            this.payerAccessToken = payerAccessToken;
-            return this;
-        }
-
-        public Builder enableAccountMoney() {
-            this.excludeAccountMoney = false;
-            return this;
-        }
-
-        public CheckoutPreference build() {
-
-            if (items == null || items.isEmpty())
-                throw new IllegalStateException("Items required");
-            if (localPreferenceSite == null)
-                throw new IllegalStateException("Site is required");
-            if (excludeAccountMoney) {
-                addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
-            }
-
-            return new CheckoutPreference(this);
-        }
+    public Builder() {
+        items = new ArrayList<>();
+        excludedPaymentMethods = new ArrayList<>();
+        excludedPaymentTypes = new ArrayList<>();
     }
+
+    public Builder addItem(Item item) {
+        if (item != null) {
+            this.items.add(item);
+        }
+        return this;
+    }
+
+    public Builder addItems(List<Item> items) {
+        if (items != null) {
+            this.items.addAll(items);
+        }
+        return this;
+    }
+
+    public Builder addExcludedPaymentMethod(String paymentMethodId) {
+        if (paymentMethodId != null) {
+            this.excludedPaymentMethods.add(paymentMethodId);
+        }
+        return this;
+    }
+
+    public Builder addExcludedPaymentMethods(List<String> paymentMethodIds) {
+        if (paymentMethodIds != null) {
+            this.excludedPaymentMethods.addAll(paymentMethodIds);
+        }
+        return this;
+    }
+
+    public Builder addExcludedPaymentType(String paymentTypeId) {
+        if (paymentTypeId != null) {
+            this.excludedPaymentTypes.add(paymentTypeId);
+        }
+        return this;
+    }
+
+    public Builder addExcludedPaymentTypes(List<String> paymentTypeIds) {
+        if (paymentTypeIds != null) {
+            this.excludedPaymentTypes.addAll(paymentTypeIds);
+        }
+        return this;
+    }
+
+    public Builder setMaxInstallments(Integer maxInstallments) {
+        this.maxInstallments = maxInstallments;
+        return this;
+    }
+
+    public Builder setDefaultInstallments(Integer defaultInstallments) {
+        this.defaultInstallments = defaultInstallments;
+        return this;
+    }
+
+    public Builder setPayerEmail(String payerEmail) {
+        this.payerEmail = payerEmail;
+        return this;
+    }
+
+    public Builder setSite(Site site) {
+        this.localPreferenceSite = site;
+        return this;
+    }
+
+    public Builder setExpirationDate(Date date) {
+        this.expirationDateTo = date;
+        return this;
+    }
+
+    public Builder setActiveFrom(Date date) {
+        this.expirationDateFrom = date;
+        return this;
+    }
+
+    public Builder setPayerAccessToken(String payerAccessToken) {
+        this.payerAccessToken = payerAccessToken;
+        return this;
+    }
+
+    public Builder enableAccountMoney() {
+        this.excludeAccountMoney = false;
+        return this;
+    }
+
+    public CheckoutPreference build() {
+
+        if (items == null || items.isEmpty())
+            throw new IllegalStateException("Items required");
+        if (localPreferenceSite == null)
+            throw new IllegalStateException("Site is required");
+        if (excludeAccountMoney) {
+            addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
+        }
+
+        return new CheckoutPreference(this);
+    }
+}
 }
 */
