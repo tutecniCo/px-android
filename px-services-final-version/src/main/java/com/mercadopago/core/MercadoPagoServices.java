@@ -7,13 +7,20 @@ import com.mercadopago.constants.ProcessingModes;
 import com.mercadopago.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.controllers.CustomServicesHandler;
+import com.mercadopago.model.BankDeal;
+import com.mercadopago.model.IdentificationType;
+import com.mercadopago.model.Installment;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.preferences.ServicePreference;
+import com.mercadopago.services.BankDealService;
+import com.mercadopago.services.IdentificationService;
 import com.mercadopago.services.PaymentService;
 import com.mercadopago.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.util.TextUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -148,28 +155,28 @@ public class MercadoPagoServices {
 //        service.getToken(tokenId, this.mPublicKey, mPrivateKey, securityCodeIntent).enqueue(callback);
 //    }
 //
-//    public void getBankDeals(final Callback<List<BankDeal>> callback) {
-//        BankDealService service = getDefaultRetrofit().create(BankDealService.class);
-//        service.getBankDeals(this.mPublicKey, mPrivateKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
-//    }
-//
-//
-//    public void getIdentificationTypes(Callback<List<IdentificationType>> callback) {
-//        IdentificationService service = getDefaultRetrofit().create(IdentificationService.class);
-//        service.getIdentificationTypes(this.mPublicKey, this.mPrivateKey).enqueue(callback);
-//    }
-//
-//    public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, Callback<List<Installment>> callback) {
-//        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-//        service.getInstallments(this.mPublicKey, mPrivateKey, bin, amount, issuerId, paymentMethodId,
-//                mContext.getResources().getConfiguration().locale.toString(), mProcessingMode).enqueue(callback);
-//    }
-//
-//    public void getIssuers(String paymentMethodId, String bin, final Callback<List<Issuer>> callback) {
-//        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-//        service.getIssuers(this.mPublicKey, mPrivateKey, paymentMethodId, bin, mProcessingMode).enqueue(callback);
-//    }
-//
+    public void getBankDeals(final Callback<List<BankDeal>> callback) {
+        BankDealService service = getDefaultRetrofit().create(BankDealService.class);
+        service.getBankDeals(this.mPublicKey, mPrivateKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
+    }
+
+
+    public void getIdentificationTypes(Callback<List<IdentificationType>> callback) {
+        IdentificationService service = getDefaultRetrofit().create(IdentificationService.class);
+        service.getIdentificationTypes(this.mPublicKey, this.mPrivateKey).enqueue(callback);
+    }
+
+    public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, Callback<List<Installment>> callback) {
+        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
+        service.getInstallments(this.mPublicKey, mPrivateKey, bin, amount, issuerId, paymentMethodId,
+                mContext.getResources().getConfiguration().locale.toString(), mProcessingMode).enqueue(callback);
+    }
+
+    public void getIssuers(String paymentMethodId, String bin, final Callback<List<Issuer>> callback) {
+        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
+        service.getIssuers(this.mPublicKey, mPrivateKey, paymentMethodId, bin, mProcessingMode).enqueue(callback);
+    }
+
     public void getPaymentMethods(final Callback<List<PaymentMethod>> callback) {
         PaymentService service = getDefaultRetrofit().create(PaymentService.class);
         service.getPaymentMethods(this.mPublicKey, mPrivateKey).enqueue(callback);
@@ -202,7 +209,7 @@ public class MercadoPagoServices {
 //        } else
 //            throw new RuntimeException("Invalid bin: " + BIN_LENGTH + " digits needed, " + bin.length() + " found");
 //    }
-//
+
     private Retrofit getDefaultRetrofit() {
         return getDefaultRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
     }

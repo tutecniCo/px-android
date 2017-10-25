@@ -1,5 +1,6 @@
 package com.mercadopago.services;
 
+import com.mercadopago.BuildConfig;
 import com.mercadopago.adapters.MPCall;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
