@@ -19,6 +19,7 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Created by mromar on 2/24/16.
  */
+
 public class CheckoutPreferenceTest {
 
     @Test
