@@ -1,6 +1,7 @@
 package com.mercadopago.core;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Build;
 
 import com.mercadopago.adapters.ErrorHandlingCallAdapter;
@@ -8,6 +9,7 @@ import com.mercadopago.callbacks.Callback;
 import com.mercadopago.constants.ProcessingModes;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.lite.core.MercadoPagoServices;
+import com.mercadopago.lite.model.ApiException;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardToken;
@@ -199,8 +201,17 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getPaymentMethods(final Callback<List<PaymentMethod>> callback) {
-        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-        service.getPaymentMethods(this.mPublicKey, mPrivateKey).enqueue(callback);
+        mMercadoPagoServices.getPaymentMethods(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.PaymentMethod>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.PaymentMethod> paymentMethods) {
+                callback.success(ModelsAdapter.adapt(paymentMethods));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getDirectDiscount(String amount, String payerEmail, final Callback<Discount> callback) {
