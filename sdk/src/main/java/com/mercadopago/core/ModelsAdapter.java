@@ -3,6 +3,7 @@ package com.mercadopago.core;
 import com.google.gson.reflect.TypeToken;
 
 import com.mercadopago.constants.ProcessingModes;
+import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
@@ -10,6 +11,7 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 class ModelsAdapter {
@@ -65,5 +67,19 @@ class ModelsAdapter {
 
     static ApiException adapt(com.mercadopago.lite.model.ApiException apiException) {
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(apiException), ApiException.class);
+    }
+
+    static List<PaymentMethod> adapt(List<com.mercadopago.lite.model.PaymentMethod> paymentMethodsList) {
+
+        List<PaymentMethod> paymentMethods;
+        try {
+            Type listType = new TypeToken<List<PaymentMethod>>() {
+            }.getType();
+            paymentMethods = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(paymentMethodsList), listType);
+        } catch (Exception ex) {
+            paymentMethods = null;
+        }
+
+        return paymentMethods;
     }
 }
