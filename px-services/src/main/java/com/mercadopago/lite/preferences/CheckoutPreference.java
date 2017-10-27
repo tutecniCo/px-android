@@ -1,7 +1,6 @@
 package com.mercadopago.lite.preferences;
 
 import com.google.gson.annotations.SerializedName;
-
 import com.mercadopago.lite.model.Item;
 import com.mercadopago.lite.model.Payer;
 
