@@ -9,17 +9,16 @@ import android.view.View;
 
 public abstract class Renderer<T extends Component> {
 
-    protected T component;
-    protected Context context;
+    private T component;
+    private Context context;
 
-    public void setComponent(T component) {
+    public void setComponent(final T component) {
         this.component = component;
     }
 
-    public void setContext(Context context) {
+    public void setContext(final Context context) {
         this.context = context;
     }
 
-    public abstract View render();
+    public abstract View render(final Context context, final T component);
 }
-

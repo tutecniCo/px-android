@@ -6,7 +6,6 @@ import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.Component;
 import com.mercadopago.model.PaymentData;
-import com.mercadopago.model.PaymentResult;
 
 /**
  * Created by nfortuna on 10/24/17.
@@ -20,7 +19,7 @@ public class PaymentMethodConfirm extends Component<PaymentMethodConfirm.Props> 
     }
 
     @Override
-    public void applyProps(@NonNull Props props) {
+    public void applyProps(@NonNull final PaymentMethodConfirm.Props props) {
 
     }
 

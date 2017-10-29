@@ -4,16 +4,11 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 
 
-/**
- * Created by vaserber on 10/17/17.
- */
-
 public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListener<T> {
 
     private Activity activity;
     private Component root;
     private ActionsListener actionsListener;
-    private Mutator mutator;
     private Renderer renderer;
 
     public ComponentManager(@NonNull final Activity activity) {
@@ -27,7 +22,14 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
 
     public void render() {
         if (renderer != null) {
-            activity.setContentView(renderer.render());
+            activity.setContentView(renderer.render(activity, root));
+        }
+    }
+
+    public void render(final Component component) {
+        if (component != null) {
+            setComponent(component);
+            render();
         }
     }
 
@@ -41,11 +43,6 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
             actionsListener.onAction(action);
         }
     }
-
-//    public void setMutator(Mutator mutator) {
-//        this.mutator = mutator;
-//        this.mutator.setPropsListener(this);
-//    }
 
     @Override
     public void onProps(T props) {

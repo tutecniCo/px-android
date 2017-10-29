@@ -1,5 +1,6 @@
 package com.mercadopago.hooks.components;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -13,7 +14,7 @@ import com.mercadopago.examples.R;
 public class PaymentMethodConfirmRenderer extends Renderer<PaymentMethodConfirm> {
 
     @Override
-    public View render() {
+    public View render(final Context context, final PaymentMethodConfirm component) {
         final View view = LayoutInflater.from(context).inflate(R.layout.mpsdk_example_component_hook, null);
 
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
