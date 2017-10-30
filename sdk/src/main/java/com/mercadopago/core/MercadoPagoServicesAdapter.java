@@ -193,9 +193,18 @@ public class MercadoPagoServicesAdapter {
     }
 
 
-    public void getIdentificationTypes(Callback<List<IdentificationType>> callback) {
-        IdentificationService service = getDefaultRetrofit().create(IdentificationService.class);
-        service.getIdentificationTypes(this.mPublicKey, this.mPrivateKey).enqueue(callback);
+    public void getIdentificationTypes(final Callback<List<IdentificationType>> callback) {
+        mMercadoPagoServices.getIdentificationTypes(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.IdentificationType>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.IdentificationType> identificationTypes) {
+                callback.success(ModelsAdapter.adaptIdentificationTypes(identificationTypes));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, final Callback<List<Installment>> callback) {
