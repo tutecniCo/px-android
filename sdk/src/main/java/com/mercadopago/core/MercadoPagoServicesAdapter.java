@@ -196,6 +196,17 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getIssuers(String paymentMethodId, String bin, final Callback<List<Issuer>> callback) {
+        mMercadoPagoServices.getIssuers(paymentMethodId, bin, new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.Issuer>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.Issuer> issuers) {
+                callback.success(ModelsAdapter.adaptIssuers(issuers));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
         PaymentService service = getDefaultRetrofit().create(PaymentService.class);
         service.getIssuers(this.mPublicKey, mPrivateKey, paymentMethodId, bin, mProcessingMode).enqueue(callback);
     }
@@ -204,7 +215,7 @@ public class MercadoPagoServicesAdapter {
         mMercadoPagoServices.getPaymentMethods(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.PaymentMethod>>() {
             @Override
             public void success(List<com.mercadopago.lite.model.PaymentMethod> paymentMethods) {
-                callback.success(ModelsAdapter.adapt(paymentMethods));
+                callback.success(ModelsAdapter.adaptPaymentMethods(paymentMethods));
             }
 
             @Override
