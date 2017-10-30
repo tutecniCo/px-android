@@ -174,28 +174,76 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void putSecurityCode(final String tokenId, final SecurityCodeIntent securityCodeIntent, final Callback<Token> callback) {
-        GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-        service.getToken(tokenId, this.mPublicKey, mPrivateKey, securityCodeIntent).enqueue(callback);
+        com.mercadopago.lite.model.requests.SecurityCodeIntent securityCodeIntentAdapted = ModelsAdapter.adapt(securityCodeIntent);
+
+        mMercadoPagoServices.putSecurityCode(tokenId, securityCodeIntentAdapted, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Token>() {
+            @Override
+            public void success(com.mercadopago.lite.model.Token token) {
+                callback.success(ModelsAdapter.adapt(token));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getBankDeals(final Callback<List<BankDeal>> callback) {
-        BankDealService service = getDefaultRetrofit().create(BankDealService.class);
-        service.getBankDeals(this.mPublicKey, mPrivateKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
+        mMercadoPagoServices.getBankDeals(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.BankDeal>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.BankDeal> bankDeals) {
+                callback.success(ModelsAdapter.adaptBankDeals(bankDeals));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
 
-    public void getIdentificationTypes(Callback<List<IdentificationType>> callback) {
-        IdentificationService service = getDefaultRetrofit().create(IdentificationService.class);
-        service.getIdentificationTypes(this.mPublicKey, this.mPrivateKey).enqueue(callback);
+    public void getIdentificationTypes(final Callback<List<IdentificationType>> callback) {
+        mMercadoPagoServices.getIdentificationTypes(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.IdentificationType>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.IdentificationType> identificationTypes) {
+                callback.success(ModelsAdapter.adaptIdentificationTypes(identificationTypes));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
-    public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, Callback<List<Installment>> callback) {
-        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-        service.getInstallments(this.mPublicKey, mPrivateKey, bin, amount, issuerId, paymentMethodId,
-                mContext.getResources().getConfiguration().locale.toString(), mProcessingMode).enqueue(callback);
+    public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, final Callback<List<Installment>> callback) {
+        mMercadoPagoServices.getInstallments(bin, amount, issuerId, paymentMethodId, new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.Installment>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.Installment> installments) {
+                callback.success(ModelsAdapter.adaptInstallments(installments));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getIssuers(String paymentMethodId, String bin, final Callback<List<Issuer>> callback) {
+        mMercadoPagoServices.getIssuers(paymentMethodId, bin, new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.Issuer>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.Issuer> issuers) {
+                callback.success(ModelsAdapter.adaptIssuers(issuers));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
         PaymentService service = getDefaultRetrofit().create(PaymentService.class);
         service.getIssuers(this.mPublicKey, mPrivateKey, paymentMethodId, bin, mProcessingMode).enqueue(callback);
     }
@@ -204,7 +252,7 @@ public class MercadoPagoServicesAdapter {
         mMercadoPagoServices.getPaymentMethods(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.PaymentMethod>>() {
             @Override
             public void success(List<com.mercadopago.lite.model.PaymentMethod> paymentMethods) {
-                callback.success(ModelsAdapter.adapt(paymentMethods));
+                callback.success(ModelsAdapter.adaptPaymentMethods(paymentMethods));
             }
 
             @Override
@@ -215,18 +263,45 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getDirectDiscount(String amount, String payerEmail, final Callback<Discount> callback) {
-        DiscountService service = getDefaultRetrofit().create(DiscountService.class);
-        service.getDirectDiscount(this.mPublicKey, amount, payerEmail).enqueue(callback);
+        mMercadoPagoServices.getDirectDiscount(amount, payerEmail, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Discount>() {
+            @Override
+            public void success(com.mercadopago.lite.model.Discount discount) {
+                callback.success(ModelsAdapter.adapt(discount));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getCodeDiscount(String amount, String payerEmail, String couponCode, final Callback<Discount> callback) {
-        DiscountService service = getDefaultRetrofit().create(DiscountService.class);
-        service.getCodeDiscount(this.mPublicKey, amount, payerEmail, couponCode).enqueue(callback);
+        mMercadoPagoServices.getCodeDiscount(amount, payerEmail, couponCode, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Discount>() {
+            @Override
+            public void success(com.mercadopago.lite.model.Discount discount) {
+                callback.success(ModelsAdapter.adapt(discount));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getCampaigns(final Callback<List<Campaign>> callback) {
-        DiscountService service = getDefaultRetrofit().create(DiscountService.class);
-        service.getCampaigns(this.mPublicKey).enqueue(callback);
+        mMercadoPagoServices.getCampaigns(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.Campaign>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.Campaign> campaigns) {
+                callback.success(ModelsAdapter.adaptCampaigns(campaigns));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public static List<PaymentMethod> getValidPaymentMethodsForBin(String bin, List<PaymentMethod> paymentMethods) {
