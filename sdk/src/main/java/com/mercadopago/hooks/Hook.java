@@ -8,9 +8,11 @@ import com.mercadopago.components.Component;
 
 public class Hook {
 
-    public final Component component;
+    public final HookComponent component;
 
-    public Hook(Component component) {
+    public Hook(HookComponent component) {
         this.component = component;
     }
+
+
 }

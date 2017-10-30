@@ -195,6 +195,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE) {
+            mCheckoutPresenter.onPaymenMethodSelectedHookContinue();
         }
     }
 
@@ -532,6 +534,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showHook(final Hook hook) {
         startActivityForResult(HookActivity.getIntent(this),
-                MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK);
+                MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE);
     }
 }

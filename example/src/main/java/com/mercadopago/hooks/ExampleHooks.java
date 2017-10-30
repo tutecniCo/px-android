@@ -17,17 +17,19 @@ public class ExampleHooks extends DefaultCheckoutHooks {
     @Override
     public Hook onPaymentMethodSelected(@NonNull final PaymentData paymentData) {
 
-        final ActionDispatcher dispatcher = new ActionDispatcher() {
+        final HookComponent.Props props = new HookComponent.Props(
+                HooksStore.getInstance(),
+                paymentData);
 
-            @Override
-            public void dispatch(Action action) {
-                //sarasa
-            }
-        };
-
-        final PaymentMethodConfirm.Props props = new PaymentMethodConfirm.Props(paymentData);
-        final PaymentMethodConfirm component = new PaymentMethodConfirm(props, dispatcher);
+        final PaymentMethodConfirm component = new PaymentMethodConfirm(props);
         final Hook hook = new Hook(component);
         return hook;
     }
+
+//    @Override
+//    public Hook onConfirmPayment(@NonNull PaymentData paymentData) {
+//
+//
+//        return super.onConfirmPayment(paymentData);
+//    }
 }

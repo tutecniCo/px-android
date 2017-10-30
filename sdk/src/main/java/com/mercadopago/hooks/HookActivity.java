@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mercadopago.components.Action;
+import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.ComponentManager;
 import com.mercadopago.components.RendererFactory;
 
-/**
- * Created by nfortuna on 10/24/17.
- */
-
-public class HookActivity extends AppCompatActivity {
+public class HookActivity extends AppCompatActivity implements ActionDispatcher {
 
     private ComponentManager componentManager;
 
@@ -30,18 +28,22 @@ public class HookActivity extends AppCompatActivity {
 
         componentManager = new ComponentManager(this);
 
-//        final Hook hook = HooksStore.getInstance().getHook();
-//
-//        if (hook == null) {
-//            setResult(RESULT_CANCELED);
-//            finish();
-//            return;
-//        }
+        final Hook hook = HooksStore.getInstance().getHook();
 
-        final HookComponent hook = new HookComponent(
-                new HookComponent.Props(HooksStore.getInstance(),
-                "Sarasa!!!"), componentManager);
+        if (hook == null) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
 
-        componentManager.render(hook);
+        hook.component.setDispatcher(this);
+        componentManager.render(hook.component);
+    }
+
+    @Override
+    public void dispatch(final Action action) {
+        if (action.type == Action.TYPE_CONTINUE) {
+            finish();
+        }
     }
 }

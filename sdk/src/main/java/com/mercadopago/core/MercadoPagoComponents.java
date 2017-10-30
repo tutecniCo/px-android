@@ -99,7 +99,7 @@ public class MercadoPagoComponents {
         public static final int REVIEW_PAYMENT_METHODS_REQUEST_CODE = 21;
         public static final int PAYER_INFORMATION_REQUEST_CODE = 22;
         //HOOKS
-        public static final int PAYMENT_METHOD_SELECTED_HOOK = 23;
+        public static final int PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE = 23;
 
         private Activities() {
         }
