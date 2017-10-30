@@ -179,8 +179,17 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getBankDeals(final Callback<List<BankDeal>> callback) {
-        BankDealService service = getDefaultRetrofit().create(BankDealService.class);
-        service.getBankDeals(this.mPublicKey, mPrivateKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
+        mMercadoPagoServices.getBankDeals(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.BankDeal>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.BankDeal> bankDeals) {
+                callback.success(ModelsAdapter.adaptBankDeals(bankDeals));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
 
