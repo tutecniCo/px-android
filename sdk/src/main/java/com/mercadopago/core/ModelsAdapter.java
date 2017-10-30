@@ -6,6 +6,8 @@ import com.mercadopago.constants.ProcessingModes;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
+import com.mercadopago.model.Discount;
+import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
@@ -126,4 +128,20 @@ class ModelsAdapter{
         return adaptedList;
     }
 
+    static Discount adapt(com.mercadopago.lite.model.Discount discount){
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(discount), Discount.class);
+    }
+
+    static List<Installment> adaptInstallments(List<com.mercadopago.lite.model.Installment> list){
+        List<Installment> adaptedList;
+        try {
+            Type listType = new TypeToken<List<Installment>>() {
+            }.getType();
+            adaptedList = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(list), listType);
+        } catch (Exception ex) {
+            adaptedList = null;
+        }
+
+        return adaptedList;
+    }
 }
