@@ -1,4 +1,5 @@
 package com.mercadopago.lite.model;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -22,6 +23,21 @@ public class PaymentMethod {
     private Integer accreditationTime;
     private String merchantAccountId;
     private List<FinancialInstitution> financialInstitutions;
+
+    public boolean isIssuerRequired() {
+        return isAdditionalInfoNeeded("issuer_id");
+    }
+
+    private boolean isAdditionalInfoNeeded(String param) {
+        if ((additionalInfoNeeded != null) && (additionalInfoNeeded.size() > 0)) {
+            for (int i = 0; i < additionalInfoNeeded.size(); i++) {
+                if (additionalInfoNeeded.get(i).equals(param)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public List<String> getAdditionalInfoNeeded() {
         return additionalInfoNeeded;
