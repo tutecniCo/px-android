@@ -3,10 +3,11 @@ package com.mercadopago.core;
 import com.google.gson.reflect.TypeToken;
 
 import com.mercadopago.constants.ProcessingModes;
-import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.ApiException;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
+import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
 
@@ -14,7 +15,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-class ModelsAdapter {
+class ModelsAdapter{
 
     static Map<String, Object> adapt(PaymentBody paymentBody) {
         Type type = new TypeToken<Map<String, Object>>() {
@@ -69,17 +70,32 @@ class ModelsAdapter {
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(apiException), ApiException.class);
     }
 
-    static List<PaymentMethod> adapt(List<com.mercadopago.lite.model.PaymentMethod> paymentMethodsList) {
 
-        List<PaymentMethod> paymentMethods;
+
+    static List<PaymentMethod> adaptPaymentMethods(List<com.mercadopago.lite.model.PaymentMethod> list){
+        List<PaymentMethod> adaptedList;
         try {
             Type listType = new TypeToken<List<PaymentMethod>>() {
             }.getType();
-            paymentMethods = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(paymentMethodsList), listType);
+            adaptedList = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(list), listType);
         } catch (Exception ex) {
-            paymentMethods = null;
+            adaptedList = null;
         }
 
-        return paymentMethods;
+        return adaptedList;
     }
+
+    static List<Issuer> adaptIssuers(List<com.mercadopago.lite.model.Issuer> list){
+        List<Issuer> adaptedList;
+        try {
+            Type listType = new TypeToken<List<Issuer>>() {
+            }.getType();
+            adaptedList = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(list), listType);
+        } catch (Exception ex) {
+            adaptedList = null;
+        }
+
+        return adaptedList;
+    }
+
 }
