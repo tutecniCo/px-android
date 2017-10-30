@@ -3,7 +3,6 @@ package com.mercadopago.lite.model;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.mercadopago.lite.exceptions.CardTokenException;
 import com.mercadopago.lite.util.MercadoPagoUtil;
 
 import java.util.Calendar;
@@ -20,10 +19,12 @@ public class CardToken {
     private Integer expirationYear;
     private String securityCode;
 
-    public void validateCardNumber(PaymentMethod paymentMethod) throws CardTokenException {
+    public boolean validateCardNumber(PaymentMethod paymentMethod) {
+        boolean isValidCardNumber = true;
+
         // Empty field
         if (cardNumber == null || cardNumber.isEmpty()) {
-            throw new CardTokenException(CardTokenException.INVALID_EMPTY_CARD);
+            isValidCardNumber = false;
         }
 
         Setting setting = Setting.getSettingByBin(paymentMethod.getSettings(), (cardNumber.length()
@@ -31,20 +32,22 @@ public class CardToken {
 
         if (setting == null) {
             // Invalid bin
-            throw new CardTokenException(CardTokenException.INVALID_CARD_BIN);
+            isValidCardNumber = false;
         } else {
             // Validate cards length
             int cardLength = setting.getCardNumber().getLength();
             if (cardNumber.trim().length() != cardLength) {
-                throw new CardTokenException(CardTokenException.INVALID_CARD_LENGTH, String.valueOf(cardLength));
+                isValidCardNumber = false;
             }
 
             // Validate luhn
             String luhnAlgorithm = setting.getCardNumber().getValidation();
             if (("standard".equals(luhnAlgorithm)) && (!checkLuhn(cardNumber))) {
-                throw new CardTokenException(CardTokenException.INVALID_CARD_LUHN);
+                isValidCardNumber = false;
             }
         }
+
+        return isValidCardNumber;
     }
 
     private static boolean checkLuhn(String cardNumber) {
@@ -67,11 +70,12 @@ public class CardToken {
         return (sum % 10 == 0);
     }
 
-    public void validateSecurityCode(PaymentMethod paymentMethod) throws CardTokenException {
-        validateSecurityCode(securityCode, paymentMethod, (((cardNumber != null) ? cardNumber.length() : 0) >= MercadoPagoUtil.BIN_LENGTH ? cardNumber.substring(0, MercadoPagoUtil.BIN_LENGTH) : ""));
+    public boolean validateSecurityCode(PaymentMethod paymentMethod) {
+        return validateSecurityCode(securityCode, paymentMethod, (((cardNumber != null) ? cardNumber.length() : 0) >= MercadoPagoUtil.BIN_LENGTH ? cardNumber.substring(0, MercadoPagoUtil.BIN_LENGTH) : ""));
     }
 
-    private static void validateSecurityCode(String securityCode, PaymentMethod paymentMethod, String bin) throws CardTokenException {
+    private static boolean validateSecurityCode(String securityCode, PaymentMethod paymentMethod, String bin) {
+        boolean isValidSecurityCode = true;
 
         if (paymentMethod != null) {
             Setting setting = Setting.getSettingByBin(paymentMethod.getSettings(), bin);
@@ -80,12 +84,14 @@ public class CardToken {
             if (setting != null) {
                 int cvvLength = setting.getSecurityCode().getLength();
                 if ((securityCode == null) || ((cvvLength != 0) && (securityCode.trim().length() != cvvLength))) {
-                    throw new CardTokenException(CardTokenException.INVALID_CVV_LENGTH, String.valueOf(cvvLength));
+                    isValidSecurityCode = false;
                 }
             } else {
-                throw new CardTokenException(CardTokenException.INVALID_FIELD);
+                isValidSecurityCode = false;
             }
         }
+
+        return isValidSecurityCode;
     }
 
     public static boolean validateExpiryDate(Integer month, Integer year) {
