@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mercadopago.constants.ProcessingModes;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.BankDeal;
+import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
@@ -103,6 +104,19 @@ class ModelsAdapter{
         List<BankDeal> adaptedList;
         try {
             Type listType = new TypeToken<List<BankDeal>>() {
+            }.getType();
+            adaptedList = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(list), listType);
+        } catch (Exception ex) {
+            adaptedList = null;
+        }
+
+        return adaptedList;
+    }
+
+    static List<Campaign> adaptCampaigns(List<com.mercadopago.lite.model.Campaign> list){
+        List<Campaign> adaptedList;
+        try {
+            Type listType = new TypeToken<List<Campaign>>() {
             }.getType();
             adaptedList = JsonUtil.getInstance().getGson().fromJson(JsonUtil.getInstance().toJson(list), listType);
         } catch (Exception ex) {
