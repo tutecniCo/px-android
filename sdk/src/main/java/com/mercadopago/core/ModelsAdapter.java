@@ -13,6 +13,8 @@ import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.SecurityCodeIntent;
+import com.mercadopago.model.Token;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
 
@@ -157,5 +159,14 @@ class ModelsAdapter{
         }
 
         return adaptedList;
+    }
+
+    static Token adapt(com.mercadopago.lite.model.Token token){
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(token), Token.class);
+    }
+
+
+    public static com.mercadopago.lite.model.requests.SecurityCodeIntent adapt(SecurityCodeIntent securityCodeIntent) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(securityCodeIntent), com.mercadopago.lite.model.requests.SecurityCodeIntent.class);
     }
 }
