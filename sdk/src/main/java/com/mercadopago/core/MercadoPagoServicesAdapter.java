@@ -174,8 +174,19 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void putSecurityCode(final String tokenId, final SecurityCodeIntent securityCodeIntent, final Callback<Token> callback) {
-        GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-        service.getToken(tokenId, this.mPublicKey, mPrivateKey, securityCodeIntent).enqueue(callback);
+        com.mercadopago.lite.model.requests.SecurityCodeIntent securityCodeIntentAdapted = ModelsAdapter.adapt(securityCodeIntent);
+
+        mMercadoPagoServices.putSecurityCode(tokenId, securityCodeIntentAdapted, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Token>() {
+            @Override
+            public void success(com.mercadopago.lite.model.Token token) {
+                callback.success(ModelsAdapter.adapt(token));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getBankDeals(final Callback<List<BankDeal>> callback) {
