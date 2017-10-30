@@ -245,8 +245,17 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getCampaigns(final Callback<List<Campaign>> callback) {
-        DiscountService service = getDefaultRetrofit().create(DiscountService.class);
-        service.getCampaigns(this.mPublicKey).enqueue(callback);
+        mMercadoPagoServices.getCampaigns(new com.mercadopago.lite.callbacks.Callback<List<com.mercadopago.lite.model.Campaign>>() {
+            @Override
+            public void success(List<com.mercadopago.lite.model.Campaign> campaigns) {
+                callback.success(ModelsAdapter.adaptCampaigns(campaigns));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public static List<PaymentMethod> getValidPaymentMethodsForBin(String bin, List<PaymentMethod> paymentMethods) {
