@@ -3,6 +3,7 @@ package com.mercadopago.core;
 import com.google.gson.reflect.TypeToken;
 
 import com.mercadopago.constants.ProcessingModes;
+import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.model.Instructions;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethodSearch;
@@ -203,5 +204,9 @@ class ModelsAdapter{
 
     static Instructions adapt(com.mercadopago.lite.model.Instructions instructions) {
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(instructions), Instructions.class);
+    }
+
+    static CheckoutPreference adapt(com.mercadopago.lite.preferences.CheckoutPreference checkoutPreference) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(checkoutPreference), CheckoutPreference.class);
     }
 }

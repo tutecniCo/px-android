@@ -1,7 +1,10 @@
 package com.mercadopago.lite.preferences;
 
 import com.google.gson.annotations.SerializedName;
+import com.mercadopago.lite.model.PaymentMethod;
+import com.mercadopago.lite.model.PaymentType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,8 +16,8 @@ public class PaymentPreference {
     @SerializedName("installments")
     private Integer maxAcceptedInstallments;
     private Integer defaultInstallments;
-    private List<String> excludedPaymentMethodIds;
-    private List<String> excludedPaymentTypeIds;
+    private List<PaymentMethod> excludedPaymentMethods;
+    private List<PaymentType> excludedPaymentTypes;
     private String defaultPaymentMethodId;
     private String defaultPaymentTypeId;
 
@@ -38,19 +41,47 @@ public class PaymentPreference {
     }
 
     public List<String> getExcludedPaymentMethodIds() {
-        return excludedPaymentMethodIds;
-    }
-
-    public void setExcludedPaymentMethodIds(List<String> excludedPaymentMethodIds) {
-        this.excludedPaymentMethodIds = excludedPaymentMethodIds;
+        if (this.excludedPaymentMethods != null) {
+            List<String> excludedPaymentMethodIds = new ArrayList<>();
+            for (PaymentMethod paymentMethod : this.excludedPaymentMethods) {
+                excludedPaymentMethodIds.add(paymentMethod.getId());
+            }
+            return excludedPaymentMethodIds;
+        } else
+            return null;
     }
 
     public List<String> getExcludedPaymentTypeIds() {
-        return excludedPaymentTypeIds;
+        if (this.excludedPaymentTypes != null) {
+            List<String> excludedPaymentTypeIds = new ArrayList<>();
+            for (PaymentType paymentType : this.excludedPaymentTypes) {
+                excludedPaymentTypeIds.add(paymentType.getId());
+            }
+            return excludedPaymentTypeIds;
+        } else
+            return null;
+    }
+
+    public void setExcludedPaymentMethodIds(List<String> excludedPaymentMethodIds) {
+        if (excludedPaymentMethodIds != null) {
+            this.excludedPaymentMethods = new ArrayList<>();
+            for (String paymentMethodId : excludedPaymentMethodIds) {
+                PaymentMethod excludedPaymentMethod = new PaymentMethod();
+                excludedPaymentMethod.setId(paymentMethodId);
+                this.excludedPaymentMethods.add(excludedPaymentMethod);
+            }
+        }
     }
 
     public void setExcludedPaymentTypeIds(List<String> excludedPaymentTypeIds) {
-        this.excludedPaymentTypeIds = excludedPaymentTypeIds;
+        if (excludedPaymentTypeIds != null) {
+            this.excludedPaymentTypes = new ArrayList<>();
+            for (String paymentTypeId : excludedPaymentTypeIds) {
+                PaymentType excludedPaymentType = new PaymentType();
+                excludedPaymentType.setId(paymentTypeId);
+                this.excludedPaymentTypes.add(excludedPaymentType);
+            }
+        }
     }
 
     public String getDefaultPaymentMethodId() {
@@ -68,4 +99,5 @@ public class PaymentPreference {
     public void setDefaultPaymentTypeId(String defaultPaymentTypeId) {
         this.defaultPaymentTypeId = defaultPaymentTypeId;
     }
+
 }
