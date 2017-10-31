@@ -1,6 +1,7 @@
 import android.support.test.InstrumentationRegistry;
 
 import com.mercadopago.lite.model.CardToken;
+import com.mercadopago.lite.model.IdentificationType;
 import com.mercadopago.lite.model.PaymentMethod;
 
 import com.mercadopago.lite.test.StaticMock;
@@ -204,199 +205,176 @@ public class CardTokenTest {
         assertFalse(CardToken.validateExpiryDate(month, year));
     }
 
+    @Test
+    public void testExpiryDateWrongYear() {
+        Integer month = 13;
+        Integer year = 2000;
 
-//    public void testExpiryDateWrongYear() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.setExpirationYear(2000);
-//
-//        assertFalse(cardToken.validateExpiryDate());
-//    }
-//
-//
-//    public void testExpiryDateWrongShortYear() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.setExpirationYear(10);
-//
-//        assertFalse(cardToken.validateExpiryDate());
-//    }
-//
-//    // * Identification
-//
-//
-//    public void testIdentification() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//
-//        assertTrue(cardToken.validateIdentification());
-//    }
-//
-//
-//    public void testIdentificationNullCardholder() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.setCardholder(null);
-//
-//        assertFalse(cardToken.validateIdentification());
-//    }
-//
-//
-//    public void testIdentificationNullIdentification() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().setIdentification(null);
-//
-//        assertFalse(cardToken.validateIdentification());
-//    }
-//
-//
-//    public void testIdentificationEmptyType() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().getIdentification().setType("");
-//
-//        assertFalse(cardToken.validateIdentification());
-//    }
-//
-//
-//    public void testIdentificationEmptyNumber() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().getIdentification().setNumber("");
-//
-//        assertFalse(cardToken.validateIdentification());
-//    }
-//
-//
-//    public void testIdentificationNumber() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//
-//        com.mercadopago.model.IdentificationType type = StaticMock.getIdentificationType();
-//
-//        assertTrue(cardToken.validateIdentificationNumber(type));
-//    }
-//
-//
-//    public void testIdentificationNumberWrongLength() {
-//
-//        com.mercadopago.model.CardToken cardToken;
-//        com.mercadopago.model.IdentificationType type;
-//
-//        cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().getIdentification().setNumber("123456");
-//        type = StaticMock.getIdentificationType();
-//        assertFalse(cardToken.validateIdentificationNumber(type));
-//
-//        cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().getIdentification().setNumber("12345678901234567890");
-//        type = StaticMock.getIdentificationType();
-//        assertFalse(cardToken.validateIdentificationNumber(type));
-//    }
-//
-//
-//    public void testIdentificationNumberNullIdType() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//
-//        assertTrue(cardToken.validateIdentificationNumber(null));
-//    }
-//
-//
-//    public void testIdentificationNumberNullCardholderValues() {
-//
-//        com.mercadopago.model.CardToken cardToken;
-//        com.mercadopago.model.IdentificationType type;
-//
-//        cardToken = StaticMock.getCardToken();
-//        cardToken.setCardholder(null);
-//        type = StaticMock.getIdentificationType();
-//        assertFalse(cardToken.validateIdentificationNumber(type));
-//
-//        cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().setIdentification(null);
-//        type = StaticMock.getIdentificationType();
-//        assertFalse(cardToken.validateIdentificationNumber(type));
-//
-//        cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().getIdentification().setNumber(null);
-//        type = StaticMock.getIdentificationType();
-//        assertFalse(cardToken.validateIdentificationNumber(type));
-//    }
-//
-//
-//    public void testIdentificationNumberNullMinMaxLength() {
-//
-//        com.mercadopago.model.CardToken cardToken;
-//        IdentificationType type;
-//
-//        cardToken = StaticMock.getCardToken();
-//        type = StaticMock.getIdentificationType();
-//        type.setMinLength(null);
-//        assertTrue(cardToken.validateIdentificationNumber(type));
-//
-//        cardToken = StaticMock.getCardToken();
-//        type = StaticMock.getIdentificationType();
-//        type.setMaxLength(null);
-//        assertTrue(cardToken.validateIdentificationNumber(type));
-//    }
-//
-//    // * Cardholder name
-//
-//
-//    public void testCardholderName() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//
-//        assertTrue(cardToken.validateCardholderName());
-//    }
-//
-//
-//    public void testCardholderNameEmpty() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().setName("");
-//
-//        assertFalse(cardToken.validateCardholderName());
-//    }
-//
-//
-//    public void testCardholderNameNull() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.getCardholder().setName(null);
-//
-//        assertFalse(cardToken.validateCardholderName());
-//    }
-//
-//
-//    public void testCardholderNameCardholderNull() {
-//
-//        com.mercadopago.model.CardToken cardToken = StaticMock.getCardToken();
-//        cardToken.setCardholder(null);
-//
-//        assertFalse(cardToken.validateCardholderName());
-//    }
-//
-//    // * Luhn
-//
-//
-//    public void testLuhn() {
-//
-//        assertTrue(com.mercadopago.model.CardToken.checkLuhn(StaticMock.DUMMY_CARD_NUMBER));
-//    }
-//
-//
-//    public void testLuhnNullOrEmptyCardNumber() {
-//
-//        assertFalse(com.mercadopago.model.CardToken.checkLuhn(null));
-//        assertFalse(com.mercadopago.model.CardToken.checkLuhn(""));
-//    }
-//
-//
-//    public void testLuhnWrongCardNumber() {
-//
-//        assertFalse(com.mercadopago.model.CardToken.checkLuhn("1111000000000000"));
-//    }
+        assertFalse(CardToken.validateExpiryDate(month, year));
+    }
+
+    @Test
+    public void testExpiryDateWrongShortYear() {
+        Integer month = 13;
+        Integer year = 00;
+
+        assertFalse(CardToken.validateExpiryDate(month, year));
+    }
+
+    // * Identification
+    @Test
+    public void testIdentification() {
+        CardToken cardToken = StaticMock.getCardToken();
+
+        assertTrue(cardToken.validateIdentificationNumber());
+    }
+
+    @Test
+    public void testIdentificationNullCardholder() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.setCardholder(null);
+
+        assertFalse(cardToken.validateIdentificationNumber());
+    }
+
+    @Test
+    public void testIdentificationNullIdentification() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().setIdentification(null);
+
+        assertFalse(cardToken.validateIdentificationNumber());
+    }
+
+    @Test
+    public void testIdentificationEmptyType() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().getIdentification().setType("");
+
+        assertFalse(cardToken.validateIdentificationNumber());
+    }
+
+    @Test
+    public void testIdentificationEmptyNumber() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().getIdentification().setNumber("");
+
+        assertFalse(cardToken.validateIdentificationNumber());
+    }
+
+    @Test
+    public void testIdentificationNumber() {
+        CardToken cardToken = StaticMock.getCardToken();
+        IdentificationType type = StaticMock.getIdentificationType();
+
+        assertTrue(cardToken.validateIdentificationNumber(type));
+    }
+
+    @Test
+    public void testIdentificationNumberWrongLength() {
+        CardToken cardToken;
+        IdentificationType type;
+
+        cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().getIdentification().setNumber("123456");
+        type = StaticMock.getIdentificationType();
+        assertFalse(cardToken.validateIdentificationNumber(type));
+
+        cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().getIdentification().setNumber("12345678901234567890");
+        type = StaticMock.getIdentificationType();
+        assertFalse(cardToken.validateIdentificationNumber(type));
+    }
+
+    @Test
+    public void testIdentificationNumberNullIdType() {
+        CardToken cardToken = StaticMock.getCardToken();
+
+        assertTrue(cardToken.validateIdentificationNumber(null));
+    }
+
+    @Test
+    public void testIdentificationNumberNullCardholderValues() {
+        CardToken cardToken;
+        IdentificationType type;
+
+        cardToken = StaticMock.getCardToken();
+        cardToken.setCardholder(null);
+        type = StaticMock.getIdentificationType();
+        assertFalse(cardToken.validateIdentificationNumber(type));
+
+        cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().setIdentification(null);
+        type = StaticMock.getIdentificationType();
+        assertFalse(cardToken.validateIdentificationNumber(type));
+
+        cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().getIdentification().setNumber(null);
+        type = StaticMock.getIdentificationType();
+        assertFalse(cardToken.validateIdentificationNumber(type));
+    }
+
+    @Test
+    public void testIdentificationNumberNullMinMaxLength() {
+        CardToken cardToken;
+        IdentificationType type;
+
+        cardToken = StaticMock.getCardToken();
+        type = StaticMock.getIdentificationType();
+        type.setMinLength(null);
+        assertTrue(cardToken.validateIdentificationNumber(type));
+
+        cardToken = StaticMock.getCardToken();
+        type = StaticMock.getIdentificationType();
+        type.setMaxLength(null);
+        assertTrue(cardToken.validateIdentificationNumber(type));
+    }
+
+    // * Cardholder name
+    @Test
+    public void testCardholderName() {
+        CardToken cardToken = StaticMock.getCardToken();
+
+        assertTrue(cardToken.validateCardholderName());
+    }
+
+    @Test
+    public void testCardholderNameEmpty() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().setName("");
+
+        assertFalse(cardToken.validateCardholderName());
+    }
+
+    @Test
+    public void testCardholderNameNull() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.getCardholder().setName(null);
+
+        assertFalse(cardToken.validateCardholderName());
+    }
+
+    @Test
+    public void testCardholderNameCardholderNull() {
+        CardToken cardToken = StaticMock.getCardToken();
+        cardToken.setCardholder(null);
+
+        assertFalse(cardToken.validateCardholderName());
+    }
+
+    // * Luhn
+    @Test
+    public void testLuhn() {
+        assertTrue(CardToken.checkLuhn(StaticMock.DUMMY_CARD_NUMBER));
+    }
+
+    @Test
+    public void testLuhnNullOrEmptyCardNumber() {
+        assertFalse(CardToken.checkLuhn(null));
+        assertFalse(CardToken.checkLuhn(""));
+    }
+
+    @Test
+    public void testLuhnWrongCardNumber() {
+        assertFalse(CardToken.checkLuhn("1111000000000000"));
+    }
 }
