@@ -91,4 +91,16 @@ public class PaymentMethodSearchItem {
     public boolean isGroup() {
         return type != null && type.equals(TYPE_GROUP);
     }
+
+    public void setChildrenHeader(String childrenHeader) {
+        this.childrenHeader = childrenHeader;
+    }
+
+    public Boolean getShowIcon() {
+        return showIcon;
+    }
+
+    public void setShowIcon(Boolean showIcon) {
+        this.showIcon = showIcon;
+    }
 }

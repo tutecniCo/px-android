@@ -105,8 +105,17 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getInstructions(Long paymentId, String paymentTypeId, final Callback<Instructions> callback) {
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
-        service.getPaymentResult(mContext.getResources().getConfiguration().locale.getLanguage(), paymentId, this.mPublicKey, this.mPrivateKey, paymentTypeId, PAYMENT_RESULT_API_VERSION).enqueue(callback);
+        mMercadoPagoServices.getInstructions(paymentId, paymentTypeId, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Instructions>() {
+            @Override
+            public void success(com.mercadopago.lite.model.Instructions instructions) {
+                callback.success(ModelsAdapter.adapt(instructions));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
@@ -117,7 +126,19 @@ public class MercadoPagoServicesAdapter {
         String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);
         String siteId = site == null ? "" : site.getId();
         service.getPaymentMethodSearch(mContext.getResources().getConfiguration().locale.getLanguage(), this.mPublicKey, amount, excludedPaymentTypesAppended, excludedPaymentMethodsAppended, payerIntent, siteId, PAYMENT_METHODS_OPTIONS_API_VERSION, mProcessingMode).enqueue(callback);
+//        mMercadoPagoServices.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethods, ModelsAdapter.adapt(payer), ModelsAdapter.adapt(site), new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.PaymentMethodSearch>() {
+//            @Override
+//            public void success(com.mercadopago.lite.model.PaymentMethodSearch paymentMethodSearch) {
+//                callback.success(ModelsAdapter.adapt(paymentMethodSearch));
+//            }
+//
+//            @Override
+//            public void failure(ApiException apiException) {
+//                callback.failure(ModelsAdapter.adapt(apiException));
+//            }
+//        });
     }
+
 
     public void createPayment(final PaymentBody paymentBody, final Callback<Payment> callback) {
         Map<String, Object> adaptedBody = ModelsAdapter.adapt(paymentBody);
@@ -136,41 +157,59 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void createToken(final SavedCardToken savedCardToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
+        mMercadoPagoServices.createToken(ModelsAdapter.adapt(savedCardToken), new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Token>() {
             @Override
-            public void run() {
-                savedCardToken.setDevice(mContext);
-                GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-                service.getToken(mPublicKey, mPrivateKey, savedCardToken).enqueue(callback);
+            public void success(com.mercadopago.lite.model.Token token) {
+                callback.success(ModelsAdapter.adapt(token));
             }
-        }).start();
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void createToken(final CardToken cardToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
+        mMercadoPagoServices.createToken(ModelsAdapter.adapt(cardToken), new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Token>() {
             @Override
-            public void run() {
-                cardToken.setDevice(mContext);
-                GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-                service.getToken(mPublicKey, mPrivateKey, cardToken).enqueue(callback);
+            public void success(com.mercadopago.lite.model.Token token) {
+                callback.success(ModelsAdapter.adapt(token));
             }
-        }).start();
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void createToken(final SavedESCCardToken savedESCCardToken, final Callback<Token> callback) {
-        new Thread(new Runnable() {
+        mMercadoPagoServices.createToken(ModelsAdapter.adapt(savedESCCardToken), new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Token>() {
             @Override
-            public void run() {
-                savedESCCardToken.setDevice(mContext);
-                GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-                service.getToken(mPublicKey, mPrivateKey, savedESCCardToken).enqueue(callback);
+            public void success(com.mercadopago.lite.model.Token token) {
+                callback.success(ModelsAdapter.adapt(token));
             }
-        }).start();
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void cloneToken(final String tokenId, final Callback<Token> callback) {
-        GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-        service.getToken(tokenId, this.mPublicKey, mPrivateKey).enqueue(callback);
+        mMercadoPagoServices.cloneToken(tokenId, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.Token>() {
+            @Override
+            public void success(com.mercadopago.lite.model.Token token) {
+                callback.success(ModelsAdapter.adapt(token));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void putSecurityCode(final String tokenId, final SecurityCodeIntent securityCodeIntent, final Callback<Token> callback) {

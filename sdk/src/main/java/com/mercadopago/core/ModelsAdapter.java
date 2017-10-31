@@ -3,9 +3,13 @@ package com.mercadopago.core;
 import com.google.gson.reflect.TypeToken;
 
 import com.mercadopago.constants.ProcessingModes;
+import com.mercadopago.model.Instructions;
+import com.mercadopago.model.Payer;
+import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
+import com.mercadopago.model.CardToken;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
@@ -13,7 +17,10 @@ import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
 import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.SavedCardToken;
+import com.mercadopago.model.SavedESCCardToken;
 import com.mercadopago.model.SecurityCodeIntent;
+import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.JsonUtil;
@@ -165,8 +172,36 @@ class ModelsAdapter{
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(token), Token.class);
     }
 
-
-    public static com.mercadopago.lite.model.requests.SecurityCodeIntent adapt(SecurityCodeIntent securityCodeIntent) {
+    static com.mercadopago.lite.model.requests.SecurityCodeIntent adapt(SecurityCodeIntent securityCodeIntent) {
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(securityCodeIntent), com.mercadopago.lite.model.requests.SecurityCodeIntent.class);
+    }
+
+    static com.mercadopago.lite.model.SavedESCCardToken adapt(SavedESCCardToken savedESCCardToken) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(savedESCCardToken), com.mercadopago.lite.model.SavedESCCardToken.class);
+    }
+
+    static com.mercadopago.lite.model.CardToken adapt(CardToken cardToken) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(cardToken), com.mercadopago.lite.model.CardToken.class);
+    }
+
+    static com.mercadopago.lite.model.SavedCardToken adapt(SavedCardToken savedCardToken) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(savedCardToken), com.mercadopago.lite.model.SavedCardToken.class);
+    }
+
+    static PaymentMethodSearch adapt(com.mercadopago.lite.model.PaymentMethodSearch paymentMethodSearch) {
+        PaymentMethodSearch ps =  JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(paymentMethodSearch), PaymentMethodSearch.class);
+        return ps;
+    }
+
+    static com.mercadopago.lite.model.Payer adapt(Payer payer) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(payer), com.mercadopago.lite.model.Payer.class);
+    }
+
+    static com.mercadopago.lite.model.Site adapt(Site site) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(site), com.mercadopago.lite.model.Site.class);
+    }
+
+    static Instructions adapt(com.mercadopago.lite.model.Instructions instructions) {
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(instructions), Instructions.class);
     }
 }
