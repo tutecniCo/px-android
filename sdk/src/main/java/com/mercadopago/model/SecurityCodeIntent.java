@@ -13,5 +13,13 @@ public class SecurityCodeIntent {
     public void setSecurityCode(String securityCode){
         this.mSecurityCode = securityCode;
     }
+
+    public String getmSecurityCode() {
+        return mSecurityCode;
+    }
+
+    public void setmSecurityCode(String mSecurityCode) {
+        this.mSecurityCode = mSecurityCode;
+    }
 }
 
