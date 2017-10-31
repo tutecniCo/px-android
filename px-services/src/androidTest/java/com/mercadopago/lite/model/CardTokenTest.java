@@ -155,7 +155,7 @@ public class CardTokenTest {
         CardToken cardToken = StaticMock.getCardToken();
         cardToken.setCardNumber("5300888800009999");
 
-        PaymentMethod paymentMethod = StaticMock.getPaymentMethod( InstrumentationRegistry.getContext());
+        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(InstrumentationRegistry.getContext());
 
         assertFalse(cardToken.validateSecurityCode(paymentMethod));
     }
@@ -178,7 +178,7 @@ public class CardTokenTest {
         Integer month = 3;
         Integer year = 2029;
 
-        assertTrue(CardToken.validateExpiryDate(month,year));
+        assertTrue(CardToken.validateExpiryDate(month, year));
     }
 
     @Test
@@ -186,7 +186,7 @@ public class CardTokenTest {
         Integer month = null;
         Integer year = 2020;
 
-        assertFalse(CardToken.validateExpiryDate(month,year));
+        assertFalse(CardToken.validateExpiryDate(month, year));
     }
 
     @Test
@@ -359,22 +359,5 @@ public class CardTokenTest {
         cardToken.setCardholder(null);
 
         assertFalse(cardToken.validateCardholderName());
-    }
-
-    // * Luhn
-    @Test
-    public void testLuhn() {
-        assertTrue(CardToken.checkLuhn(StaticMock.DUMMY_CARD_NUMBER));
-    }
-
-    @Test
-    public void testLuhnNullOrEmptyCardNumber() {
-        assertFalse(CardToken.checkLuhn(null));
-        assertFalse(CardToken.checkLuhn(""));
-    }
-
-    @Test
-    public void testLuhnWrongCardNumber() {
-        assertFalse(CardToken.checkLuhn("1111000000000000"));
     }
 }
