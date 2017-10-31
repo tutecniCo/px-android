@@ -3,10 +3,7 @@ package com.mercadopago.core;
 import android.content.Context;
 import android.os.Build;
 
-import com.mercadopago.adapters.ErrorHandlingCallAdapter;
 import com.mercadopago.callbacks.Callback;
-import com.mercadopago.constants.ProcessingModes;
-import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.lite.core.MercadoPagoServices;
 import com.mercadopago.lite.model.ApiException;
 import com.mercadopago.model.BankDeal;
@@ -29,20 +26,13 @@ import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.services.PaymentService;
-import com.mercadopago.util.HttpClientUtil;
-import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.util.TextUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by mreverter on 1/17/17.
@@ -67,21 +57,7 @@ public class MercadoPagoServicesAdapter {
 
     private final MercadoPagoServices mMercadoPagoServices;
 
-    //TODO Borrar cuando este todo migrado al modulo nuevo
-    private ServicePreference mServicePreference;
-    private String mPublicKey;
-    private String mPrivateKey;
-    private Context mContext;
-    private String mProcessingMode;
-
     private MercadoPagoServicesAdapter(MercadoPagoServicesAdapter.Builder builder) {
-        //TODO Borrar cuando este todo migrado al modulo nuevo
-        this.mContext = builder.mContext;
-        this.mPublicKey = builder.mPublicKey;
-        this.mPrivateKey = builder.mPrivateKey;
-        this.mServicePreference = CustomServicesHandler.getInstance().getServicePreference();
-        this.mProcessingMode = mServicePreference != null ? mServicePreference.getProcessingModeString() : ProcessingModes.AGGREGATOR;
-
         mMercadoPagoServices = new MercadoPagoServices.Builder()
                 .setContext(builder.mContext)
                 .setPublicKey(builder.mPublicKey)
@@ -278,8 +254,6 @@ public class MercadoPagoServicesAdapter {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
-        PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-        service.getIssuers(this.mPublicKey, mPrivateKey, paymentMethodId, bin, mProcessingMode).enqueue(callback);
     }
 
     public void getPaymentMethods(final Callback<List<PaymentMethod>> callback) {
@@ -338,58 +312,6 @@ public class MercadoPagoServicesAdapter {
         });
     }
 
-    public static List<PaymentMethod> getValidPaymentMethodsForBin(String bin, List<PaymentMethod> paymentMethods) {
-        if (bin.length() == BIN_LENGTH) {
-            List<PaymentMethod> validPaymentMethods = new ArrayList<>();
-            for (PaymentMethod pm : paymentMethods) {
-                if (pm.isValidForBin(bin)) {
-                    validPaymentMethods.add(pm);
-                }
-            }
-            return validPaymentMethods;
-        } else
-            throw new RuntimeException("Invalid bin: " + BIN_LENGTH + " digits needed, " + bin.length() + " found");
-    }
-
-    private Retrofit getDefaultRetrofit() {
-        return getDefaultRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
-    }
-
-    private Retrofit getDefaultRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {
-        String baseUrl;
-        if (mServicePreference != null && !TextUtil.isEmpty(mServicePreference.getDefaultBaseURL())) {
-            baseUrl = mServicePreference.getDefaultBaseURL();
-        } else {
-            baseUrl = MP_API_BASE_URL;
-        }
-        return getRetrofit(baseUrl, connectTimeout, readTimeout, writeTimeout);
-    }
-
-    private Retrofit getGatewayRetrofit() {
-        return getGatewayRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
-    }
-
-    private Retrofit getGatewayRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {
-        String baseUrl;
-        if (mServicePreference != null && !TextUtil.isEmpty(mServicePreference.getGatewayBaseURL())) {
-            baseUrl = mServicePreference.getGatewayBaseURL();
-        } else if (mServicePreference != null && !TextUtil.isEmpty(mServicePreference.getDefaultBaseURL())) {
-            baseUrl = mServicePreference.getDefaultBaseURL();
-        } else {
-            baseUrl = MP_API_BASE_URL;
-        }
-        return getRetrofit(baseUrl, connectTimeout, readTimeout, writeTimeout);
-    }
-
-    private Retrofit getRetrofit(String baseUrl, int connectTimeout, int readTimeout, int writeTimeout) {
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(JsonUtil.getInstance().getGson()))
-                .client(HttpClientUtil.getClient(this.mContext, connectTimeout, readTimeout, writeTimeout))
-                .addCallAdapterFactory(new ErrorHandlingCallAdapter.ErrorHandlingCallAdapterFactory())
-                .build();
-    }
-
     private void disableConnectionReuseIfNecessary() {
         // HTTP connection reuse which was buggy pre-froyo
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -397,18 +319,6 @@ public class MercadoPagoServicesAdapter {
         }
     }
 
-    private String getListAsString(List<String> list, String separator) {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (list != null) {
-            for (String typeId : list) {
-                stringBuilder.append(typeId);
-                if (!typeId.equals(list.get(list.size() - 1))) {
-                    stringBuilder.append(separator);
-                }
-            }
-        }
-        return stringBuilder.toString();
-    }
 
     public static class Builder {
 
