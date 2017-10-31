@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import com.mercadopago.lite.model.CardToken;
 import com.mercadopago.lite.model.Cardholder;
 import com.mercadopago.lite.model.Identification;
+import com.mercadopago.lite.model.IdentificationType;
 import com.mercadopago.lite.model.PaymentMethod;
 import com.mercadopago.lite.util.JsonUtil;
 
@@ -108,12 +109,16 @@ public class StaticMock {
         return JsonUtil.getInstance().fromJson(getFile(context, "mocks/payment_method_on" + flavor + ".json"), PaymentMethod.class);
     }
 
-//    public static IdentificationType getIdentificationType() {
-//
-//        return new IdentificationType(DUMMI_IDENTIFICATION_TYPE_ID, DUMMI_IDENTIFICATION_TYPE_NAME,
-//                DUMMI_IDENTIFICATION_TYPE_TYPE, DUMMI_IDENTIFICATION_TYPE_MIN_LENGTH,
-//                DUMMI_IDENTIFICATION_TYPE_MAX_LENGTH);
-//    }
+    public static IdentificationType getIdentificationType() {
+        IdentificationType identificationType = new IdentificationType();
+        identificationType.setId(DUMMI_IDENTIFICATION_TYPE_ID);
+        identificationType.setName(DUMMI_IDENTIFICATION_TYPE_NAME);
+        identificationType.setType(DUMMI_IDENTIFICATION_TYPE_TYPE);
+        identificationType.setMinLength(DUMMI_IDENTIFICATION_TYPE_MIN_LENGTH);
+        identificationType.setMaxLength(DUMMI_IDENTIFICATION_TYPE_MAX_LENGTH);
+
+        return identificationType;
+    }
 
 //    public static String getIdentificationTypeList() {
 //
