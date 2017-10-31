@@ -50,7 +50,7 @@ public class CardToken {
         return isValidCardNumber;
     }
 
-    private static boolean checkLuhn(String cardNumber) {
+    private boolean checkLuhn(String cardNumber) {
         int sum = 0;
         boolean alternate = false;
         if ((cardNumber == null) || (cardNumber.length() == 0)) {
@@ -74,7 +74,7 @@ public class CardToken {
         return validateSecurityCode(securityCode, paymentMethod, (((cardNumber != null) ? cardNumber.length() : 0) >= MercadoPagoUtil.BIN_LENGTH ? cardNumber.substring(0, MercadoPagoUtil.BIN_LENGTH) : ""));
     }
 
-    private static boolean validateSecurityCode(String securityCode, PaymentMethod paymentMethod, String bin) {
+    private boolean validateSecurityCode(String securityCode, PaymentMethod paymentMethod, String bin) {
         boolean isValidSecurityCode = true;
 
         if (paymentMethod != null) {
@@ -94,7 +94,7 @@ public class CardToken {
         return isValidSecurityCode;
     }
 
-    public static boolean validateExpiryDate(Integer month, Integer year) {
+    public boolean validateExpiryDate(Integer month, Integer year) {
         if (!validateExpMonth(month)) {
             return false;
         }
@@ -104,24 +104,24 @@ public class CardToken {
         return !hasMonthPassed(month, year);
     }
 
-    private static boolean validateExpMonth(Integer month) {
+    private boolean validateExpMonth(Integer month) {
         return (month == null) ? false : (month >= 1 && month <= 12);
     }
 
-    private static boolean validateExpYear(Integer year) {
+    private boolean validateExpYear(Integer year) {
         return (year == null) ? false : !hasYearPassed(year);
     }
 
-    private static boolean hasMonthPassed(int month, int year) {
+    private boolean hasMonthPassed(int month, int year) {
         return hasYearPassed(year) || normalizeYear(year) == now.get(Calendar.YEAR) && month < (now.get(Calendar.MONTH) + 1);
     }
 
-    private static boolean hasYearPassed(int year) {
+    private boolean hasYearPassed(int year) {
         int normalized = normalizeYear(year);
         return normalized < now.get(Calendar.YEAR);
     }
 
-    private static Integer normalizeYear(Integer year) {
+    private Integer normalizeYear(Integer year) {
         if ((year != null) && (year < 100 && year >= 0)) {
             String currentYear = String.valueOf(now.get(Calendar.YEAR));
             String prefix = currentYear.substring(0, currentYear.length() - 2);

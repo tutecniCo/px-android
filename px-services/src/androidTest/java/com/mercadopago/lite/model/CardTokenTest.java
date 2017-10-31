@@ -175,50 +175,62 @@ public class CardTokenTest {
     // * Expiry date
     @Test
     public void testExpiryDate() {
+        CardToken cardToken = StaticMock.getCardToken();
+
         Integer month = 3;
         Integer year = 2029;
 
-        assertTrue(CardToken.validateExpiryDate(month, year));
+        assertTrue(cardToken.validateExpiryDate(month, year));
     }
 
     @Test
     public void testExpiryDateNullMonth() {
+        CardToken cardToken = StaticMock.getCardToken();
+
         Integer month = null;
         Integer year = 2020;
 
-        assertFalse(CardToken.validateExpiryDate(month, year));
+        assertFalse(cardToken.validateExpiryDate(month, year));
     }
 
     @Test
     public void testExpiryDateWrongMonth() {
+        CardToken cardToken = StaticMock.getCardToken();
+
         Integer month = 13;
         Integer year = 2020;
 
-        assertFalse(CardToken.validateExpiryDate(month, year));
+        assertFalse(cardToken.validateExpiryDate(month, year));
     }
 
     @Test
     public void testExpiryDateNullYear() {
+        CardToken cardToken = StaticMock.getCardToken();
+
         Integer month = 13;
         Integer year = null;
 
-        assertFalse(CardToken.validateExpiryDate(month, year));
+        assertFalse(cardToken.validateExpiryDate(month, year));
     }
 
     @Test
     public void testExpiryDateWrongYear() {
+        CardToken cardToken = StaticMock.getCardToken();
+
         Integer month = 13;
         Integer year = 2000;
 
-        assertFalse(CardToken.validateExpiryDate(month, year));
+        assertFalse(cardToken.validateExpiryDate(month, year));
     }
 
     @Test
     public void testExpiryDateWrongShortYear() {
+        CardToken cardToken = StaticMock.getCardToken();
+
         Integer month = 13;
         Integer year = 00;
 
-        assertFalse(CardToken.validateExpiryDate(month, year));
+        assertFalse(cardToken.validateExpiryDate(month, year));
     }
 
     // * Identification
