@@ -9,19 +9,20 @@ import java.util.List;
 
 public class PaymentMethodSearch {
 
-    private List<PaymentMethodSearchItem> paymentMethodSearchItem;
+    @SerializedName("groups")
+    private List<PaymentMethodSearchItem> paymentMethodSearchItems;
     @SerializedName("custom_options")
     private List<CustomOptionSearchItem> customOptionSearchItems;
     private List<PaymentMethod> paymentMethods;
     private List<Card> cards;
     private PaymentMethodSearchItem defaultOption;
 
-    public List<PaymentMethodSearchItem> getPaymentMethodSearchItem() {
-        return paymentMethodSearchItem;
+    public List<PaymentMethodSearchItem> getPaymentMethodSearchItems() {
+        return paymentMethodSearchItems;
     }
 
-    public void setPaymentMethodSearchItem(List<PaymentMethodSearchItem> paymentMethodSearchItem) {
-        this.paymentMethodSearchItem = paymentMethodSearchItem;
+    public void setPaymentMethodSearchItems(List<PaymentMethodSearchItem> paymentMethodSearchItems) {
+        this.paymentMethodSearchItems = paymentMethodSearchItems;
     }
 
     public List<CustomOptionSearchItem> getCustomOptionSearchItems() {

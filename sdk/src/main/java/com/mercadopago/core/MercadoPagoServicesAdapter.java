@@ -17,7 +17,6 @@ import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
-import com.mercadopago.model.PayerIntent;
 import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentBody;
 import com.mercadopago.model.PaymentMethod;
@@ -30,7 +29,6 @@ import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.services.CheckoutService;
 import com.mercadopago.services.PaymentService;
 import com.mercadopago.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
@@ -123,24 +121,17 @@ public class MercadoPagoServicesAdapter {
     }
 
     public void getPaymentMethodSearch(BigDecimal amount, List<String> excludedPaymentTypes, List<String> excludedPaymentMethods, Payer payer, Site site, final Callback<PaymentMethodSearch> callback) {
-        PayerIntent payerIntent = new PayerIntent(payer);
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
-        String separator = ",";
-        String excludedPaymentTypesAppended = getListAsString(excludedPaymentTypes, separator);
-        String excludedPaymentMethodsAppended = getListAsString(excludedPaymentMethods, separator);
-        String siteId = site == null ? "" : site.getId();
-        service.getPaymentMethodSearch(mContext.getResources().getConfiguration().locale.getLanguage(), this.mPublicKey, amount, excludedPaymentTypesAppended, excludedPaymentMethodsAppended, payerIntent, siteId, PAYMENT_METHODS_OPTIONS_API_VERSION, mProcessingMode).enqueue(callback);
-//        mMercadoPagoServices.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethods, ModelsAdapter.adapt(payer), ModelsAdapter.adapt(site), new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.PaymentMethodSearch>() {
-//            @Override
-//            public void success(com.mercadopago.lite.model.PaymentMethodSearch paymentMethodSearch) {
-//                callback.success(ModelsAdapter.adapt(paymentMethodSearch));
-//            }
-//
-//            @Override
-//            public void failure(ApiException apiException) {
-//                callback.failure(ModelsAdapter.adapt(apiException));
-//            }
-//        });
+        mMercadoPagoServices.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethods, ModelsAdapter.adapt(payer), ModelsAdapter.adapt(site), new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.model.PaymentMethodSearch>() {
+            @Override
+            public void success(com.mercadopago.lite.model.PaymentMethodSearch paymentMethodSearch) {
+                callback.success(ModelsAdapter.adapt(paymentMethodSearch));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
 
