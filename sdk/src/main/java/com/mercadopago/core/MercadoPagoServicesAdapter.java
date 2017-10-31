@@ -1,7 +1,6 @@
 package com.mercadopago.core;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Build;
 
 import com.mercadopago.adapters.ErrorHandlingCallAdapter;
@@ -31,11 +30,7 @@ import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.services.BankDealService;
 import com.mercadopago.services.CheckoutService;
-import com.mercadopago.services.DiscountService;
-import com.mercadopago.services.GatewayService;
-import com.mercadopago.services.IdentificationService;
 import com.mercadopago.services.PaymentService;
 import com.mercadopago.util.HttpClientUtil;
 import com.mercadopago.util.JsonUtil;
@@ -99,9 +94,18 @@ public class MercadoPagoServicesAdapter {
         disableConnectionReuseIfNecessary();
     }
 
-    public void getPreference(String checkoutPreferenceId, Callback<CheckoutPreference> callback) {
-        CheckoutService service = getDefaultRetrofit().create(CheckoutService.class);
-        service.getPreference(checkoutPreferenceId, this.mPublicKey).enqueue(callback);
+    public void getPreference(String checkoutPreferenceId, final Callback<CheckoutPreference> callback) {
+        mMercadoPagoServices.getCheckoutPreference(checkoutPreferenceId, new com.mercadopago.lite.callbacks.Callback<com.mercadopago.lite.preferences.CheckoutPreference>() {
+            @Override
+            public void success(com.mercadopago.lite.preferences.CheckoutPreference checkoutPreference) {
+                callback.success(ModelsAdapter.adapt(checkoutPreference));
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                callback.failure(ModelsAdapter.adapt(apiException));
+            }
+        });
     }
 
     public void getInstructions(Long paymentId, String paymentTypeId, final Callback<Instructions> callback) {
