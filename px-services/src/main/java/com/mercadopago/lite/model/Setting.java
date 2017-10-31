@@ -16,7 +16,7 @@ public class Setting {
 
         Setting selectedSetting = null;
 
-        if (settings != null && settings.size() > 0 ) {
+        if (settings != null && settings.size() > 0) {
 
             for (Setting setting : settings) {
 

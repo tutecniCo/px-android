@@ -50,7 +50,7 @@ public class CardToken {
         return isValidCardNumber;
     }
 
-    public static boolean checkLuhn(String cardNumber) {
+    private static boolean checkLuhn(String cardNumber) {
         int sum = 0;
         boolean alternate = false;
         if ((cardNumber == null) || (cardNumber.length() == 0)) {

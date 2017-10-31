@@ -1,4 +1,5 @@
 package com.mercadopago.lite.model;
+
 /**
  * Created by mromar on 10/20/17.
  */
@@ -11,6 +12,15 @@ public class Currency {
     private int decimalPlaces;
     private Character decimalSeparator;
     private Character thousandsSeparator;
+
+    public Currency(String id, String description, String symbol, int decimalPlaces, Character decimalSeparator, Character thousandsSeparator) {
+        this.id = id;
+        this.description = description;
+        this.symbol = symbol;
+        this.decimalPlaces = decimalPlaces;
+        this.decimalSeparator = decimalSeparator;
+        this.thousandsSeparator = thousandsSeparator;
+    }
 
     public String getId() {
         return id;

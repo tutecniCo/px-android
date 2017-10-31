@@ -1,4 +1,5 @@
 package com.mercadopago.lite.model;
+
 /**
  * Created by mromar on 10/24/17.
  */
