@@ -190,8 +190,7 @@ class ModelsAdapter{
     }
 
     static PaymentMethodSearch adapt(com.mercadopago.lite.model.PaymentMethodSearch paymentMethodSearch) {
-        PaymentMethodSearch ps =  JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(paymentMethodSearch), PaymentMethodSearch.class);
-        return ps;
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(paymentMethodSearch), PaymentMethodSearch.class);
     }
 
     static com.mercadopago.lite.model.Payer adapt(Payer payer) {
