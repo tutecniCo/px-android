@@ -1,1 +1,1 @@
-include ':sdk', ':example', ':px-tracking', ':px-services-old', ':px-services'
+include ':sdk', ':example'

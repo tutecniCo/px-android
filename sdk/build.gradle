@@ -122,7 +122,6 @@ dependencies {
 
     implementation project(':px-tracking')
     implementation project(':px-services')
-
 }
 
 configurations {
