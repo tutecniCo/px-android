@@ -116,8 +116,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.mercadopago:services:0.1.0'
-    devCompile project(path: ':px-tracking', configuration: 'devDebug')
-    prodCompile project(path: ':px-tracking', configuration: 'prodDebug')
+    compile 'com.mercadopago:tracking:2.2.0'
 }
 
 configurations {

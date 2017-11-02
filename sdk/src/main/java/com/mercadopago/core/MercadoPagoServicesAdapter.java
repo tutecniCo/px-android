@@ -4,24 +4,25 @@ import android.content.Context;
 import android.os.Build;
 
 import com.mercadopago.callbacks.Callback;
+
 import com.mercadopago.lite.core.MercadoPagoServices;
-import com.mercadopago.lite.model.ApiException;
-import com.mercadopago.lite.model.BankDeal;
-import com.mercadopago.lite.model.Campaign;
-import com.mercadopago.lite.model.CardToken;
-import com.mercadopago.lite.model.Discount;
-import com.mercadopago.lite.model.IdentificationType;
-import com.mercadopago.lite.model.Instructions;
-import com.mercadopago.lite.model.Issuer;
-import com.mercadopago.lite.model.Payer;
-import com.mercadopago.lite.model.Payment;
-import com.mercadopago.lite.model.PaymentMethod;
-import com.mercadopago.lite.model.PaymentMethodSearch;
-import com.mercadopago.lite.model.SavedCardToken;
-import com.mercadopago.lite.model.SavedESCCardToken;
-import com.mercadopago.lite.model.Site;
-import com.mercadopago.lite.model.Token;
-import com.mercadopago.lite.model.requests.SecurityCodeIntent;
+import com.mercadopago.model.Installment;
+import com.mercadopago.model.BankDeal;
+import com.mercadopago.model.Campaign;
+import com.mercadopago.model.CardToken;
+import com.mercadopago.model.Discount;
+import com.mercadopago.model.IdentificationType;
+import com.mercadopago.model.Instructions;
+import com.mercadopago.model.Issuer;
+import com.mercadopago.model.Payer;
+import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentMethod;
+import com.mercadopago.model.PaymentMethodSearch;
+import com.mercadopago.model.SavedCardToken;
+import com.mercadopago.model.SavedESCCardToken;
+import com.mercadopago.model.Site;
+import com.mercadopago.model.Token;
+import com.mercadopago.model.SecurityCodeIntent;
 import com.mercadopago.model.PaymentBody;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.ServicePreference;
@@ -75,7 +76,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -89,7 +90,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -103,7 +104,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -134,7 +135,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -148,7 +149,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -162,7 +163,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -176,7 +177,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -192,7 +193,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -206,7 +207,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -221,7 +222,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -235,7 +236,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -249,7 +250,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -263,7 +264,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -277,7 +278,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -291,7 +292,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });
@@ -305,7 +306,7 @@ public class MercadoPagoServicesAdapter {
             }
 
             @Override
-            public void failure(ApiException apiException) {
+            public void failure(com.mercadopago.lite.model.ApiException apiException) {
                 callback.failure(ModelsAdapter.adapt(apiException));
             }
         });

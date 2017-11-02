@@ -18,8 +18,8 @@ import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
-import com.mercadopago.px_tracking.utils.TrackingUtil;
 import com.mercadopago.tracker.MPTrackingContext;
+import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.ApiUtil;
 
 import java.math.BigDecimal;
