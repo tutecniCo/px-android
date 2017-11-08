@@ -13,7 +13,6 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Item;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
-import com.mercadopago.util.CircleTransform;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ScaleUtil;
 import com.squareup.picasso.Picasso;
@@ -143,6 +142,14 @@ public class ReviewProductView implements ReviewProductViewController {
             setDefaultProductIcon(resId, decorationPreference);
         } else {
             int dimen = ScaleUtil.getPxFromDp(48, mContext);
+
+//            ImageLoader.with(mContext).load(pictureUrl)
+//                    .transform(ImageLoader.TRANSFORM_CRCLE)
+//                    .resize(dimen, dimen)
+//                    .centerInside()
+//                    .placeholder(resId)
+//                    .into(mProductImage);
+
             Picasso.with(mContext)
                     .load(pictureUrl)
                     .transform(new CircleTransform())

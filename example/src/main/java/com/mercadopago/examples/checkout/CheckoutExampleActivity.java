@@ -12,16 +12,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercadopago.constants.Sites;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.examples.R;
 import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.Item;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+
+import java.math.BigDecimal;
 
 public class CheckoutExampleActivity extends AppCompatActivity {
 
@@ -42,6 +46,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_checkout_example);
         mActivity = this;
         mPublicKey = ExamplesUtils.DUMMY_MERCHANT_PUBLIC_KEY;
@@ -70,10 +75,18 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     }
 
     private void startMercadoPagoCheckout() {
+
+//        final CheckoutPreference.Builder prefBuilder = new CheckoutPreference.Builder();
+//        prefBuilder
+//                .setDefaultInstallments(1)
+//                .addItem(new Item("Bici", 1, new BigDecimal(3000)))
+//                    .setSite(Sites.ARGENTINA);
+
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
+//                .setCheckoutPreference(prefBuilder.build())
                 .setDecorationPreference(getCurrentDecorationPreference())
                 .startForPayment();
     }

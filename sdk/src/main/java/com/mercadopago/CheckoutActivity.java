@@ -205,6 +205,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             mCheckoutPresenter.onPaymentConfirmation();
         } else if (resultCode == ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD) {
             mCheckoutPresenter.changePaymentMethod();
+
         } else if (resultCode == ReviewAndConfirmActivity.RESULT_CANCEL_PAYMENT) {
             if (data != null && data.getIntExtra("resultCode", 0) != 0) {
                 Integer customResultCode = data.getIntExtra("resultCode", 0);
