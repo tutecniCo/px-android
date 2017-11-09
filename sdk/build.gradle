@@ -122,7 +122,6 @@ dependencies {
     implementation "com.mercadopago:services:0.1.0"
     implementation "com.mercadopago:tracking:2.2.0"
 }
-
 configurations {
     archives {
         extendsFrom configurations.default

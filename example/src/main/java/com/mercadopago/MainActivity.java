@@ -7,6 +7,8 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.mercadopago.core.Settings;
+import com.mercadopago.examples.*;
 import com.mercadopago.examples.R;
 import com.mercadopago.examples.checkout.CheckoutExampleActivity;
 import com.mercadopago.examples.components.ComponentsExampleActivity;
