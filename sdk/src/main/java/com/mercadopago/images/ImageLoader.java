@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -41,17 +40,45 @@ public class ImageLoader {
 
     public static Builder with(final Context context) {
         return new Builder(context);
+    }
 
+    public static class Config {
+
+        public final Context context;
+        public final String url;
+//        public final boolean centerInside;
+        public final int size;
+        public final @Transform String transform;
+        public final @DrawableRes int placeholder;
+        public final ImageView image;
+
+        public Config(@NonNull final Builder builder) {
+            this.context = builder.context;
+            this.url = builder.url;
+//            this.centerInside = builder.centerInside;
+            this.size = builder.size;
+            this.transform = builder.transform;
+            this.placeholder = builder.placeholder;
+            this.image = builder.image;
+        }
+
+        public String getPlaceholderKey() {
+            return placeholder + size + transform;
+        }
+
+        public String getUrlKey() {
+            return placeholder + size + transform;
+        }
     }
 
     public static class Builder {
 
         private final Context context;
         private String url;
-        private boolean centerInside;
-        private Point size;
+//        private boolean centerInside;
+        private int size = 0;
         private @Transform String transform = TRANSFORM_NONE;
-        private @DrawableRes int placeholder;
+        private @DrawableRes int placeholder = 0;
         private ImageView image;
 
         public Builder(Context context) {
@@ -68,25 +95,16 @@ public class ImageLoader {
             return this;
         }
 
-        /** Resize the image to the specified size in pixels. */
-        public Builder resize(final int width, final int height) {
-            if (width < 0) {
-                throw new IllegalArgumentException("Width must be positive number or 0.");
-            }
-            if (height < 0) {
-                throw new IllegalArgumentException("Height must be positive number or 0.");
-            }
-            if (height == 0 && width == 0) {
-                throw new IllegalArgumentException("At least one dimension has to be positive number.");
-            }
-            this.size = new Point(width, height);
+        /** Resize the image maintaining aspec ratio to the specified size in pixels. */
+        public Builder resize(final int size) {
+            this.size = size;
             return this;
         }
 
-        public Builder centerInside() {
-            this.centerInside = true;
-            return this;
-        }
+//        public Builder centerInside() {
+//            this.centerInside = true;
+//            return this;
+//        }
 
         public Builder placeholder(@DrawableRes final int placeholder) {
             this.placeholder = placeholder;
@@ -95,69 +113,106 @@ public class ImageLoader {
 
         public AsyncTask into(@NonNull final ImageView image) {
             this.image = image;
-            return new LoadImageTask().execute(this);
+            return new LoadImageTask(new Config(this)).execute();
         }
     }
 
-    public static class LoadImageTask extends AsyncTask<Builder, Void, Bitmap> {
+    public static class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
 
-        private ImageView image;
+        private Config config;
+
+        public LoadImageTask(final Config config) {
+            this.config = config;
+        }
 
         @Override
-        protected Bitmap doInBackground(final Builder... builders) {
+        protected void onPreExecute() {
 
-            final OkHttpClient client = new OkHttpClient();
+//            if (config.centerInside) {
+            config.image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//            }
 
-            if (builders != null && builders.length > 0) {
+            if (config.placeholder != 0) {
+                config.image.setImageBitmap(getBitmapFromResource(config));
+            }
+        }
 
-                final Builder builder = builders[0];
-                image = builder.image;
+        @Override
+        protected Bitmap doInBackground(final Void... voids) {
 
-                if (builder.centerInside) {
-                    image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                }
+            if (config.url != null && !config.url.isEmpty()) {
 
-                if (builder.size != null) {
+                Bitmap bitmap = ImageCache.getBitmapFromMemCache(config.getUrlKey());
 
-                }
+                if (bitmap == null) {
 
-                final Request request = new Request.Builder()
-                        .url(builder.url)
-                        .build();
+                    final OkHttpClient client = new OkHttpClient();
 
-                final Response response;
+                    final Request request = new Request.Builder()
+                            .url(config.url)
+                            .build();
 
-                try {
+                    final Response response;
 
-                    response = client.newCall(request).execute();
+                    try {
 
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                        response = client.newCall(request).execute();
 
-                    final InputStream inputStream = response.body().byteStream();
-                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
+                        final InputStream inputStream = response.body().byteStream();
+                        bitmap = BitmapFactory.decodeStream(inputStream);
+                        bitmap = getResizedBitmap(bitmap, config.size);
 
-                    if (builder.transform == TRANSFORM_CRCLE) {
-                        return transformCircle(bitmap);
+                        if (config.transform == TRANSFORM_CRCLE) {
+                            return transformCircle(bitmap);
+                        }
+
+                        ImageCache.addBitmapToMemoryCache(config.getUrlKey(), bitmap);
+
+                        return bitmap;
+
+                    } catch (final IOException e) {
+                        Log.d(ImageLoader.class.getName(), e.getMessage(), e);
                     }
 
-                    return bitmap;
+                } else {
 
-                } catch (final IOException e) {
-                    Log.d(ImageLoader.class.getName(), e.getMessage(), e);
+                    return bitmap;
                 }
+
+            } else if (config.placeholder != 0) {
+
+                return BitmapFactory.decodeResource(
+                    config.context.getResources(),
+                    config.placeholder
+                );
             }
 
-            //DEvolver placeholder!!!
             return null;
         }
 
         @Override
         protected void onPostExecute(final Bitmap bitmap) {
             if (bitmap != null) {
-                image.setImageBitmap(bitmap);
+                config.image.setImageBitmap(bitmap);
             }
         }
+    }
+
+    private static Bitmap getBitmapFromResource (final Config config) {
+
+        Bitmap bmp = ImageCache.getBitmapFromMemCache(config.getPlaceholderKey());
+
+        if (bmp == null) {
+            bmp = BitmapFactory.decodeResource(config.context.getResources(), config.placeholder);
+            if (config.size > 0) {
+                bmp = getResizedBitmap(bmp, config.size);
+            }
+            ImageCache.addBitmapToMemoryCache(config.getPlaceholderKey(), bmp);
+        }
+
+        return bmp;
     }
 
     private static Bitmap transformCircle(Bitmap source) {
@@ -187,6 +242,27 @@ public class ImageLoader {
         return bitmap;
     }
 
+    public static Bitmap getResizedBitmap(final Bitmap bitmap, final int maxSize) {
+
+        if (maxSize > 0) {
+
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+
+            float bitmapRatio = (float) width / (float) height;
+            if (bitmapRatio > 1) {
+                width = maxSize;
+                height = (int) (width / bitmapRatio);
+            } else {
+                height = maxSize;
+                width = (int) (height * bitmapRatio);
+            }
+
+            return Bitmap.createScaledBitmap(bitmap, width, height, true);
+        }
+
+        return bitmap;
+    }
 
 
 //    Picasso.with(mContext)

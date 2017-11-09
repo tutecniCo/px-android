@@ -13,6 +13,7 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Item;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
+import com.mercadopago.util.CircleTransform;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ScaleUtil;
 import com.squareup.picasso.Picasso;
