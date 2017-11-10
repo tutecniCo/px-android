@@ -1,83 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
     tools:context="com.mercadopago.example.ImageLoadActivity"
-    tools:showIn="@layout/activity_image_load"
-    android:orientation="vertical"
-    android:layout_gravity="center">
+    tools:showIn="@layout/activity_image_load">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:background="@color/mpsdk_amex" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="17sp"
-            android:text="Picasso"/>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical">-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="17sp"
-            android:text="Custom"/>
+        <!--<Button-->
+            <!--android:id="@+id/reload"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Recargar" />-->
 
-    </LinearLayout>
+        <!--<Button-->
+            <!--android:id="@+id/clear_cache"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Borrar cache" />-->
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+    <!--</LinearLayout>-->
 
-        <ImageView
-            android:id="@+id/image_picasso_1"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/mpsdk_amex"/>
-
-        <ImageView
-            android:id="@+id/image_image_laoder_1"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/mpsdk_amex"
-            android:layout_marginLeft="20dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:id="@+id/image_picasso_2"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/mpsdk_amex"/>
-
-        <ImageView
-            android:id="@+id/image_image_laoder_2"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@color/mpsdk_amex"
-            android:layout_marginLeft="20dp"/>
-
-    </LinearLayout>
 </LinearLayout>

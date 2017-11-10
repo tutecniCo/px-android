@@ -32,14 +32,17 @@ public class ImageCache {
         };
     }
 
-    public static void addBitmapToMemoryCache(final String key, final Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
+    public static synchronized void addBitmapToMemoryCache(final String key, final Bitmap bitmap) {
+        if (key != null && bitmap != null && getBitmapFromMemCache(key) == null) {
             memoryCache.put(key, bitmap);
         }
     }
 
-    public static Bitmap getBitmapFromMemCache(final String key) {
+    public static synchronized Bitmap getBitmapFromMemCache(final String key) {
         return memoryCache.get(key);
     }
 
+    public static synchronized void reset() {
+        memoryCache.evictAll();
+    }
 }

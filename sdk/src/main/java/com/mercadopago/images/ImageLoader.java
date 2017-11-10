@@ -17,20 +17,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-/**
- * Created by nfortuna on 11/6/17.
- */
 
 public class ImageLoader {
 
     public static final String TRANSFORM_NONE = "transform_none";
     public static final String TRANSFORM_CRCLE = "transform_circle";
 
+    private static Map<Integer, AsyncTask> tasks = new HashMap<>();
 
     @StringDef({TRANSFORM_NONE, TRANSFORM_CRCLE})
     @Retention(RetentionPolicy.SOURCE)
@@ -39,14 +38,13 @@ public class ImageLoader {
     }
 
     public static Builder with(final Context context) {
-        return new Builder(context);
+        return new Builder(context, tasks);
     }
 
     public static class Config {
 
         public final Context context;
         public final String url;
-//        public final boolean centerInside;
         public final int size;
         public final @Transform String transform;
         public final @DrawableRes int placeholder;
@@ -55,7 +53,6 @@ public class ImageLoader {
         public Config(@NonNull final Builder builder) {
             this.context = builder.context;
             this.url = builder.url;
-//            this.centerInside = builder.centerInside;
             this.size = builder.size;
             this.transform = builder.transform;
             this.placeholder = builder.placeholder;
@@ -67,7 +64,7 @@ public class ImageLoader {
         }
 
         public String getUrlKey() {
-            return placeholder + size + transform;
+            return url + size + transform;
         }
     }
 
@@ -75,18 +72,24 @@ public class ImageLoader {
 
         private final Context context;
         private String url;
-//        private boolean centerInside;
         private int size = 0;
         private @Transform String transform = TRANSFORM_NONE;
         private @DrawableRes int placeholder = 0;
         private ImageView image;
+        private Map<Integer, AsyncTask> tasks;
 
-        public Builder(Context context) {
+        public Builder(final Context context, final Map<Integer, AsyncTask> tasks) {
             this.context = context;
+            this.tasks = tasks;
         }
 
         public Builder load(final String url) {
             this.url = url;
+            return this;
+        }
+
+        public Builder load(@DrawableRes final int drawable) {
+            this.placeholder = drawable;
             return this;
         }
 
@@ -101,23 +104,28 @@ public class ImageLoader {
             return this;
         }
 
-//        public Builder centerInside() {
-//            this.centerInside = true;
-//            return this;
-//        }
 
         public Builder placeholder(@DrawableRes final int placeholder) {
             this.placeholder = placeholder;
             return this;
         }
 
-        public AsyncTask into(@NonNull final ImageView image) {
+        public void into(@NonNull final ImageView image) {
             this.image = image;
-            return new LoadImageTask(new Config(this)).execute();
+            if (tasks.containsKey(this.image.getId())) {
+                //The image is the same we have to cancel pending tasks before creating new one
+                final AsyncTask task = tasks.get(this.image.getId());
+                if (task.getStatus().equals(AsyncTask.Status.RUNNING) ) {
+                    tasks.get(this.image.getId()).cancel(true);
+                }
+                tasks.remove(this.image.getId());
+            }
+            final AsyncTask task = new LoadImageTask(new Config(this)).execute();
+            tasks.put(this.image.getId(), task);
         }
     }
 
-    public static class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
+    private static class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
 
         private Config config;
 
@@ -128,9 +136,7 @@ public class ImageLoader {
         @Override
         protected void onPreExecute() {
 
-//            if (config.centerInside) {
             config.image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//            }
 
             if (config.placeholder != 0) {
                 config.image.setImageBitmap(getBitmapFromResource(config));
@@ -142,19 +148,19 @@ public class ImageLoader {
 
             if (config.url != null && !config.url.isEmpty()) {
 
-                Bitmap bitmap = ImageCache.getBitmapFromMemCache(config.getUrlKey());
+                try {
 
-                if (bitmap == null) {
+                    Bitmap bitmap = ImageCache.getBitmapFromMemCache(config.getUrlKey());
 
-                    final OkHttpClient client = new OkHttpClient();
+                    if (bitmap == null) {
 
-                    final Request request = new Request.Builder()
-                            .url(config.url)
-                            .build();
+                        final OkHttpClient client = new OkHttpClient();
 
-                    final Response response;
+                        final Request request = new Request.Builder()
+                                .url(config.url)
+                                .build();
 
-                    try {
+                        final Response response;
 
                         response = client.newCall(request).execute();
 
@@ -165,28 +171,21 @@ public class ImageLoader {
                         bitmap = getResizedBitmap(bitmap, config.size);
 
                         if (config.transform == TRANSFORM_CRCLE) {
-                            return transformCircle(bitmap);
+                            bitmap = transformCircle(bitmap);
                         }
 
                         ImageCache.addBitmapToMemoryCache(config.getUrlKey(), bitmap);
 
                         return bitmap;
 
-                    } catch (final IOException e) {
-                        Log.d(ImageLoader.class.getName(), e.getMessage(), e);
+                    } else {
+
+                        return bitmap;
                     }
 
-                } else {
-
-                    return bitmap;
+                } catch(final Exception e) {
+                    Log.d("log", e.getMessage(), e);
                 }
-
-            } else if (config.placeholder != 0) {
-
-                return BitmapFactory.decodeResource(
-                    config.context.getResources(),
-                    config.placeholder
-                );
             }
 
             return null;
@@ -242,7 +241,7 @@ public class ImageLoader {
         return bitmap;
     }
 
-    public static Bitmap getResizedBitmap(final Bitmap bitmap, final int maxSize) {
+    private static Bitmap getResizedBitmap(final Bitmap bitmap, final int maxSize) {
 
         if (maxSize > 0) {
 
@@ -263,13 +262,4 @@ public class ImageLoader {
 
         return bitmap;
     }
-
-
-//    Picasso.with(mContext)
-//            .load(pictureUrl)
-//                    .transform(new CircleTransform())
-//            .resize(dimen, dimen)
-//                    .centerInside()
-//                    .placeholder(resId)
-//                    .into(mProductImage);
 }
