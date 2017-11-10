@@ -16,7 +16,7 @@ public class AllModelTest extends BaseTest<CheckoutActivity> {
 
     public void testAddress() {
 
-        com.mercadopago.model.Address address = new com.mercadopago.model.Address();
+        Address address = new Address();
         address.setStreetName("abcd");
         address.setStreetNumber(Long.parseLong("100"));
         address.setZipCode("1000");
@@ -27,7 +27,7 @@ public class AllModelTest extends BaseTest<CheckoutActivity> {
 
     public void testPayment() {
 
-        com.mercadopago.model.Payment payment = new Payment();
+        Payment payment = new Payment();
         payment.setBinaryMode(true);
         payment.setCallForAuthorizeId("123");
         payment.setCaptured(false);

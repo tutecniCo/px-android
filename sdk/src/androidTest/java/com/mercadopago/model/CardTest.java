@@ -12,21 +12,21 @@ public class CardTest extends BaseTest<CheckoutActivity> {
 
     public void testIsSecurityCodeRequired() {
 
-        com.mercadopago.model.Card card = StaticMock.getCard();
+        Card card = StaticMock.getCard();
 
         assertTrue(card.isSecurityCodeRequired());
     }
 
     public void testIsSecurityCodeRequiredNull() {
 
-        com.mercadopago.model.Card card = StaticMock.getCard();
+        Card card = StaticMock.getCard();
         card.setSecurityCode(null);
         assertTrue(!card.isSecurityCodeRequired());
     }
 
     public void testIsSecurityCodeRequiredLengthZero() {
 
-        com.mercadopago.model.Card card = StaticMock.getCard();
+        Card card = StaticMock.getCard();
         card.getSecurityCode().setLength(0);
         assertTrue(!card.isSecurityCodeRequired());
     }
