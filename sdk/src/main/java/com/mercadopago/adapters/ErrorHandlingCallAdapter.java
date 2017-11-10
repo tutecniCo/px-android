@@ -28,10 +28,10 @@ public class ErrorHandlingCallAdapter {
     public static class ErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
 
         @Override
-        public CallAdapter<com.mercadopago.adapters.MPCall<?>> get(Type returnType, Annotation[] annotations,
-                                                                   Retrofit retrofit) {
+        public CallAdapter<MPCall<?>> get(Type returnType, Annotation[] annotations,
+                                          Retrofit retrofit) {
             TypeToken<?> token = TypeToken.get(returnType);
-            if (token.getRawType() != com.mercadopago.adapters.MPCall.class) {
+            if (token.getRawType() != MPCall.class) {
                 return null;
             }
             if (!(returnType instanceof ParameterizedType)) {
@@ -39,14 +39,14 @@ public class ErrorHandlingCallAdapter {
                         "MPCall must have generic type (e.g., MPCall<ResponseBody>)");
             }
             final Type responseType = ((ParameterizedType) returnType).getActualTypeArguments()[0];
-            return new CallAdapter<com.mercadopago.adapters.MPCall<?>>() {
+            return new CallAdapter<MPCall<?>>() {
                 @Override
                 public Type responseType() {
                     return responseType;
                 }
 
                 @Override
-                public <R> com.mercadopago.adapters.MPCall<R> adapt(Call<R> call) {
+                public <R> MPCall<R> adapt(Call<R> call) {
                     return new MPCallAdapter<>(call);
                 }
             };
@@ -54,9 +54,9 @@ public class ErrorHandlingCallAdapter {
     }
 
     /**
-     * Adapts a {@link Call} to {@link com.mercadopago.adapters.MPCall}.
+     * Adapts a {@link Call} to {@link MPCall}.
      */
-    static class MPCallAdapter<T> implements com.mercadopago.adapters.MPCall<T> {
+    static class MPCallAdapter<T> implements MPCall<T> {
         private final Call<T> call;
 
         MPCallAdapter(Call<T> call) {
@@ -117,7 +117,7 @@ public class ErrorHandlingCallAdapter {
         }
 
         @Override
-        public com.mercadopago.adapters.MPCall<T> clone() {
+        public MPCall<T> clone() {
             return new MPCallAdapter<>(call.clone());
         }
     }
