@@ -6,16 +6,16 @@ import com.google.gson.GsonBuilder;
 
 public class JsonUtil {
 
-    private static com.mercadopago.util.JsonUtil mInstance = null;
+    private static JsonUtil mInstance = null;
     private Gson mGson;
 
     protected JsonUtil() {
         mGson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     }
 
-    public static com.mercadopago.util.JsonUtil getInstance() {
+    public static JsonUtil getInstance() {
         if (mInstance == null) {
-            mInstance = new com.mercadopago.util.JsonUtil();
+            mInstance = new JsonUtil();
         }
         return mInstance;
     }

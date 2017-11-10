@@ -3,14 +3,15 @@ package com.mercadopago.controllers;
 import com.mercadopago.preferences.ServicePreference;
 
 public class CustomServicesHandler {
-    private static com.mercadopago.controllers.CustomServicesHandler mInstance;
+    private static CustomServicesHandler mInstance;
     private ServicePreference servicePreference;
 
-    private CustomServicesHandler(){}
+    private CustomServicesHandler() {
+    }
 
-    public static com.mercadopago.controllers.CustomServicesHandler getInstance() {
-        if(mInstance == null) {
-            mInstance = new com.mercadopago.controllers.CustomServicesHandler();
+    public static CustomServicesHandler getInstance() {
+        if (mInstance == null) {
+            mInstance = new CustomServicesHandler();
         }
         return mInstance;
     }

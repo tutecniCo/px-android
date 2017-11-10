@@ -15,6 +15,7 @@ import java.util.Collection;
 /**
  * Created by mreverter on 27/4/16.
  */
+
 @RunWith(Parameterized.class)
 public class PaymentMethodSearchGetSearchItemsTest {
     @Parameterized.Parameters
@@ -31,7 +32,7 @@ public class PaymentMethodSearchGetSearchItemsTest {
         });
     }
 
-    public com.mercadopago.model.PaymentMethodSearch paymentMethodSearch;
+    public PaymentMethodSearch paymentMethodSearch;
 
     public String mItemId;
 
@@ -40,7 +41,7 @@ public class PaymentMethodSearchGetSearchItemsTest {
     public String mPaymentTypeId;
 
 
-    public PaymentMethodSearchGetSearchItemsTest(String paymentMethodId, String paymentTypeId, String itemId){
+    public PaymentMethodSearchGetSearchItemsTest(String paymentMethodId, String paymentTypeId, String itemId) {
         this.paymentMethodSearch = getPaymentMethodSearch();
         this.mItemId = itemId;
         this.mPaymentMethodId = paymentMethodId;
@@ -49,13 +50,13 @@ public class PaymentMethodSearchGetSearchItemsTest {
 
     @Test
     public void testGetItemByPaymentMethod() {
-        com.mercadopago.model.PaymentMethod paymentMethod = new PaymentMethod();
+        PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId(mPaymentMethodId);
         paymentMethod.setPaymentTypeId(mPaymentTypeId);
 
-        com.mercadopago.model.PaymentMethodSearchItem item = paymentMethodSearch.getSearchItemByPaymentMethod(paymentMethod);
+        PaymentMethodSearchItem item = paymentMethodSearch.getSearchItemByPaymentMethod(paymentMethod);
 
-        if(item != null) {
+        if (item != null) {
             Assert.assertEquals(mItemId, item.getId());
         } else {
             Assert.assertEquals(mItemId, "null");
@@ -63,7 +64,7 @@ public class PaymentMethodSearchGetSearchItemsTest {
     }
 
 
-    private com.mercadopago.model.PaymentMethodSearch getPaymentMethodSearch() {
+    private PaymentMethodSearch getPaymentMethodSearch() {
         String paymentMethodSearchJson = StaticMock.getPaymentMethodSearchWithoutCustomOptionsAsJson();
         return JsonUtil.getInstance().fromJson(paymentMethodSearchJson, PaymentMethodSearch.class);
 

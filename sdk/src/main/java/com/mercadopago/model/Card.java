@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Card implements CardInformation {
 
-    private com.mercadopago.model.Cardholder cardHolder;
+    private Cardholder cardHolder;
     private String customerId;
     private Date dateCreated;
     private Date dateLastUpdated;

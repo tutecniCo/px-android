@@ -25,23 +25,23 @@ public class SettingTest {
 
     @Test
     public void whenValidBinThenGetSetting() {
-        com.mercadopago.model.PaymentMethod paymentMethod = StaticMock.getPaymentMethod(InstrumentationRegistry.getContext());
-        com.mercadopago.model.Setting setting = com.mercadopago.model.Setting.getSettingByBin(paymentMethod.getSettings(), "466057");
+        PaymentMethod paymentMethod = StaticMock.getPaymentMethod(InstrumentationRegistry.getContext());
+        Setting setting = Setting.getSettingByBin(paymentMethod.getSettings(), "466057");
         assertTrue(setting != null);
     }
 
     @Test
     public void whenInvalidBinThenReturnNullSetting() {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(InstrumentationRegistry.getContext());
-        com.mercadopago.model.Setting setting = com.mercadopago.model.Setting.getSettingByBin(paymentMethod.getSettings(), "888888");
+        Setting setting = Setting.getSettingByBin(paymentMethod.getSettings(), "888888");
         assertTrue(setting == null);
     }
 
     @Test
     public void whenNoSettingsThenReturnNullSetting() {
-        com.mercadopago.model.Setting setting = com.mercadopago.model.Setting.getSettingByBin(new ArrayList<com.mercadopago.model.Setting>(), "466057");
+        Setting setting = Setting.getSettingByBin(new ArrayList<Setting>(), "466057");
         assertTrue(setting == null);
-        setting = com.mercadopago.model.Setting.getSettingByBin(null, "466057");
+        setting = Setting.getSettingByBin(null, "466057");
         assertTrue(setting == null);
     }
 }

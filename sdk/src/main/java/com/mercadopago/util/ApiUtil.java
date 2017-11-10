@@ -21,7 +21,7 @@ public class ApiUtil {
         ApiException apiException = null;
         try {
             String errorString = response.errorBody().string();
-            apiException = com.mercadopago.util.JsonUtil.getInstance().fromJson(errorString, ApiException.class);
+            apiException = JsonUtil.getInstance().fromJson(errorString, ApiException.class);
         } catch (Exception ex) {
             //Do nothing
         } finally {
@@ -48,7 +48,7 @@ public class ApiUtil {
 
     public static void finishWithApiException(Activity activity, ApiException apiException) {
 
-        if (!com.mercadopago.util.ApiUtil.checkConnection(activity)) {  // check for connection error
+        if (!ApiUtil.checkConnection(activity)) {  // check for connection error
 
             // Show refresh layout
             LayoutUtil.showRefreshLayout(activity);
@@ -59,7 +59,7 @@ public class ApiUtil {
             // Return with api exception
             Intent intent = new Intent();
             activity.setResult(Activity.RESULT_CANCELED, intent);
-            intent.putExtra("apiException", com.mercadopago.util.JsonUtil.getInstance().toJson(apiException));
+            intent.putExtra("apiException", JsonUtil.getInstance().toJson(apiException));
             activity.finish();
         }
     }
@@ -68,7 +68,7 @@ public class ApiUtil {
         MercadoPagoError mercadoPagoError;
         String errorMessage;
 
-        if (!com.mercadopago.util.ApiUtil.checkConnection(activity)) {
+        if (!ApiUtil.checkConnection(activity)) {
             errorMessage = activity.getString(R.string.mpsdk_no_connection_message);
             mercadoPagoError = new MercadoPagoError(errorMessage, true);
         } else {

@@ -24,7 +24,7 @@ public class CheckoutPreference {
     private Payer payer;
 
     @SerializedName("payment_methods")
-    private com.mercadopago.preferences.PaymentPreference paymentPreference;
+    private PaymentPreference paymentPreference;
 
     private Date expirationDateTo;
     private Date expirationDateFrom;
@@ -47,7 +47,7 @@ public class CheckoutPreference {
         payer.setAccessToken(builder.payerAccessToken);
         this.payer = payer;
 
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(builder.excludedPaymentTypes);
         paymentPreference.setExcludedPaymentMethodIds(builder.excludedPaymentMethods);
         paymentPreference.setMaxAcceptedInstallments(builder.maxInstallments);
@@ -145,7 +145,7 @@ public class CheckoutPreference {
         this.expirationDateFrom = date;
     }
 
-    public void setPaymentPreference(com.mercadopago.preferences.PaymentPreference paymentPreference) {
+    public void setPaymentPreference(PaymentPreference paymentPreference) {
         this.paymentPreference = paymentPreference;
     }
 
@@ -227,7 +227,7 @@ public class CheckoutPreference {
         }
     }
 
-    public com.mercadopago.preferences.PaymentPreference getPaymentPreference() {
+    public PaymentPreference getPaymentPreference() {
         return paymentPreference;
     }
 
@@ -348,7 +348,7 @@ public class CheckoutPreference {
             return this;
         }
 
-        public com.mercadopago.preferences.CheckoutPreference build() {
+        public CheckoutPreference build() {
 
             if (items == null || items.isEmpty())
                 throw new IllegalStateException("Items required");
@@ -358,7 +358,7 @@ public class CheckoutPreference {
                 addExcludedPaymentType(PaymentTypes.ACCOUNT_MONEY);
             }
 
-            return new com.mercadopago.preferences.CheckoutPreference(this);
+            return new CheckoutPreference(this);
         }
     }
 }

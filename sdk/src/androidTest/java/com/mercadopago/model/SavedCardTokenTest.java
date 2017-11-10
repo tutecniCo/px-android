@@ -26,16 +26,14 @@ public class SavedCardTokenTest {
 
     @Test
     public void testConstructor() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         assertTrue(savedCardToken.getCardId().equals(StaticMock.DUMMY_CARD_ID));
         assertTrue(savedCardToken.getSecurityCode().equals(StaticMock.DUMMY_SECURITY_CODE));
     }
 
     @Test
     public void testValidate() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         assertTrue(savedCardToken.validate());
     }
 
@@ -43,16 +41,14 @@ public class SavedCardTokenTest {
 
     @Test
     public void testValidateNullCardId() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         savedCardToken.setCardId(null);
         assertTrue(!savedCardToken.validate());
     }
 
     @Test
     public void testValidateWrongCardId() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         savedCardToken.setCardId("john");
         assertTrue(!savedCardToken.validate());
     }
@@ -61,15 +57,13 @@ public class SavedCardTokenTest {
 
     @Test
     public void testSecurityCode() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         assertTrue(savedCardToken.validateSecurityCode());
     }
 
     @Test
     public void testSecurityCodeEmpty() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         savedCardToken.setSecurityCode("");
 
         assertTrue(!savedCardToken.validate());
@@ -78,8 +72,7 @@ public class SavedCardTokenTest {
 
     @Test
     public void testSecurityCodeMinLength() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         savedCardToken.setSecurityCode("4");
 
         assertTrue(!savedCardToken.validate());
@@ -88,8 +81,7 @@ public class SavedCardTokenTest {
 
     @Test
     public void testSecurityCodeMaxLength() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         savedCardToken.setSecurityCode("44444");
 
         assertTrue(!savedCardToken.validate());
@@ -98,8 +90,7 @@ public class SavedCardTokenTest {
 
     @Test
     public void testSecurityCodeLengthZero() {
-
-        com.mercadopago.model.SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
+        SavedCardToken savedCardToken = StaticMock.getSavedCardToken();
         Card card = StaticMock.getCard();
 
         savedCardToken.setSecurityCode(null);

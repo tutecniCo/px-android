@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * Created by mreverter on 15/1/16.
  */
+
 public class PaymentMethodSearchItem {
 
     private static final String TYPE_PAYMENT_METHOD = "payment_method";
@@ -15,7 +16,7 @@ public class PaymentMethodSearchItem {
     private String type;
     private String description;
     private String comment;
-    private List<com.mercadopago.model.PaymentMethodSearchItem> children;
+    private List<PaymentMethodSearchItem> children;
     private String childrenHeader;
     private Boolean showIcon;
 
@@ -52,11 +53,11 @@ public class PaymentMethodSearchItem {
         this.comment = comment;
     }
 
-    public List<com.mercadopago.model.PaymentMethodSearchItem> getChildren() {
+    public List<PaymentMethodSearchItem> getChildren() {
         return children;
     }
 
-    public void setChildren(List<com.mercadopago.model.PaymentMethodSearchItem> children) {
+    public void setChildren(List<PaymentMethodSearchItem> children) {
         this.children = children;
     }
 
