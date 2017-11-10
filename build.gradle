@@ -42,8 +42,7 @@ allprojects {
 }
 
 task jacocoRootReport(type: JacocoReport) {
-    dependsOn "sdk:jacocoFullTestReport",
-            "px-tracking:jacocoFullTestReport"
+    dependsOn "sdk:jacocoFullTestReport"
 
     additionalSourceDirs = files(coverageSourceDirs)
     sourceDirectories = files(coverageSourceDirs)
