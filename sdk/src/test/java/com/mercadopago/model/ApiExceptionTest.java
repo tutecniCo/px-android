@@ -12,32 +12,31 @@ public class ApiExceptionTest {
 
     @Test
     public void whenCauseIsNullThenContainsCauseShouldBeFalse() {
-        com.mercadopago.model.ApiException apiException = new com.mercadopago.model.ApiException();
+        ApiException apiException = new ApiException();
         assertFalse(apiException.containsCause(null));
     }
 
     @Test
     public void whenCauseIsEmptyThenContainsCauseShouldBeFalse() {
-        com.mercadopago.model.ApiException apiException = new com.mercadopago.model.ApiException();
-        apiException.setCause(new ArrayList<com.mercadopago.model.Cause>());
+        ApiException apiException = new ApiException();
+        apiException.setCause(new ArrayList<Cause>());
         assertFalse(apiException.containsCause("Some cause"));
     }
 
     @Test
     public void whenCauseIsNotInListOfCausesThenContainsCauseShouldBeFalse() {
-
-        final com.mercadopago.model.Cause cause1 = new com.mercadopago.model.Cause();
+        final Cause cause1 = new Cause();
         cause1.setCode("1");
 
-        final com.mercadopago.model.Cause cause2 = new com.mercadopago.model.Cause();
+        final Cause cause2 = new Cause();
         cause2.setCode("2");
 
-        List<com.mercadopago.model.Cause> causeList = new ArrayList<com.mercadopago.model.Cause>() {{
+        List<Cause> causeList = new ArrayList<Cause>() {{
             add(cause1);
             add(cause2);
         }};
 
-        com.mercadopago.model.ApiException apiException = new com.mercadopago.model.ApiException();
+        ApiException apiException = new ApiException();
         apiException.setCause(causeList);
 
         assertFalse(apiException.containsCause("Some cause"));
@@ -45,19 +44,18 @@ public class ApiExceptionTest {
 
     @Test
     public void whenCauseIsInListOfCausesThenContainsCauseShouldBeTrue() {
-
-        final com.mercadopago.model.Cause cause1 = new com.mercadopago.model.Cause();
+        final Cause cause1 = new Cause();
         cause1.setCode("1");
 
-        final com.mercadopago.model.Cause cause2 = new com.mercadopago.model.Cause();
+        final Cause cause2 = new Cause();
         cause2.setCode("Some cause");
 
-        List<com.mercadopago.model.Cause> causeList = new ArrayList<Cause>() {{
+        List<Cause> causeList = new ArrayList<Cause>() {{
             add(cause1);
             add(cause2);
         }};
 
-        com.mercadopago.model.ApiException apiException = new com.mercadopago.model.ApiException();
+        ApiException apiException = new ApiException();
         apiException.setCause(causeList);
 
         assertTrue(apiException.containsCause("Some cause"));
