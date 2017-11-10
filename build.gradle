@@ -1,12 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply plugin: 'jacoco'
 
-def coverageSourceDirs = ['sdk/src/main/java', 'px-tracking/src/main/java']
+def coverageSourceDirs = ['sdk/src/main/java']
 
 def coverageExcludes = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
 
-def coverageClassDirectories = [fileTree(dir: 'sdk/build/intermediates/classes/debug', excludes: coverageExcludes),
-                                fileTree(dir: 'px-tracking/build/intermediates/classes/debug', excludes: coverageExcludes)]
+def coverageClassDirectories = [fileTree(dir: 'sdk/build/intermediates/classes/debug', excludes: coverageExcludes)]
 
 buildscript {
     repositories {
