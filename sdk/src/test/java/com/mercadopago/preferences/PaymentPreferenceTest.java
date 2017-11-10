@@ -13,42 +13,40 @@ import java.util.List;
  */
 public class PaymentPreferenceTest {
 
-    public void testIfDefaultInstallmentsSetAndExistsInListReturnIt()
-    {
+    public void testIfDefaultInstallmentsSetAndExistsInListReturnIt() {
         List<PayerCost> payerCosts = getPayerCosts();
 
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setDefaultInstallments(3);
         PayerCost defaultPayerCost = paymentPreference.getDefaultInstallments(payerCosts);
 
         Assert.assertTrue(defaultPayerCost.getInstallments() == 3);
     }
 
-    public void testIfDefaultInstallmentNotSetReturnNull()
-    {
+    public void testIfDefaultInstallmentNotSetReturnNull() {
         List<PayerCost> payerCosts = getPayerCosts();
 
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         Assert.assertTrue(paymentPreference.getDefaultInstallments(payerCosts) == null);
 
     }
 
-    public void testIfDefaultInstallmentSetButDoesNotExistReturnNull(){
+    public void testIfDefaultInstallmentSetButDoesNotExistReturnNull() {
 
         List<PayerCost> payerCosts = getPayerCosts();
 
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setDefaultInstallments(4);
         PayerCost defaultPayerCost = paymentPreference.getDefaultInstallments(payerCosts);
 
         Assert.assertTrue(defaultPayerCost == null);
     }
 
-    public void testIfMaxInstallmentsSetRemoveInstallmentsAboveMax(){
+    public void testIfMaxInstallmentsSetRemoveInstallmentsAboveMax() {
         List<PayerCost> originalPayerCosts = getPayerCosts();
 
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setMaxAcceptedInstallments(6);
 
         List<PayerCost> filteredPayerCosts = paymentPreference.getInstallmentsBelowMax(originalPayerCosts);
@@ -57,10 +55,10 @@ public class PaymentPreferenceTest {
         Assert.assertTrue(getMaxPayerCost(filteredPayerCosts) <= 6);
     }
 
-    public void testIfMaxInstallmentsNotSetReturnOriginalPayerCostsList(){
+    public void testIfMaxInstallmentsNotSetReturnOriginalPayerCostsList() {
         List<PayerCost> originalPayerCosts = getPayerCosts();
 
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         List<PayerCost> filteredPayerCosts = paymentPreference.getInstallmentsBelowMax(originalPayerCosts);
 
@@ -68,145 +66,137 @@ public class PaymentPreferenceTest {
     }
 
 
+    public void testWhenPaymentMethodTypeIsExcludedReturnNotSupported() {
 
-    public void testWhenPaymentMethodTypeIsExcludedReturnNotSupported(){
-
-        List<String> excludedPaymentMethods = new ArrayList<String>(){{
+        List<String> excludedPaymentMethods = new ArrayList<String>() {{
             add("debit_card");
         }};
 
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setPaymentTypeId("debit_card");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(excludedPaymentMethods);
 
         Assert.assertTrue(!paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testIfNeitherExcludedOrSupportedSetSupportAnyType()
-    {
+    public void testIfNeitherExcludedOrSupportedSetSupportAnyType() {
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setPaymentTypeId("credit_card");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         Assert.assertTrue(paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testIfSupportedAndExcludedPMSetExcludeEvenWhenSupported(){
-        List<String> excludedPaymentMethods = new ArrayList<String>(){{
+    public void testIfSupportedAndExcludedPMSetExcludeEvenWhenSupported() {
+        List<String> excludedPaymentMethods = new ArrayList<String>() {{
             add("debit_card");
         }};
 
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setPaymentTypeId("debit_card");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(excludedPaymentMethods);
 
         Assert.assertTrue(!paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testIfPaymentMethodIdExcludedReturnSupportedFalse()
-    {
-        List<String> excludedPaymentMethodIds = new ArrayList<String>(){{
+    public void testIfPaymentMethodIdExcludedReturnSupportedFalse() {
+        List<String> excludedPaymentMethodIds = new ArrayList<String>() {{
             add("visa");
         }};
 
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId("visa");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethodIds);
 
         Assert.assertTrue(!paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testIfPaymentMethodIdExcludedReturnSupportedTrue()
-    {
-        List<String> excludedPaymentMethodIds = new ArrayList<String>(){{
+    public void testIfPaymentMethodIdExcludedReturnSupportedTrue() {
+        List<String> excludedPaymentMethodIds = new ArrayList<String>() {{
             add("visa");
         }};
 
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId("master");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethodIds);
 
         Assert.assertTrue(paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testIfPaymentMethodIdNotExcludedButPaymentTypeExcludedReturnSupportedFalse()
-    {
-        List<String> excludedPaymentMethodIds = new ArrayList<String>(){{
+    public void testIfPaymentMethodIdNotExcludedButPaymentTypeExcludedReturnSupportedFalse() {
+        List<String> excludedPaymentMethodIds = new ArrayList<String>() {{
             add("master");
         }};
-        List<String> excludedPaymentMethodTypes = new ArrayList<String>(){{
+        List<String> excludedPaymentMethodTypes = new ArrayList<String>() {{
             add("credit_card");
         }};
 
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId("visa");
         paymentMethod.setPaymentTypeId("credit_card");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setExcludedPaymentTypeIds(excludedPaymentMethodTypes);
         paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethodIds);
 
         Assert.assertTrue(!paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testIfExcludedPaymentMethodIdNotSetReturnSupportedTrue()
-    {
+    public void testIfExcludedPaymentMethodIdNotSetReturnSupportedTrue() {
         PaymentMethod paymentMethod = new PaymentMethod();
         paymentMethod.setId("master");
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         Assert.assertTrue(paymentPreference.isPaymentMethodSupported(paymentMethod));
     }
 
-    public void testFilterListByExcludedPaymentMethodTypes(){
+    public void testFilterListByExcludedPaymentMethodTypes() {
 
-        List<String> excludedPaymentMethodTypes = new ArrayList<String>(){{
+        List<String> excludedPaymentMethodTypes = new ArrayList<String>() {{
             add("prepaid_card");
             add("credit_card");
         }};
 
         List<PaymentMethod> originalPaymentMethods = getPaymentMethods();
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         paymentPreference.setExcludedPaymentTypeIds(excludedPaymentMethodTypes);
 
         List<PaymentMethod> filteredPaymentMethods = paymentPreference.getSupportedPaymentMethods(originalPaymentMethods);
 
         Assert.assertTrue(filteredPaymentMethods.size() != 0);
-        for(PaymentMethod pm : filteredPaymentMethods)
-        {
+        for (PaymentMethod pm : filteredPaymentMethods) {
             Assert.assertTrue(!(pm.getPaymentTypeId().equals("prepaid_card") || pm.getPaymentTypeId().equals("credit_card")));
         }
     }
 
-    public void testFilterListByExcludedPaymentMethodIds(){
+    public void testFilterListByExcludedPaymentMethodIds() {
 
-        List<String> excludedPaymentMethodIds = new ArrayList<String>(){{
+        List<String> excludedPaymentMethodIds = new ArrayList<String>() {{
             add("visa");
             add("debvisa");
         }};
 
         List<PaymentMethod> originalPaymentMethods = getPaymentMethods();
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         paymentPreference.setExcludedPaymentMethodIds(excludedPaymentMethodIds);
 
         List<PaymentMethod> filteredPaymentMethods = paymentPreference.getSupportedPaymentMethods(originalPaymentMethods);
 
         Assert.assertTrue(filteredPaymentMethods.size() != 0);
-        for(PaymentMethod pm : filteredPaymentMethods)
-        {
+        for (PaymentMethod pm : filteredPaymentMethods) {
             Assert.assertTrue(!(pm.getId().equals("visa") || pm.getId().equals("debvisa")));
         }
     }
 
-    public void testIfDefaultPaymentMethodExistsReturnIt(){
+    public void testIfDefaultPaymentMethodExistsReturnIt() {
 
         List<PaymentMethod> paymentMethods = getPaymentMethods();
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setDefaultPaymentMethodId("visa");
 
         PaymentMethod defaultPaymentMethod = paymentPreference.getDefaultPaymentMethod(paymentMethods);
@@ -214,10 +204,10 @@ public class PaymentPreferenceTest {
         Assert.assertTrue(defaultPaymentMethod.getId().equals("visa"));
     }
 
-    public void testIfDefaultPaymentMethodDoesNotExistsReturnNull(){
+    public void testIfDefaultPaymentMethodDoesNotExistsReturnNull() {
 
         List<PaymentMethod> paymentMethods = getPaymentMethods();
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
         paymentPreference.setDefaultPaymentMethodId("i don't exist");
 
         PaymentMethod defaultPaymentMethod = paymentPreference.getDefaultPaymentMethod(paymentMethods);
@@ -225,10 +215,10 @@ public class PaymentPreferenceTest {
         Assert.assertTrue(defaultPaymentMethod == null);
     }
 
-    public void testIfDefaultPaymentMethodIdNotSetReturnNull(){
+    public void testIfDefaultPaymentMethodIdNotSetReturnNull() {
 
         List<PaymentMethod> paymentMethods = getPaymentMethods();
-        com.mercadopago.preferences.PaymentPreference paymentPreference = new com.mercadopago.preferences.PaymentPreference();
+        PaymentPreference paymentPreference = new PaymentPreference();
 
         PaymentMethod defaultPaymentMethod = paymentPreference.getDefaultPaymentMethod(paymentMethods);
 
@@ -237,9 +227,8 @@ public class PaymentPreferenceTest {
 
     private int getMaxPayerCost(List<PayerCost> payerCosts) {
         int max = 0;
-        for(PayerCost pc : payerCosts)
-        {
-            if(pc.getInstallments() > max)
+        for (PayerCost pc : payerCosts) {
+            if (pc.getInstallments() > max)
                 max = pc.getInstallments();
         }
         return max;
