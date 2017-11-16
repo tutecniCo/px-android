@@ -30,7 +30,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-class ModelsAdapter{
+class ModelsAdapter {
 
     static Map<String, Object> adapt(PaymentBody paymentBody) {
         Type type = new TypeToken<Map<String, Object>>() {
@@ -42,10 +42,8 @@ class ModelsAdapter{
         return payload;
     }
 
-    static com.mercadopago.lite.preferences.ServicePreference adapt(ServicePreference servicePreference) {
-        if (servicePreference == null) {
-            return null;
-        } else {
+    static void adapt(ServicePreference servicePreference) {
+        if (servicePreference != null) {
             com.mercadopago.lite.preferences.ServicePreference.Builder builder = new com.mercadopago.lite.preferences.ServicePreference.Builder();
             builder.setDefaultBaseURL(servicePreference.getDefaultBaseURL());
             builder.setGatewayURL(servicePreference.getGatewayBaseURL());
@@ -72,8 +70,7 @@ class ModelsAdapter{
             } else {
                 builder.setAggregatorAsProcessingMode();
             }
-
-            return builder.build();
+            com.mercadopago.lite.controllers.CustomServicesHandler.getInstance().setServices(builder.build());
         }
     }
 
@@ -86,8 +83,7 @@ class ModelsAdapter{
     }
 
 
-
-    static List<PaymentMethod> adaptPaymentMethods(List<com.mercadopago.lite.model.PaymentMethod> list){
+    static List<PaymentMethod> adaptPaymentMethods(List<com.mercadopago.lite.model.PaymentMethod> list) {
         List<PaymentMethod> adaptedList;
         try {
             Type listType = new TypeToken<List<PaymentMethod>>() {
@@ -100,7 +96,7 @@ class ModelsAdapter{
         return adaptedList;
     }
 
-    static List<Issuer> adaptIssuers(List<com.mercadopago.lite.model.Issuer> list){
+    static List<Issuer> adaptIssuers(List<com.mercadopago.lite.model.Issuer> list) {
         List<Issuer> adaptedList;
         try {
             Type listType = new TypeToken<List<Issuer>>() {
@@ -113,7 +109,7 @@ class ModelsAdapter{
         return adaptedList;
     }
 
-    static List<BankDeal> adaptBankDeals(List<com.mercadopago.lite.model.BankDeal> list){
+    static List<BankDeal> adaptBankDeals(List<com.mercadopago.lite.model.BankDeal> list) {
         List<BankDeal> adaptedList;
         try {
             Type listType = new TypeToken<List<BankDeal>>() {
@@ -126,7 +122,7 @@ class ModelsAdapter{
         return adaptedList;
     }
 
-    static List<Campaign> adaptCampaigns(List<com.mercadopago.lite.model.Campaign> list){
+    static List<Campaign> adaptCampaigns(List<com.mercadopago.lite.model.Campaign> list) {
         List<Campaign> adaptedList;
         try {
             Type listType = new TypeToken<List<Campaign>>() {
@@ -139,11 +135,11 @@ class ModelsAdapter{
         return adaptedList;
     }
 
-    static Discount adapt(com.mercadopago.lite.model.Discount discount){
+    static Discount adapt(com.mercadopago.lite.model.Discount discount) {
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(discount), Discount.class);
     }
 
-    static List<Installment> adaptInstallments(List<com.mercadopago.lite.model.Installment> list){
+    static List<Installment> adaptInstallments(List<com.mercadopago.lite.model.Installment> list) {
         List<Installment> adaptedList;
         try {
             Type listType = new TypeToken<List<Installment>>() {
@@ -156,7 +152,7 @@ class ModelsAdapter{
         return adaptedList;
     }
 
-    static List<IdentificationType> adaptIdentificationTypes(List<com.mercadopago.lite.model.IdentificationType> list){
+    static List<IdentificationType> adaptIdentificationTypes(List<com.mercadopago.lite.model.IdentificationType> list) {
         List<IdentificationType> adaptedList;
         try {
             Type listType = new TypeToken<List<IdentificationType>>() {
@@ -169,7 +165,7 @@ class ModelsAdapter{
         return adaptedList;
     }
 
-    static Token adapt(com.mercadopago.lite.model.Token token){
+    static Token adapt(com.mercadopago.lite.model.Token token) {
         return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(token), Token.class);
     }
 

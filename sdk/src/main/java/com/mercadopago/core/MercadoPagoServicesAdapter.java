@@ -5,6 +5,7 @@ import android.os.Build;
 
 import com.mercadopago.callbacks.Callback;
 
+import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.lite.core.MercadoPagoServices;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.BankDeal;
@@ -58,11 +59,14 @@ public class MercadoPagoServicesAdapter {
     private final MercadoPagoServices mMercadoPagoServices;
 
     private MercadoPagoServicesAdapter(MercadoPagoServicesAdapter.Builder builder) {
+
+        ServicePreference servicePreference = CustomServicesHandler.getInstance().getServicePreference();
+        ModelsAdapter.adapt(servicePreference);
+
         mMercadoPagoServices = new MercadoPagoServices.Builder()
                 .setContext(builder.mContext)
                 .setPublicKey(builder.mPublicKey)
                 .setPrivateKey(builder.mPrivateKey)
-                .setServicePreference(ModelsAdapter.adapt(builder.mServicePreference))
                 .build();
 
         disableConnectionReuseIfNecessary();
