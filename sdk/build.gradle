@@ -121,7 +121,7 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$retrofit"
     compile "com.squareup.picasso:picasso:$picasso"
 
-    compile "com.mercadopago:services:1.0.0"
+    compile "com.mercadopago:services:1.0.1-beta2"
     compile "com.mercadopago:tracking:2.2.2"
 }
 configurations {
