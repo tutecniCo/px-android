@@ -1,3 +1,10 @@
+## VERSION 3.7.2
+
+_17_11_2017_
+
+* New: Integrated services library 1.0.1
+* New: Integrated tracking library 2.2.2
+
 ## VERSION 3.7.1
 
 _09_11_2017_
