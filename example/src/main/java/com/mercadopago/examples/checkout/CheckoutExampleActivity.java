@@ -17,6 +17,9 @@ import com.mercadopago.examples.R;
 import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.hooks.ExampleHooks;
+import com.mercadopago.hooks.components.PaymentMethodConfirm;
+import com.mercadopago.hooks.components.PaymentMethodConfirmRenderer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
@@ -72,14 +75,24 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     }
 
     private void startMercadoPagoCheckout() {
-        new MercadoPagoCheckout.Builder()
+
+        final MercadoPagoCheckout.Builder builder = new MercadoPagoCheckout.Builder()
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
-                .setDecorationPreference(getCurrentDecorationPreference())
-                .startForPayment();
-    }
+                .setDecorationPreference(getCurrentDecorationPreference());
 
+        if (mHooksEnabled.isChecked()) {
+
+            builder.registerComponent(
+                    PaymentMethodConfirm.class,
+                    PaymentMethodConfirmRenderer.class);
+
+            builder.setCheckoutHooks(new ExampleHooks());
+        }
+
+        builder.startForPayment();
+    }
 
     private CheckoutPreference getCheckoutPreference() {
         return new CheckoutPreference(mCheckoutPreferenceId);
