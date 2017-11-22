@@ -8,6 +8,8 @@ import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.hooks.Hook;
+import com.mercadopago.hooks.HookActivity;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -192,6 +194,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE) {
+            mCheckoutPresenter.onPaymenMethodSelectedHookContinue();
         }
     }
 
@@ -521,5 +525,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showProgress() {
         LayoutUtil.showProgressLayout(this);
+    }
+
+    @Override
+    public void showHook(final Hook hook) {
+        startActivityForResult(HookActivity.getIntent(this),
+                MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE);
     }
 }

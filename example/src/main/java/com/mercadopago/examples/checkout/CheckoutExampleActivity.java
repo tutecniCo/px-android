@@ -32,6 +32,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
     private Integer mDefaultColor;
     private CheckBox mDarkFontEnabled;
+    private CheckBox mHooksEnabled;
     private ImageView mColorSample;
     private Integer mSelectedColor;
     private CheckBox mVisaExcluded;
@@ -51,6 +52,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mRegularLayout = findViewById(R.id.regularLayout);
         mDarkFontEnabled = (CheckBox) findViewById(R.id.darkFontEnabled);
+        mHooksEnabled = (CheckBox) findViewById(R.id.hooks_enabled);
         mColorSample = (ImageView) findViewById(R.id.colorSample);
         mVisaExcluded = (CheckBox) findViewById(R.id.visaExcluded);
         mCashExcluded = (CheckBox) findViewById(R.id.cashExcluded);

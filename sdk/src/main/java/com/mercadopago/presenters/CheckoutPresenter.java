@@ -473,6 +473,12 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         }
     }
 
+    public void onPaymenMethodSelectedHookContinue() {
+        if (isReviewAndConfirmEnabled()) {
+            showReviewAndConfirm();
+        }
+    }
+
     private void resolvePaymentDataResponse() {
         if (MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE.equals(mRequestedResult)) {
             PaymentData paymentData = createPaymentData();
