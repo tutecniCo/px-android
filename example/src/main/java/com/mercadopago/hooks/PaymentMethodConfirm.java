@@ -14,11 +14,6 @@ public class PaymentMethodConfirm extends HookComponent {
         super(props);
     }
 
-    @Override
-    public void applyProps(@NonNull final Props props) {
-
-    }
-
     public void onContinue() {
         getDispatcher().dispatch(Action.continueAction());
     }

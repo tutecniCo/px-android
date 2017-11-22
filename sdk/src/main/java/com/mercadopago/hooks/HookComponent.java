@@ -8,9 +8,8 @@ import com.mercadopago.model.PaymentData;
 
 public abstract class HookComponent extends Component<HookComponent.Props> {
 
-    public HookComponent(@NonNull final Props props,
-                         @NonNull final ActionDispatcher dispatcher) {
-        super(props, dispatcher);
+    public HookComponent(@NonNull final Props props) {
+        super(props);
     }
 
     public static class Props {

@@ -56,8 +56,8 @@
         <activity
                 android:name=".services.ServicesExampleActivity"
                 android:label="@string/title_activity_customized_example"/>
-        <activity android:name=".checkout.JsonSetupActivity">
-        </activity>
+        <activity android:name=".checkout.JsonSetupActivity" />
+        <activity android:name="com.mercadopago.hooks.HookActivity" />
     </application>
 
 </manifest>

@@ -29,6 +29,14 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
         }
     }
 
+
+    public void render(final Component component) {
+        if (component != null) {
+            setComponent(component);
+            render();
+        }
+    }
+
     public void setActionsListener(@NonNull final ActionsListener actionsListener) {
         this.actionsListener = actionsListener;
     }
