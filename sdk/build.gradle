@@ -71,19 +71,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
-    flavorDimensions "environment"
-
-    productFlavors {
-        dev {
-            dimension "environment"
-            buildConfigField "String", "API_VERSION", "\"beta\""
-        }
-        prod {
-            dimension "environment"
-            buildConfigField "String", "API_VERSION", "\"v1\""
-        }
-    }
 }
 
 project.gradle.taskGraph.whenReady {
