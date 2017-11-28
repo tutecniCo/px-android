@@ -28,6 +28,7 @@ import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
+3import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
@@ -75,6 +76,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     private String mIdempotencyKeySeed;
     private String mCurrentPaymentIdempotencyKey;
 
+    private DecorationPreference decorationPreference;
+
     private transient FailureRecovery failureRecovery;
     private transient Timer mCheckoutTimer;
 
@@ -101,6 +104,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             String exceptionDetail = e.getMessage();
             getView().showError(new MercadoPagoError(userMessage, exceptionDetail, false));
         }
+    }
+
+    public void setDecorationPreference(DecorationPreference decorationPreference) {
+        this.decorationPreference = decorationPreference;
     }
 
     private void startCheckoutForPreference() {
@@ -473,7 +480,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         if (HooksStore.getInstance().hasCheckoutHooks()) {
             final PaymentData paymentData = createPaymentData();
             final Hook hook = HooksStore.getInstance().getCheckoutHooks()
-                    .onPaymentMethodSelected(paymentData);
+                    .onPaymentMethodSelected(paymentData, decorationPreference);
+
             HooksStore.getInstance().setHook(hook);
             if (hook != null) {
                 getView().showHook(hook);

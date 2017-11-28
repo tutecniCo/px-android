@@ -11,10 +11,12 @@ public class PaymentMethodConfirmRenderer extends Renderer<PaymentMethodConfirm>
 
     @Override
     public View render() {
+
         final View view = LayoutInflater.from(context)
                 .inflate(R.layout.mpsdk_example_component_hook, null);
 
         final TextView label = (TextView) view.findViewById(R.id.label);
+
         label.setText(component.props.paymentData.getPaymentMethod().getName());
 
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {

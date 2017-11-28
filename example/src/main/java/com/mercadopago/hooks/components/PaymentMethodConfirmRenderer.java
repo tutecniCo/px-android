@@ -2,15 +2,21 @@ package com.mercadopago.hooks.components;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mercadopago.components.Renderer;
 import com.mercadopago.examples.R;
+import com.mercadopago.hooks.HookRenderer;
 
-public class PaymentMethodConfirmRenderer extends Renderer<PaymentMethodConfirm> {
+public class PaymentMethodConfirmRenderer extends HookRenderer {
 
     @Override
     public View render() {
+
+        final View parent = super.render();
+        final ViewGroup contents = (ViewGroup) parent.findViewById(R.id.contents);
+
         final View view = LayoutInflater.from(context)
                 .inflate(R.layout.mpsdk_example_component_hook, null);
 
@@ -24,6 +30,7 @@ public class PaymentMethodConfirmRenderer extends Renderer<PaymentMethodConfirm>
             }
         });
 
-        return view;
+        contents.addView(view);
+        return parent;
     }
 }

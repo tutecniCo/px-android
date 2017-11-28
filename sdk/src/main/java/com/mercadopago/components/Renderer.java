@@ -29,6 +29,18 @@ public abstract class Renderer<T extends Component> {
         this.context = context;
     }
 
+//    public void onCreate() {
+//
+//    }
+//
+//    public void onStart() {
+//
+//    }
+//
+//    public void onStop() {
+//
+//    }
+
     public abstract View render();
 
     public void wrapHeight(@NonNull final ViewGroup viewGroup) {
