@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.hooks.HookComponent;
 
-public class PaymentMethodConfirm extends HookComponent {
+public class PaymentTypeConfirm extends HookComponent {
 
-    public PaymentMethodConfirm(@NonNull final Props props) {
+    public PaymentTypeConfirm(@NonNull final Props props) {
         super(props);
     }
 }

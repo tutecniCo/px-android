@@ -33,7 +33,7 @@
                     android:textSize="20sp"
                     android:textColor="@color/mpsdk_black"
                     android:layout_margin="10dp"
-                    android:text="Medio de pago seleccionado"/>
+                    android:text="Payment METHOD"/>
 
                 <com.mercadopago.customviews.MPTextView
                     android:id="@+id/label"

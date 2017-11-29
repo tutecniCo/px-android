@@ -20,6 +20,8 @@ import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.ExampleHooks;
 import com.mercadopago.hooks.components.PaymentMethodConfirm;
 import com.mercadopago.hooks.components.PaymentMethodConfirmRenderer;
+import com.mercadopago.hooks.components.PaymentTypeConfirm;
+import com.mercadopago.hooks.components.PaymentTypeConfirmRenderer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
@@ -87,6 +89,10 @@ public class CheckoutExampleActivity extends AppCompatActivity {
             builder.registerComponent(
                     PaymentMethodConfirm.class,
                     PaymentMethodConfirmRenderer.class);
+
+            builder.registerComponent(
+                    PaymentTypeConfirm.class,
+                    PaymentTypeConfirmRenderer.class);
 
             builder.setCheckoutHooks(new ExampleHooks());
         }

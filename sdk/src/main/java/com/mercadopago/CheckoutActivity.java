@@ -1,5 +1,6 @@
 package com.mercadopago;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -196,7 +197,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE) {
-            mCheckoutPresenter.onPaymenMethodSelectedHookContinue();
+            if (resultCode == Activity.RESULT_CANCELED) {
+                backToPaymentMethodSelection();
+            } else {
+                mCheckoutPresenter.onPaymenMethodSelectedHookContinue();
+            }
         }
     }
 

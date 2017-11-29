@@ -10,7 +10,7 @@ import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.BackAction;
 import com.mercadopago.components.ComponentManager;
-import com.mercadopago.components.ContinueAction;
+import com.mercadopago.components.NextAction;
 import com.mercadopago.components.RendererFactory;
 
 public class HookActivity extends AppCompatActivity implements ActionDispatcher {
@@ -44,7 +44,8 @@ public class HookActivity extends AppCompatActivity implements ActionDispatcher 
 
     @Override
     public void dispatch(final Action action) {
-        if (action instanceof ContinueAction) {
+        if (action instanceof NextAction) {
+            setResult(RESULT_OK);
             finish();
         } else if (action instanceof BackAction) {
             onBackPressed();

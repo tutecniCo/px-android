@@ -1,6 +1,6 @@
 package com.mercadopago.components;
 
-public class ContinueAction extends Action {
+public class NextAction extends Action {
 
     @Override
     public String toString() {

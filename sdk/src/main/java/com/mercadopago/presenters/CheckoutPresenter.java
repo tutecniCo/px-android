@@ -28,7 +28,7 @@ import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
-3import com.mercadopago.preferences.DecorationPreference;
+import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
@@ -331,7 +331,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             continuePaymentWithoutESC();
         } else {
             if (hasToStoreESC(paymentResult)) {
-                getResourcesProvider().saveESC(paymentResult.getPaymentData().getToken().getCardId(), paymentResult.getPaymentData().getToken().getEsc());
+                getResourcesProvider().saveESC(paymentResult.getPaymentData().getToken().getCardId(),
+                        paymentResult.getPaymentData().getToken().getEsc());
             }
             if (hasToSkipPaymentResultScreen(paymentResult)) {
                 finishCheckout();
@@ -478,18 +479,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         mPaymentMethodEditionRequested = false;
 
         if (HooksStore.getInstance().hasCheckoutHooks()) {
-            final PaymentData paymentData = createPaymentData();
-            final Hook hook = HooksStore.getInstance().getCheckoutHooks()
-                    .onPaymentMethodSelected(paymentData, decorationPreference);
-
-            HooksStore.getInstance().setHook(hook);
-            if (hook != null) {
-                getView().showHook(hook);
-                return;
-            }
-        }
-
-        if (isReviewAndConfirmEnabled()) {
+            startAfterPaymentMethodSelectedHook();
+        } else if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {
             resolvePaymentDataResponse();
@@ -666,7 +657,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onReviewAndConfirmCancel() {
-        if (mFlowPreference.shouldExitOnPaymentMethodChange() && !isUniquePaymentMethod()) {
+
+        if (hasAfterPaymentMethodSelectedHook()) {
+            startAfterPaymentMethodSelectedHook();
+        } else if (mFlowPreference.shouldExitOnPaymentMethodChange() && !isUniquePaymentMethod()) {
             getView().finishFromReviewAndConfirm();
         } else if (isUniquePaymentMethod()) {
             getView().cancelCheckout();
@@ -968,5 +962,22 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     public Integer getMaxSavedCardsToShow() {
         return mFlowPreference.getMaxSavedCardsToShow();
+    }
+
+    private boolean hasAfterPaymentMethodSelectedHook() {
+        return HooksStore.getInstance().hasCheckoutHooks();
+    }
+
+    private void startAfterPaymentMethodSelectedHook() {
+
+        final PaymentData paymentData = createPaymentData();
+        final Hook hook = HooksStore.getInstance().getCheckoutHooks()
+                .afterPaymentMethodSelected(paymentData, decorationPreference);
+
+        HooksStore.getInstance().setHook(hook);
+
+        if (hook != null) {
+            getView().showHook(hook);
+        }
     }
 }

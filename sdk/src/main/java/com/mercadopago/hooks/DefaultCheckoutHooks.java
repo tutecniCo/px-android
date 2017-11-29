@@ -6,14 +6,22 @@ import com.mercadopago.model.PaymentData;
 import com.mercadopago.preferences.DecorationPreference;
 
 public class DefaultCheckoutHooks implements CheckoutHooks {
+
     @Override
-    public Hook onPaymentMethodSelected(@NonNull PaymentData paymentData,
-                                        @NonNull final DecorationPreference decorationPreference) {
+    public Hook afterPaymentTypeSelected(@NonNull final String typeId,
+                                         @NonNull final DecorationPreference decorationPreference) {
         return null;
     }
 
     @Override
-    public Hook onConfirmPayment(@NonNull PaymentData paymentData) {
+    public Hook afterPaymentMethodSelected(@NonNull final PaymentData paymentData,
+                                           @NonNull final DecorationPreference decorationPreference) {
+        return null;
+    }
+
+    @Override
+    public Hook beforePayment(@NonNull final PaymentData paymentData,
+                              @NonNull final DecorationPreference decorationPreference) {
         return null;
     }
 }

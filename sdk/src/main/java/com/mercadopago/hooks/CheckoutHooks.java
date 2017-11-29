@@ -6,8 +6,13 @@ import com.mercadopago.model.PaymentData;
 import com.mercadopago.preferences.DecorationPreference;
 
 public interface CheckoutHooks {
-    Hook onPaymentMethodSelected(@NonNull final PaymentData paymentData,
+
+    Hook afterPaymentTypeSelected(@NonNull final String typeId,
                                  @NonNull final DecorationPreference decorationPreference);
 
-    Hook onConfirmPayment(@NonNull final PaymentData paymentData);
+    Hook afterPaymentMethodSelected(@NonNull final PaymentData paymentData,
+                                    @NonNull final DecorationPreference decorationPreference);
+
+    Hook beforePayment(@NonNull final PaymentData paymentData,
+                       @NonNull final DecorationPreference decorationPreference);
 }

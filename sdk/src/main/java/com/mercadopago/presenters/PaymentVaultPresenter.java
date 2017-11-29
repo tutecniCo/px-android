@@ -4,6 +4,8 @@ import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.hooks.Hook;
+import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
@@ -14,6 +16,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.PaymentVaultProvider;
 import com.mercadopago.util.ApiUtil;
@@ -47,6 +50,9 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     private boolean mSelectAutomatically;
     private FailureRecovery failureRecovery;
+
+    private DecorationPreference decorationPreference;
+    private PaymentMethodSearchItem resumeItem;
 
     public void initialize(boolean selectAutomatically) {
         try {
@@ -94,6 +100,10 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             initializeDiscountRow();
             initPaymentVaultFlow();
         }
+    }
+
+    public void setDecorationPreference(DecorationPreference decorationPreference) {
+        this.decorationPreference = decorationPreference;
     }
 
     public void onDiscountOptionSelected() {
@@ -307,6 +317,12 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
                 && (mPaymentMethodSearch.getGroups() == null || mPaymentMethodSearch.getGroups().isEmpty());
     }
 
+    public void resumeItemSelection() {
+        if (resumeItem != null) {
+            selectItem(resumeItem);
+        }
+    }
+
     private void selectItem(PaymentMethodSearchItem item) {
         selectItem(item, false);
     }
@@ -316,7 +332,15 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         if (item.hasChildren()) {
             getView().showSelectedItem(item);
         } else if (item.isPaymentType()) {
-            startNextStepForPaymentType(item, automaticSelection);
+
+            if (resumeItem == null && hasAfterPaymentTypeSelectedHook()) {
+                startAfterPaymentTypeSelectedHook(item.getId());
+                resumeItem = item;
+            } else {
+                startNextStepForPaymentType(item, automaticSelection);
+                resumeItem = null;
+            }
+
         } else if (item.isPaymentMethod()) {
             resolvePaymentMethodSelection(item);
         }
@@ -557,5 +581,22 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             limitedItems = customSearchItems;
         }
         return limitedItems;
+    }
+
+    public boolean hasAfterPaymentTypeSelectedHook() {
+        return HooksStore.getInstance().hasCheckoutHooks();
+    }
+
+    public void startAfterPaymentTypeSelectedHook(final String typeId) {
+
+        final Hook hook = HooksStore.getInstance()
+                .getCheckoutHooks()
+                .afterPaymentTypeSelected(typeId, decorationPreference);
+
+        HooksStore.getInstance().setHook(hook);
+
+        if (hook != null) {
+            getView().showPaymentTypeHook(hook);
+        }
     }
 }

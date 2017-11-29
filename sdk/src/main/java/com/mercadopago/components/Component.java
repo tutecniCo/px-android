@@ -12,8 +12,6 @@ import java.util.List;
 public class Component<T> {
 
     public T props;
-    public final List<Component> children = new ArrayList<>();
-
     private ActionDispatcher dispatcher;
 
     public Component(@NonNull final T props) {
@@ -26,15 +24,6 @@ public class Component<T> {
         setProps(props);
     }
 
-
-    public void addChildren(final Component component) {
-        this.children.add(component);
-    }
-
-    public List<Component> getChildren() {
-        return children;
-    }
-
     public ActionDispatcher getDispatcher() {
         return dispatcher;
     }
@@ -45,13 +34,5 @@ public class Component<T> {
 
     public void setProps(@NonNull final T props) {
         this.props = props;
-    }
-
-    public void dispatchActionContinue() {
-        getDispatcher().dispatch(new ContinueAction());
-    }
-
-    public void dispatchActionBack() {
-        getDispatcher().dispatch(new BackAction());
     }
 }
