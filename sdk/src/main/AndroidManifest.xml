@@ -118,6 +118,10 @@
         <activity
             android:name=".hooks.HookActivity"
             android:theme="@style/Theme.ProcessMercadoPagoTheme.NoActionbar" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

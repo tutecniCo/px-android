@@ -12,6 +12,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -70,7 +71,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     protected MPTextView mConfirmTextButton;
     protected MPTextView mFloatingConfirmTextButton;
     protected MPTextView mCancelTextView;
-    protected MPTextView mTermsAndConditionsTextView;
+    protected AppCompatTextView mTermsAndConditionsTextView;
     protected MPTextView mTimerTextView;
 
     protected FrameLayout mConfirmButton;
@@ -222,7 +223,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         mCancelButton = (FrameLayout) findViewById(R.id.mpsdkReviewCancelButton);
         mCancelTextView = (MPTextView) findViewById(R.id.mpsdkCancelText);
         mTermsAndConditionsButton = (LinearLayout) findViewById(R.id.mpsdkCheckoutTermsAndConditions);
-        mTermsAndConditionsTextView = (MPTextView) findViewById(R.id.mpsdkReviewTermsAndConditions);
+        mTermsAndConditionsTextView =  findViewById(R.id.mpsdkReviewTermsAndConditions);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
         mReviewables = (RecyclerView) findViewById(R.id.mpsdkReviewablesRecyclerView);
         mSeparatorView = findViewById(R.id.mpsdkFirstSeparator);

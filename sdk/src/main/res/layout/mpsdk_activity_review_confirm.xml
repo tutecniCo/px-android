@@ -53,14 +53,14 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.mercadopago.customviews.MPTextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/mpsdk_text_terms_and_conditions_start"
                     android:textColor="@color/mpsdk_color_payer_costs"
                     android:textSize="12dp"
-                    app:font_style="regular" />
+                    app:fontFamily="@font/annie_use_your_telescope" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -69,16 +69,16 @@
                     android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
-                    <com.mercadopago.customviews.MPTextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/mpsdkReviewTermsAndConditions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/mpsdk_text_terms_and_conditions_linked"
                         android:textColor="@color/mpsdk_background_blue"
                         android:textSize="12dp"
-                        app:font_style="regular" />
+                        app:fontFamily="@font/aguafina_script" />
 
-                    <com.mercadopago.customviews.MPTextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
@@ -86,7 +86,7 @@
                         android:text="@string/mpsdk_text_terms_and_conditions_end"
                         android:textColor="@color/mpsdk_color_payer_costs"
                         android:textSize="12dp"
-                        app:font_style="regular" />
+                        app:fontFamily="@font/alfa_slab_one" />
 
                 </LinearLayout>
 
