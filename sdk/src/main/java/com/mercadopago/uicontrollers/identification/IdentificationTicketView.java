@@ -39,16 +39,6 @@ public class IdentificationTicketView extends IdentificationView {
         mIdentificationTypeIdTextView =  mView.findViewById(R.id.mpsdkIdentificationTypeId);
         mLastNameContainer =  mView.findViewById(R.id.mpsdkLastnameContainer);
         drawIdentificationTypeName();
-        setIdentificationNumberTextSizes();
-    }
-
-    private void setIdentificationNumberTextSizes() {
-        MPTextView mIdentificationCardholderContainer =  mView.findViewById(R.id.mpsdkIdentificationCardholderContainer);
-        //if(mIdentificationNumberTextView!=null && mIdentificationCardholderContainer!=null){
-         //   int minSize = mContext.getResources().getDimensionPixelSize(R.dimen.mpsdk_small_text);
-          //  mIdentificationNumberTextView.setMinTextSize(minSize);
-           // mIdentificationCardholderContainer.setMinTextSize(minSize);
-       // }
     }
 
     @Override

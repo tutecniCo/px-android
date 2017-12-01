@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -369,29 +368,23 @@ public class FrontCardView {
         if (mSize == null) return;
         if (mSize.equals(CardRepresentationModes.MEDIUM_SIZE)) {
             resizeCard(mCardContainer, R.dimen.mpsdk_card_size_medium_height, R.dimen.mpsdk_card_size_medium_width,
-                    CardRepresentationModes.CARD_NUMBER_SIZE_MEDIUM, CardRepresentationModes.CARD_HOLDER_NAME_SIZE_MEDIUM,
+                    CardRepresentationModes.CARD_HOLDER_NAME_SIZE_MEDIUM,
                     CardRepresentationModes.CARD_EXPIRY_DATE_SIZE_MEDIUM, CardRepresentationModes.CARD_SECURITY_CODE_FRONT_SIZE_MEDIUM);
         } else if (mSize.equals(CardRepresentationModes.BIG_SIZE)) {
             resizeCard(mCardContainer, R.dimen.mpsdk_card_size_big_height, R.dimen.mpsdk_card_size_big_width,
-                    CardRepresentationModes.CARD_NUMBER_SIZE_BIG, CardRepresentationModes.CARD_HOLDER_NAME_SIZE_BIG,
+                    CardRepresentationModes.CARD_HOLDER_NAME_SIZE_BIG,
                     CardRepresentationModes.CARD_EXPIRY_DATE_SIZE_BIG, CardRepresentationModes.CARD_SECURITY_CODE_FRONT_SIZE_BIG);
         } else if (mSize.equals(CardRepresentationModes.EXTRA_BIG_SIZE)) {
             resizeCard(mCardContainer, R.dimen.mpsdk_card_size_extra_big_height, R.dimen.mpsdk_card_size_extra_big_width,
-                    CardRepresentationModes.CARD_NUMBER_SIZE_EXTRA_BIG, CardRepresentationModes.CARD_HOLDER_NAME_SIZE_EXTRA_BIG,
+                    CardRepresentationModes.CARD_HOLDER_NAME_SIZE_EXTRA_BIG,
                     CardRepresentationModes.CARD_EXPIRY_DATE_SIZE_EXTRA_BIG, CardRepresentationModes.CARD_SECURITY_CODE_FRONT_SIZE_EXTRA_BIG);
         }
     }
 
-    private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth, int cardNumberFontSize,
+    private void resizeCard(ViewGroup cardViewContainer, int cardHeight, int cardWidth,
                             int cardHolderNameFontSize, int cardExpiryDateSize, int cardSecurityCodeSize) {
         LayoutUtil.resizeViewGroupLayoutParams(cardViewContainer, cardHeight, cardWidth, mContext);
 
-        //if(cardNumberFontSize == CardRepresentationModes.CARD_NUMBER_SIZE_MEDIUM){
-        //    int minTextSize = mContext.getResources().getDimensionPixelSize(R.dimen.mpsdk_smallest_text);
-        //    mCardNumberTextView.setMinTextSize(minTextSize);
-        //}
-
-        //mCardNumberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardNumberFontSize);
         mCardholderNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardHolderNameFontSize);
         mCardExpiryMonthTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardExpiryDateSize);
         mCardDateDividerTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, cardExpiryDateSize);
