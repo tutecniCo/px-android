@@ -60,7 +60,7 @@
                     android:text="@string/mpsdk_text_terms_and_conditions_start"
                     android:textColor="@color/mpsdk_color_payer_costs"
                     android:textSize="12dp"
-                    app:fontFamily="@font/annie_use_your_telescope" />
+                    app:fontFamily="@font/aclonica" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                         android:text="@string/mpsdk_text_terms_and_conditions_linked"
                         android:textColor="@color/mpsdk_background_blue"
                         android:textSize="12dp"
-                        app:fontFamily="@font/aguafina_script" />
+                        app:fontFamily="@font/aclonica" />
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                         android:text="@string/mpsdk_text_terms_and_conditions_end"
                         android:textColor="@color/mpsdk_color_payer_costs"
                         android:textSize="12dp"
-                        app:fontFamily="@font/alfa_slab_one" />
+                        app:fontFamily="@font/aclonica" />
 
                 </LinearLayout>
 
