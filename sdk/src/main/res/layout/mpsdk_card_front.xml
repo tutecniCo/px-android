@@ -136,9 +136,9 @@
                             android:maxLength="40"
                             android:textColor="@color/mpsdk_base_text"
                             app:autoSizeTextType="uniform"
-                            app:autoSizeMinTextSize="10sp"
-                            app:autoSizeMaxTextSize="24sp"
-                            app:autoSizeStepGranularity="1sp"
+                            app:autoSizeMinTextSize="10dp"
+                            app:autoSizeMaxTextSize="24dp"
+                            app:autoSizeStepGranularity="1dp"
                             app:font_style="mono_regular"
                             app:allowCustomFont="false"
                             tools:text="1234 1234 1234 1234"/>
