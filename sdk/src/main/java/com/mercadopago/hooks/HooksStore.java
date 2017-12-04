@@ -2,19 +2,23 @@ package com.mercadopago.hooks;
 
 import android.support.annotation.NonNull;
 
-/**
- * Created by nfortuna on 10/24/17.
- */
+import com.mercadopago.model.PaymentData;
+import com.mercadopago.preferences.DecorationPreference;
 
-public class HooksStore<T> {
+public class HooksStore {
 
     private static HooksStore instance;
     private CheckoutHooks checkoutHooks;
     private Hook hook;
 
-    private T data;
+    public static final int HOOK_1 = 1000;
+    public static final int HOOK_2 = 1001;
+    public static final int HOOK_2_FROM_CARD = 1002;
+    public static final int HOOK_3 = 1003;
 
-    private HooksStore() {}
+    private HooksStore() {
+
+    }
 
     public static HooksStore getInstance() {
         if (instance == null) {
@@ -23,31 +27,62 @@ public class HooksStore<T> {
         return instance;
     }
 
-    public CheckoutHooks getCheckoutHooks() {
-        return checkoutHooks;
-    }
-
     public boolean hasCheckoutHooks() {
         return checkoutHooks != null;
+    }
+
+    public Hook activateBeforePaymentMethodConfig(@NonNull final String typeId,
+                                                 @NonNull final DecorationPreference preference) {
+        Hook hook = null;
+
+        if (this.checkoutHooks != null) {
+            hook = this.checkoutHooks.beforePaymentMethodConfig(typeId, preference);
+            if (hook != null && !hook.isEnabled()) {
+                hook = null;
+            }
+        }
+
+        return hook;
+    }
+
+    public Hook activateAfterPaymentMethodConfig(@NonNull final PaymentData paymentData,
+                                                  @NonNull final DecorationPreference preference) {
+
+        Hook hook = null;
+
+        if (this.checkoutHooks != null) {
+            hook = this.checkoutHooks.afterPaymentMethodConfig(paymentData, preference);
+            if (hook != null && !hook.isEnabled()) {
+                hook = null;
+            }
+        }
+
+        return hook;
+    }
+
+    public Hook activateBeforePayment(@NonNull final PaymentData paymentData,
+                                      @NonNull final DecorationPreference preference) {
+        Hook hook = null;
+
+        if (this.checkoutHooks != null) {
+            hook = this.checkoutHooks.beforePayment(paymentData, preference);
+            if (hook != null && !hook.isEnabled()) {
+                hook = null;
+            }
+        }
+
+        return hook;
     }
 
     public void setCheckoutHooks(@NonNull final CheckoutHooks checkoutHooks) {
         this.checkoutHooks = checkoutHooks;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public void setHook(Hook hook) {
-        this.hook = hook;
-    }
-
     public Hook getHook() {
         return hook;
+    }
+
+    public void setHook(final Hook hook) {
+        this.hook = hook;
     }
 }

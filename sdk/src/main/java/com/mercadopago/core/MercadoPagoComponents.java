@@ -44,6 +44,7 @@ import com.mercadopago.model.Reviewable;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Summary;
 import com.mercadopago.model.Token;
+import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
@@ -97,8 +98,6 @@ public class MercadoPagoComponents {
         public static final int REVIEW_AND_CONFIRM_REQUEST_CODE = 20;
         public static final int REVIEW_PAYMENT_METHODS_REQUEST_CODE = 21;
         public static final int PAYER_INFORMATION_REQUEST_CODE = 22;
-        //HOOKS
-        public static final int PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE = 23;
 
         private Activities() {
         }
@@ -130,6 +129,7 @@ public class MercadoPagoComponents {
             private String merchantDiscountBaseUrl;
             private String merchantGetDiscountUri;
             private Map<String, String> discountAdditionalInfo;
+            private CheckoutPreference checkoutPreference;
 
             public PaymentVaultActivityBuilder setActivity(Activity activity) {
                 this.activity = activity;
@@ -216,6 +216,11 @@ public class MercadoPagoComponents {
                 return this;
             }
 
+            public PaymentVaultActivityBuilder setCheckoutPReference(final CheckoutPreference checkoutPReference) {
+                this.checkoutPreference = checkoutPReference;
+                return this;
+            }
+
             public PaymentVaultActivityBuilder setPayerEmail(String payerEmail) {
                 this.payerEmail = payerEmail;
                 return this;
@@ -279,6 +284,7 @@ public class MercadoPagoComponents {
                 paymentVaultIntent.putExtra("merchantAccessToken", merchantAccessToken);
                 paymentVaultIntent.putExtra("paymentMethodSearch", JsonUtil.getInstance().toJson(paymentMethodSearch));
                 paymentVaultIntent.putExtra("paymentPreference", JsonUtil.getInstance().toJson(paymentPreference));
+                paymentVaultIntent.putExtra("checkoutPreference", JsonUtil.getInstance().toJson(checkoutPreference));
 
                 Gson gson = new Gson();
                 paymentVaultIntent.putExtra("cards", gson.toJson(cards));

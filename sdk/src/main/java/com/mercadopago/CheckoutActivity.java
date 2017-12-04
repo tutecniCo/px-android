@@ -3,6 +3,7 @@ package com.mercadopago;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
@@ -11,6 +12,7 @@ import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookActivity;
+import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -196,11 +198,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
-        } else if (requestCode == MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE) {
+        } else if (requestCode == HooksStore.HOOK_3) {
             if (resultCode == Activity.RESULT_CANCELED) {
-                backToPaymentMethodSelection();
+                backToReviewAndConfirm();
             } else {
-                mCheckoutPresenter.onPaymenMethodSelectedHookContinue();
+                mCheckoutPresenter.resolvePaymentDataResponse();
             }
         }
     }
@@ -211,6 +213,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     }
 
     private void resolveReviewAndConfirmRequest(int resultCode, Intent data) {
+
         if (resultCode == RESULT_OK) {
             mCheckoutPresenter.onPaymentConfirmation();
         } else if (resultCode == ReviewAndConfirmActivity.RESULT_CHANGE_PAYMENT_METHOD) {
@@ -352,6 +355,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setMaxSavedCards(mCheckoutPresenter.getMaxSavedCardsToShow())
                 .setShowAllSavedCardsEnabled(mCheckoutPresenter.shouldShowAllSavedCards())
                 .setESCEnabled(mCheckoutPresenter.isESCEnabled())
+                .setCheckoutPReference(mCheckoutPresenter.getCheckoutPreference())
                 .startActivity();
     }
 
@@ -533,9 +537,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         LayoutUtil.showProgressLayout(this);
     }
 
+
     @Override
-    public void showHook(final Hook hook) {
-        startActivityForResult(HookActivity.getIntent(this),
-                MercadoPagoComponents.Activities.PAYMENT_METHOD_SELECTED_HOOK_REQUEST_CODE);
+    public void showHook(@NonNull final Hook hook, @NonNull final int hookType) {
+        startActivityForResult(HookActivity.getIntent(this, hook), hookType);
     }
 }

@@ -2,6 +2,8 @@ package com.mercadopago.hooks;
 
 import android.support.annotation.NonNull;
 
+import com.mercadopago.components.Component;
+import com.mercadopago.hooks.components.PaymentConfirm;
 import com.mercadopago.hooks.components.PaymentMethodConfirm;
 import com.mercadopago.hooks.components.PaymentTypeConfirm;
 import com.mercadopago.model.PaymentData;
@@ -10,36 +12,80 @@ import com.mercadopago.preferences.DecorationPreference;
 public class ExampleHooks extends DefaultCheckoutHooks {
 
     @Override
-    public Hook afterPaymentTypeSelected(@NonNull final String typeId,
+    public Hook beforePaymentMethodConfig(@NonNull final String typeId,
                                          @NonNull final DecorationPreference decorationPreference) {
 
-        final HookComponent.Props props = new HookComponent.Props(
-                HooksStore.getInstance(),
-                typeId,
-                null,
-                decorationPreference,
-                "Hook 1",
-                true);
+        return new Hook() {
 
-        final PaymentTypeConfirm component = new PaymentTypeConfirm(props);
-        final Hook hook = new Hook(component);
-        return hook;
+            @Override
+            public Component<HookComponent.Props> createComponent() {
+                final HookComponent.Props props = new HookComponent.Props(
+                        HooksStore.getInstance(),
+                        typeId,
+                        null,
+                        decorationPreference,
+                        "Hook 1",
+                        true);
+
+                return new PaymentTypeConfirm(props);
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
+        };
     }
 
     @Override
-    public Hook afterPaymentMethodSelected(@NonNull final PaymentData paymentData,
-                                           @NonNull final DecorationPreference decorationPreference) {
+    public Hook afterPaymentMethodConfig(@NonNull final PaymentData paymentData,
+                                          @NonNull final DecorationPreference decorationPreference) {
 
-        final HookComponent.Props props = new HookComponent.Props(
-                HooksStore.getInstance(),
-                null,
-                paymentData,
-                decorationPreference,
-                "Hook 2",
-                true);
+        return new Hook() {
 
-        final PaymentMethodConfirm component = new PaymentMethodConfirm(props);
-        final Hook hook = new Hook(component);
-        return hook;
+            @Override
+            public Component<HookComponent.Props> createComponent() {
+                final HookComponent.Props props = new HookComponent.Props(
+                        HooksStore.getInstance(),
+                        null,
+                        paymentData,
+                        decorationPreference,
+                        "Hook 2",
+                        true);
+
+                return new PaymentMethodConfirm(props);
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
+        };
+    }
+
+    @Override
+    public Hook beforePayment(@NonNull final PaymentData paymentData,
+                              @NonNull final DecorationPreference decorationPreference) {
+
+        return new Hook() {
+
+            @Override
+            public Component<HookComponent.Props> createComponent() {
+                final HookComponent.Props props = new HookComponent.Props(
+                        HooksStore.getInstance(),
+                        null,
+                        paymentData,
+                        decorationPreference,
+                        "Hook 3",
+                        true);
+
+                return new PaymentConfirm(props);
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
+        };
     }
 }

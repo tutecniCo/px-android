@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.mercadopago.examples.R;
 import com.mercadopago.hooks.HookRenderer;
 
-public class PaymentMethodConfirmRenderer extends HookRenderer {
+public class PaymentConfirmRenderer extends HookRenderer {
 
     @Override
     public View render() {
@@ -17,11 +17,10 @@ public class PaymentMethodConfirmRenderer extends HookRenderer {
         final ViewGroup contents = (ViewGroup) parent.findViewById(R.id.contents);
 
         final View view = LayoutInflater.from(context)
-                .inflate(R.layout.mpsdk_example_hook_payment_method_confirm, null);
+                .inflate(R.layout.mpsdk_example_hook_payment_confirm, null);
 
-        final TextView label = (TextView) view.findViewById(R.id.label);
-
-        label.setText(component.props.paymentData.getPaymentMethod().getName());
+        final TextView amount = view.findViewById(R.id.amount);
+        amount.setText(component.props.paymentData.getTransactionAmount().toString());
 
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override

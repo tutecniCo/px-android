@@ -1,5 +1,7 @@
 package com.mercadopago.presenters;
 
+import android.support.annotation.NonNull;
+
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.constants.PaymentMethods;
@@ -9,18 +11,24 @@ import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
+import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Payer;
+import com.mercadopago.model.PayerCost;
+import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
+import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.PaymentVaultProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.CurrenciesUtil;
+import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.views.PaymentVaultView;
 
@@ -52,7 +60,19 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     private FailureRecovery failureRecovery;
 
     private DecorationPreference decorationPreference;
+    private CheckoutPreference checkoutPreference;
     private PaymentMethodSearchItem resumeItem;
+    private Payer mPayer;
+
+    private boolean hook1Displayed = false;
+    private boolean hook2Displayed = false;
+    private boolean payerInformation = false;
+
+    //Card data
+    private Token token;
+    private Issuer cardIssuer;
+    private PayerCost payerCost;
+    private Card card;
 
     public void initialize(boolean selectAutomatically) {
         try {
@@ -106,6 +126,10 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         this.decorationPreference = decorationPreference;
     }
 
+    public void setCheckoutPreference(CheckoutPreference checkoutPreference) {
+        this.checkoutPreference = checkoutPreference;
+    }
+
     public void onDiscountOptionSelected() {
         getView().startDiscountFlow(mAmount);
     }
@@ -142,8 +166,9 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         initPaymentVaultFlow();
     }
 
-    public void onPayerInformationReceived(Payer payer) {
-        getView().finishPaymentMethodSelection(mSelectedPaymentMethod, payer);
+    public void onPayerInformationReceived(final Payer payer) {
+        this.mPayer = payer;
+        resumeItemSelection();
     }
 
     private void clearPaymentMethodOptions() {
@@ -254,17 +279,22 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             payer.setAccessToken(mPayerAccessToken);
 
 
-            getResourcesProvider().getPaymentMethodSearch(getTransactionAmount(), mPaymentPreference, payer, mSite, new OnResourcesRetrievedCallback<PaymentMethodSearch>() {
+            getResourcesProvider().getPaymentMethodSearch(
+                    getTransactionAmount(),
+                    mPaymentPreference,
+                    payer,
+                    mSite,
+                    new OnResourcesRetrievedCallback<PaymentMethodSearch>() {
 
                 @Override
-                public void onSuccess(PaymentMethodSearch paymentMethodSearch) {
+                public void onSuccess(final PaymentMethodSearch paymentMethodSearch) {
                     mPaymentMethodSearch = paymentMethodSearch;
                     reselectSearchItem();
                     showPaymentMethodGroup();
                 }
 
                 @Override
-                public void onFailure(MercadoPagoError error) {
+                public void onFailure(final MercadoPagoError error) {
                     if (isViewAttached()) {
                         getView().showError(error, ApiUtil.RequestOrigin.PAYMENT_METHOD_SEARCH);
 
@@ -323,25 +353,39 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         }
     }
 
+    public void afterPaymentMethodConfigContinue() {
+        if (resumeItem != null) {
+            resolveSelectedPaymentMethod(resumeItem);
+        }
+    }
+
+    public void hook1Canceled() {
+        hook1Displayed = false;
+        resumeItem = null;
+    }
+
+    public void hook2Canceled() {
+        hook2Displayed = false;
+        resumeItem = null;
+    }
+
     private void selectItem(PaymentMethodSearchItem item) {
         selectItem(item, false);
     }
 
-    private void selectItem(PaymentMethodSearchItem item, Boolean automaticSelection) {
+    private void selectItem(@NonNull final PaymentMethodSearchItem item,
+                            final boolean automaticSelection) {
 
         if (item.hasChildren()) {
+
             getView().showSelectedItem(item);
+
         } else if (item.isPaymentType()) {
 
-            if (resumeItem == null && hasAfterPaymentTypeSelectedHook()) {
-                startAfterPaymentTypeSelectedHook(item.getId());
-                resumeItem = item;
-            } else {
-                startNextStepForPaymentType(item, automaticSelection);
-                resumeItem = null;
-            }
+            startNextStepForPaymentType(item, automaticSelection);
 
         } else if (item.isPaymentMethod()) {
+
             resolvePaymentMethodSelection(item);
         }
     }
@@ -423,30 +467,101 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         return foundCard;
     }
 
-    private void startNextStepForPaymentType(PaymentMethodSearchItem item, Boolean automaticSelection) {
+    private void startNextStepForPaymentType(@NonNull final PaymentMethodSearchItem item, final boolean automaticSelection) {
 
-        if (mPaymentPreference == null) {
-            mPaymentPreference = new PaymentPreference();
-        }
+        final HooksStore store = HooksStore.getInstance();
+        final Hook hook1 = store.activateBeforePaymentMethodConfig(item.getId(), decorationPreference);
 
-        if (MercadoPagoUtil.isCard(item.getId())) {
-            getView().startCardFlow(item.getId(), mAmount, automaticSelection);
+        if (!hook1Displayed && hook1 != null) {
+            hook1Displayed = true;
+            resumeItem = item;
+            getView().showHook(hook1, HooksStore.HOOK_1);
         } else {
-            getView().startPaymentMethodsSelection();
+
+            if (mPaymentPreference == null) {
+                mPaymentPreference = new PaymentPreference();
+            }
+
+            if (MercadoPagoUtil.isCard(item.getId())) {
+                getView().startCardFlow(item.getId(), mAmount, automaticSelection);
+            } else {
+                getView().startPaymentMethodsSelection();
+            }
+
         }
     }
 
-    private void resolvePaymentMethodSelection(PaymentMethodSearchItem item) {
+    public void resolvePaymentMethodSelection(final PaymentMethodSearchItem item) {
+
+        final PaymentMethod paymentMethod = mPaymentMethodSearch.getPaymentMethodBySearchItem(item);
+        final HooksStore store = HooksStore.getInstance();
+
+        final Hook hook1 = store.activateBeforePaymentMethodConfig(paymentMethod.getPaymentTypeId(), decorationPreference);
+        final Hook hook2 = store.activateAfterPaymentMethodConfig(createPaymentData(), decorationPreference);
+
+        resumeItem = item;
+
+        if (!hook1Displayed && hook1 != null) {
+
+            hook1Displayed = true;
+            getView().showHook(hook1, HooksStore.HOOK_1);
+
+        } else if (!payerInformation
+                && PaymentMethods.BRASIL.BOLBRADESCO.equalsIgnoreCase(paymentMethod.getId())) {
+
+            payerInformation = true;
+            mSelectedPaymentMethod = paymentMethod;
+            getView().collectPayerInformation();
+
+        } else if (payerInformation && !hook2Displayed && hook2 != null) {
+
+            hook2Displayed = true;
+            getView().showHook(hook2, HooksStore.HOOK_2);
+
+        } else {
+
+            resolveSelectedPaymentMethod(item);
+        }
+    }
+
+    public void cardFinishWithResult(final PaymentMethod paymentMethod,
+                                     final Token token, final Issuer cardIssuer,
+                                     final PayerCost payerCost, final Card card) {
+
+        this.mSelectedPaymentMethod = paymentMethod;
+        this.token = token;
+        this.cardIssuer = cardIssuer;
+        this.payerCost = payerCost;
+        this.card = card;
+
+        final HooksStore store = HooksStore.getInstance();
+        final Hook hook2 = store.activateAfterPaymentMethodConfig(createPaymentData(), decorationPreference);
+
+        if (!hook2Displayed && hook2 != null) {
+            hook2Displayed = true;
+            getView().showHook(hook2, HooksStore.HOOK_2_FROM_CARD);
+        } else {
+            getView().finishWithCardResult();
+        }
+    }
+
+    private void resolveSelectedPaymentMethod(final PaymentMethodSearchItem item) {
         PaymentMethod selectedPaymentMethod = mPaymentMethodSearch.getPaymentMethodBySearchItem(item);
         if (selectedPaymentMethod == null) {
             showMismatchingPaymentMethodError();
-        } else if (selectedPaymentMethod.getId().equals(PaymentMethods.BRASIL.BOLBRADESCO)) {
+        } else if (!payerInformation && selectedPaymentMethod.getId().equals(PaymentMethods.BRASIL.BOLBRADESCO)) {
             mSelectedPaymentMethod = selectedPaymentMethod;
             getView().collectPayerInformation();
         } else {
-            getView().finishPaymentMethodSelection(selectedPaymentMethod);
+
+            if (mPayer != null) {
+                getView().finishPaymentMethodSelection(selectedPaymentMethod, mPayer);
+            } else {
+                getView().finishPaymentMethodSelection(selectedPaymentMethod);
+            }
         }
     }
+
 
     public boolean isOnlyUniqueSearchSelectionAvailable() {
         return searchItemsAvailable() && mPaymentMethodSearch.getGroups().size() == 1 && !mPaymentMethodSearch.hasCustomSearchItems();
@@ -583,20 +698,35 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         return limitedItems;
     }
 
-    public boolean hasAfterPaymentTypeSelectedHook() {
-        return HooksStore.getInstance().hasCheckoutHooks();
+    private PaymentData createPaymentData() {
+
+        final PaymentData paymentData = new PaymentData();
+        paymentData.setPaymentMethod(mSelectedPaymentMethod);
+        paymentData.setDiscount(mDiscount);
+        paymentData.setTransactionAmount(this.checkoutPreference.getAmount());
+
+        final Payer payer = createPayerFrom(checkoutPreference.getPayer(), mPayer);
+        paymentData.setPayer(payer);
+
+        return paymentData;
     }
 
-    public void startAfterPaymentTypeSelectedHook(final String typeId) {
-
-        final Hook hook = HooksStore.getInstance()
-                .getCheckoutHooks()
-                .afterPaymentTypeSelected(typeId, decorationPreference);
-
-        HooksStore.getInstance().setHook(hook);
-
-        if (hook != null) {
-            getView().showPaymentTypeHook(hook);
+    private Payer createPayerFrom(final Payer checkoutPreferencePayer,
+                                  final Payer collectedPayer) {
+        Payer payerForPayment;
+        if (checkoutPreferencePayer != null && collectedPayer != null) {
+            payerForPayment = copy(checkoutPreferencePayer);
+            payerForPayment.setFirstName(collectedPayer.getFirstName());
+            payerForPayment.setLastName(collectedPayer.getLastName());
+            payerForPayment.setIdentification(collectedPayer.getIdentification());
+        } else {
+            payerForPayment = checkoutPreferencePayer;
         }
+        return payerForPayment;
+    }
+
+    private Payer copy(final Payer original) {
+        //FIXME: Esto no debeía correr en main thread
+        return JsonUtil.getInstance().fromJson(JsonUtil.getInstance().toJson(original), Payer.class);
     }
 }

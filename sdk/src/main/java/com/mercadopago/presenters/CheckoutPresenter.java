@@ -475,25 +475,15 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void onPaymentMethodSelected() {
-
         mPaymentMethodEditionRequested = false;
-
-        if (HooksStore.getInstance().hasCheckoutHooks()) {
-            startAfterPaymentMethodSelectedHook();
-        } else if (isReviewAndConfirmEnabled()) {
+        if (isReviewAndConfirmEnabled()) {
             showReviewAndConfirm();
         } else {
             resolvePaymentDataResponse();
         }
     }
 
-    public void onPaymenMethodSelectedHookContinue() {
-        if (isReviewAndConfirmEnabled()) {
-            showReviewAndConfirm();
-        }
-    }
-
-    private void resolvePaymentDataResponse() {
+    public void resolvePaymentDataResponse() {
         if (MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE.equals(mRequestedResult)) {
             PaymentData paymentData = createPaymentData();
             getView().finishWithPaymentDataResult(paymentData, mPaymentMethodEdited);
@@ -641,7 +631,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onPaymentConfirmation() {
-        resolvePaymentDataResponse();
+        startBeforePaymentHook();
     }
 
     public void changePaymentMethod() {
@@ -657,10 +647,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onReviewAndConfirmCancel() {
-
-        if (hasAfterPaymentMethodSelectedHook()) {
-            startAfterPaymentMethodSelectedHook();
-        } else if (mFlowPreference.shouldExitOnPaymentMethodChange() && !isUniquePaymentMethod()) {
+        if (mFlowPreference.shouldExitOnPaymentMethodChange() && !isUniquePaymentMethod()) {
             getView().finishFromReviewAndConfirm();
         } else if (isUniquePaymentMethod()) {
             getView().cancelCheckout();
@@ -964,20 +951,15 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         return mFlowPreference.getMaxSavedCardsToShow();
     }
 
-    private boolean hasAfterPaymentMethodSelectedHook() {
-        return HooksStore.getInstance().hasCheckoutHooks();
-    }
-
-    private void startAfterPaymentMethodSelectedHook() {
-
+    private void startBeforePaymentHook() {
+        final HooksStore store = HooksStore.getInstance();
         final PaymentData paymentData = createPaymentData();
-        final Hook hook = HooksStore.getInstance().getCheckoutHooks()
-                .afterPaymentMethodSelected(paymentData, decorationPreference);
-
-        HooksStore.getInstance().setHook(hook);
+        final Hook hook = store.activateBeforePayment(paymentData, decorationPreference);
 
         if (hook != null) {
-            getView().showHook(hook);
+            getView().showHook(hook, HooksStore.HOOK_3);
+        } else {
+            resolvePaymentDataResponse();
         }
     }
 }

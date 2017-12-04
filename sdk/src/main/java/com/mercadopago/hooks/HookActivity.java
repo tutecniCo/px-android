@@ -3,12 +3,14 @@ package com.mercadopago.hooks;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.BackAction;
+import com.mercadopago.components.Component;
 import com.mercadopago.components.ComponentManager;
 import com.mercadopago.components.NextAction;
 import com.mercadopago.components.RendererFactory;
@@ -17,7 +19,8 @@ public class HookActivity extends AppCompatActivity implements ActionDispatcher 
 
     private ComponentManager componentManager;
 
-    public static Intent getIntent(final Context context) {
+    public static Intent getIntent(@NonNull final Context context, @NonNull final Hook hook) {
+        HooksStore.getInstance().setHook(hook);
         final Intent intent = new Intent(context, HookActivity.class);
         return intent;
     }
@@ -38,8 +41,9 @@ public class HookActivity extends AppCompatActivity implements ActionDispatcher 
             return;
         }
 
-        hook.component.setDispatcher(this);
-        componentManager.render(hook.component);
+        final Component component = hook.createComponent();
+        component.setDispatcher(this);
+        componentManager.render(component);
     }
 
     @Override
