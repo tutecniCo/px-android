@@ -56,8 +56,5 @@ public interface PaymentVaultView extends MvpView {
 
     void initializeMPTracker();
 
-    void showHook(final Hook hook, final int hookType);
-
-    void finishWithCardResult();
-
+    void showHook(final Hook hook, final int code);
 }

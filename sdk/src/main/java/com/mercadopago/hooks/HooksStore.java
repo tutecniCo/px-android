@@ -11,11 +11,6 @@ public class HooksStore {
     private CheckoutHooks checkoutHooks;
     private Hook hook;
 
-    public static final int HOOK_1 = 1000;
-    public static final int HOOK_2 = 1001;
-    public static final int HOOK_2_FROM_CARD = 1002;
-    public static final int HOOK_3 = 1003;
-
     private HooksStore() {
 
     }

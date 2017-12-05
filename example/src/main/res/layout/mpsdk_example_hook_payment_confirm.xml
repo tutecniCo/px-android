@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="20dp"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:textColor="@color/mpsdk_black"
                     android:textSize="27sp"
                     tools:text="$ 1200" />

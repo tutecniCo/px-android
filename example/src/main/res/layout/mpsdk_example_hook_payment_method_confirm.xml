@@ -39,7 +39,7 @@
                     android:id="@+id/label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:layout_gravity="center"
                     android:textSize="27sp"
                     android:textColor="@color/mpsdk_black"

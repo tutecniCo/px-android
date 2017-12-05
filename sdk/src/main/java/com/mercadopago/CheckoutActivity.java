@@ -1,6 +1,5 @@
 package com.mercadopago;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +11,6 @@ import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
 import com.mercadopago.hooks.HookActivity;
-import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
@@ -198,11 +196,20 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             resolveCardVaultRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.REVIEW_AND_CONFIRM_REQUEST_CODE) {
             resolveReviewAndConfirmRequest(resultCode, data);
-        } else if (requestCode == HooksStore.HOOK_3) {
-            if (resultCode == Activity.RESULT_CANCELED) {
-                backToReviewAndConfirm();
+        } else if (requestCode == MercadoPagoComponents.Activities.HOOK_2) {
+
+            if (resultCode == RESULT_OK) {
+                mCheckoutPresenter.hook2Continue();
             } else {
+                cancelCheckout();
+            }
+
+        } else if (requestCode == MercadoPagoComponents.Activities.HOOK_3) {
+
+            if (resultCode == RESULT_OK) {
                 mCheckoutPresenter.resolvePaymentDataResponse();
+            } else {
+                backToReviewAndConfirm();
             }
         }
     }
@@ -537,9 +544,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         LayoutUtil.showProgressLayout(this);
     }
 
-
     @Override
-    public void showHook(@NonNull final Hook hook, @NonNull final int hookType) {
-        startActivityForResult(HookActivity.getIntent(this, hook), hookType);
+    public void showHook(@NonNull final Hook hook, final int requestCode) {
+        startActivityForResult(HookActivity.getIntent(this, hook), requestCode);
     }
 }
