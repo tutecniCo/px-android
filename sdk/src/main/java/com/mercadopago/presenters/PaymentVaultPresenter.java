@@ -595,7 +595,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     public void onHookContinue() {
         if (resumeItem != null) {
             skipHook = true;
-            selectItem(resumeItem);
+            selectItem(resumeItem, true);
         }
     }
 

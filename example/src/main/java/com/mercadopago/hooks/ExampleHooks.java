@@ -77,7 +77,7 @@ public class ExampleHooks extends DefaultCheckoutHooks {
                         paymentData,
                         decorationPreference,
                         "Hook 3",
-                        true);
+                        false);
 
                 return new PaymentConfirm(props);
             }
