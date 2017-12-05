@@ -17,8 +17,6 @@ import com.mercadopago.components.RendererFactory;
 
 public class HookActivity extends AppCompatActivity implements ActionDispatcher {
 
-    private ComponentManager componentManager;
-
     public static Intent getIntent(@NonNull final Context context, @NonNull final Hook hook) {
         HooksStore.getInstance().setHook(hook);
         final Intent intent = new Intent(context, HookActivity.class);
@@ -31,8 +29,7 @@ public class HookActivity extends AppCompatActivity implements ActionDispatcher 
 
         RendererFactory.register(HookComponent.class, HookRenderer.class);
 
-        componentManager = new ComponentManager(this);
-
+        final ComponentManager componentManager = new ComponentManager(this);
         final Hook hook = HooksStore.getInstance().getHook();
 
         if (hook == null) {

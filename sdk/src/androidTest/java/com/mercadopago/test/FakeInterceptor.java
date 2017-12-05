@@ -24,7 +24,7 @@ public class FakeInterceptor implements Interceptor {
         Response response = null;
         if(BuildConfig.DEBUG) {
             FakeAPI.QueuedResponse nextResponse = targetAPI.getNextResponse();
-            if(nextResponse.hasDelay()) {º
+            if(nextResponse.hasDelay()) {
                 try {
                     Thread.sleep(nextResponse.getDelay());
                 } catch (InterruptedException e) {

@@ -223,8 +223,8 @@ public class MercadoPagoComponents {
                 return this;
             }
 
-            public PaymentVaultActivityBuilder setCheckoutPReference(final CheckoutPreference checkoutPReference) {
-                this.checkoutPreference = checkoutPReference;
+            public PaymentVaultActivityBuilder setCheckoutPreference(final CheckoutPreference checkoutPreference) {
+                this.checkoutPreference = checkoutPreference;
                 return this;
             }
 

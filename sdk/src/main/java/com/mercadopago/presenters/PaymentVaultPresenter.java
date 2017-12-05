@@ -385,7 +385,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         accountMoneyPaymentMethod.setId(ACCOUNT_MONEY_ID);
         accountMoneyPaymentMethod.setName(searchItem.getDescription());
         accountMoneyPaymentMethod.setPaymentTypeId(searchItem.getType());
-        if (!showHook_1(ACCOUNT_MONEY_ID, MercadoPagoComponents.Activities.HOOK_1_ACCOUNT_MONEY)) {
+        if (!showHook1(ACCOUNT_MONEY_ID, MercadoPagoComponents.Activities.HOOK_1_ACCOUNT_MONEY)) {
             getView().finishPaymentMethodSelection(accountMoneyPaymentMethod);
         }
     }
@@ -415,7 +415,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     private void startNextStepForPaymentType(final PaymentMethodSearchItem item, final boolean automaticSelection) {
 
-        if (skipHook || (!hook1Displayed && !showHook_1(item.getId()))) {
+        if (skipHook || (!hook1Displayed && !showHook1(item.getId()))) {
             skipHook = false;
 
             if (mPaymentPreference == null) {
@@ -438,7 +438,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
         final PaymentMethod selectedPaymentMethod = mPaymentMethodSearch.getPaymentMethodBySearchItem(item);
 
-        if (skipHook || (!hook1Displayed && !showHook_1(selectedPaymentMethod.getPaymentTypeId()))) {
+        if (skipHook || (!hook1Displayed && !showHook1(selectedPaymentMethod.getPaymentTypeId()))) {
             skipHook = false;
 
             if (selectedPaymentMethod == null) {
@@ -604,11 +604,11 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         resumeItem = null;
     }
 
-    public boolean showHook_1(final String typeId) {
-        return showHook_1(typeId, MercadoPagoComponents.Activities.HOOK_1);
+    public boolean showHook1(final String typeId) {
+        return showHook1(typeId, MercadoPagoComponents.Activities.HOOK_1);
     }
 
-    public boolean showHook_1(final String typeId, final int requestCode) {
+    public boolean showHook1(final String typeId, final int requestCode) {
         final HooksStore store = HooksStore.getInstance();
         final Hook hook = store.activateBeforePaymentMethodConfig(typeId, decorationPreference);
         if (resumeItem == null && hook != null && getView() != null) {

@@ -476,7 +476,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void onPaymentMethodSelected() {
-        if (!showHook_2(createPaymentData())) {
+        if (!showHook2(createPaymentData())) {
             hook2Continue();
         }
     }
@@ -629,7 +629,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public void onPaymentConfirmation() {
-        if (!showHook_3(createPaymentData())) {
+        if (!showHook3(createPaymentData())) {
             resolvePaymentDataResponse();
         }
     }
@@ -953,11 +953,11 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     //### Hooks #####################
 
-    public boolean showHook_2(final PaymentData paymentData) {
-        return showHook_2(paymentData, MercadoPagoComponents.Activities.HOOK_2);
+    public boolean showHook2(final PaymentData paymentData) {
+        return showHook2(paymentData, MercadoPagoComponents.Activities.HOOK_2);
     }
 
-    public boolean showHook_2(final PaymentData paymentData, final int requestCode) {
+    public boolean showHook2(final PaymentData paymentData, final int requestCode) {
         final HooksStore store = HooksStore.getInstance();
         final Hook hook = store.activateAfterPaymentMethodConfig(paymentData, decorationPreference);
         if (hook != null && getView() != null) {
@@ -967,11 +967,11 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         return false;
     }
 
-    public boolean showHook_3(final PaymentData paymentData) {
-        return showHook_3(paymentData, MercadoPagoComponents.Activities.HOOK_3);
+    public boolean showHook3(final PaymentData paymentData) {
+        return showHook3(paymentData, MercadoPagoComponents.Activities.HOOK_3);
     }
 
-    public boolean showHook_3(final PaymentData paymentData, final int requestCode) {
+    public boolean showHook3(final PaymentData paymentData, final int requestCode) {
         final HooksStore store = HooksStore.getInstance();
         final Hook hook = store.activateBeforePayment(paymentData, decorationPreference);
         if (hook != null && getView() != null) {

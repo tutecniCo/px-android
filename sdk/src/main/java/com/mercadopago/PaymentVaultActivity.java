@@ -468,9 +468,9 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         } else if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
             resolveErrorRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1) {
-            resolveHook1Reuest(resultCode);
+            resolveHook1Request(resultCode);
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1_ACCOUNT_MONEY) {
-            resolveHook1AccountMoneyReuest(resultCode);
+            resolveHook1AccountMoneyRequest(resultCode);
         }
     }
 
@@ -860,7 +860,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
 
     //### HOOKS ######################
 
-    public void resolveHook1Reuest(int resultCode) {
+    public void resolveHook1Request(int resultCode) {
         if (resultCode == RESULT_OK) {
             mPaymentVaultPresenter.onHookContinue();
         } else {
@@ -868,7 +868,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         }
     }
 
-    public void resolveHook1AccountMoneyReuest(int resultCode) {
+    public void resolveHook1AccountMoneyRequest(int resultCode) {
         if (resultCode == RESULT_OK) {
             finishPaymentMethodSelection(mPaymentVaultPresenter.getAccountMoneyPaymentMethod());
         } else {

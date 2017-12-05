@@ -362,7 +362,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setMaxSavedCards(mCheckoutPresenter.getMaxSavedCardsToShow())
                 .setShowAllSavedCardsEnabled(mCheckoutPresenter.shouldShowAllSavedCards())
                 .setESCEnabled(mCheckoutPresenter.isESCEnabled())
-                .setCheckoutPReference(mCheckoutPresenter.getCheckoutPreference())
+                .setCheckoutPreference(mCheckoutPresenter.getCheckoutPreference())
                 .startActivity();
     }
 

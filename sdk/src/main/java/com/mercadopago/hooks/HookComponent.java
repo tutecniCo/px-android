@@ -21,20 +21,20 @@ public abstract class HookComponent extends Component<HookComponent.Props> {
         public final PaymentData paymentData;
         public final DecorationPreference decorationPreference;
         public final String toolbarTitle;
-        public final boolean toolbarVisibile;
+        public final boolean toolbarVisible;
 
         public Props(@NonNull final HooksStore store,
                      @Nullable final String paymentTypeId,
                      @Nullable final PaymentData paymentData,
                      @NonNull final DecorationPreference decorationPreference,
                      @NonNull final String toolbarTitle,
-                     final boolean toolbarVisibile) {
+                     final boolean toolbarVisible) {
             this.store = store;
             this.paymentTypeId = paymentTypeId;
             this.paymentData = paymentData;
             this.decorationPreference = decorationPreference;
             this.toolbarTitle = toolbarTitle;
-            this.toolbarVisibile = toolbarVisibile;
+            this.toolbarVisible = toolbarVisible;
         }
     }
 

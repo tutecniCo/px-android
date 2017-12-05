@@ -28,7 +28,7 @@ public abstract class HookRenderer extends Renderer<HookComponent> {
         final AppCompatActivity activity = (AppCompatActivity) context;
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        if (!component.props.toolbarVisibile) {
+        if (!component.props.toolbarVisible) {
 
             toolbar.setVisibility(View.GONE);
 
