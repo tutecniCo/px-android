@@ -1,10 +1,12 @@
 package com.mercadopago.customviews;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
@@ -34,6 +36,12 @@ public class MPEditText extends AppCompatEditText {
             Typeface tf = FontCache.createTypeface(mTypeName, getContext());
             setTypeface(tf);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    @Override
+    public int getAutofillType() {
+        return AUTOFILL_TYPE_NONE;
     }
 
     private void setErrorColor(Context context, AttributeSet attrs, int defStyle) {
