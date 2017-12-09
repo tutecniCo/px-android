@@ -71,7 +71,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     protected MPTextView mConfirmTextButton;
     protected MPTextView mFloatingConfirmTextButton;
     protected MPTextView mCancelTextView;
-    protected AppCompatTextView mTermsAndConditionsTextView;
+    protected MPTextView mTermsAndConditionsTextView;
     protected MPTextView mTimerTextView;
 
     protected FrameLayout mConfirmButton;
@@ -223,7 +223,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
         mCancelButton = (FrameLayout) findViewById(R.id.mpsdkReviewCancelButton);
         mCancelTextView = (MPTextView) findViewById(R.id.mpsdkCancelText);
         mTermsAndConditionsButton = (LinearLayout) findViewById(R.id.mpsdkCheckoutTermsAndConditions);
-        mTermsAndConditionsTextView =  findViewById(R.id.mpsdkReviewTermsAndConditions);
+        mTermsAndConditionsTextView = (MPTextView) findViewById(R.id.mpsdkReviewTermsAndConditions);
         mTimerTextView = (MPTextView) findViewById(R.id.mpsdkTimerTextView);
         mReviewables = (RecyclerView) findViewById(R.id.mpsdkReviewablesRecyclerView);
         mSeparatorView = findViewById(R.id.mpsdkFirstSeparator);
