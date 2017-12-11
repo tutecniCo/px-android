@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercadopago.components.Component;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPButton;
 import com.mercadopago.examples.R;
@@ -26,6 +27,8 @@ import com.mercadopago.hooks.components.PaymentMethodConfirmRenderer;
 import com.mercadopago.hooks.components.PaymentTypeConfirm;
 import com.mercadopago.hooks.components.PaymentTypeConfirmRenderer;
 import com.mercadopago.model.Payment;
+import com.mercadopago.plugins.PaymentMethodPlugin;
+import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.JsonUtil;
@@ -92,7 +95,18 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
-                .setDecorationPreference(getCurrentDecorationPreference());
+                .setDecorationPreference(getCurrentDecorationPreference())
+                .addPaymentMethodPlugin(new PaymentMethodPlugin() {
+                    @Override
+                    public PaymentMethodInfo getPaymentMethod() {
+                        return null;
+                    }
+
+                    @Override
+                    public Component createConfigurationComponent() {
+                        return null;
+                    }
+                });
 
         if (mHooksEnabled.isChecked()) {
 
