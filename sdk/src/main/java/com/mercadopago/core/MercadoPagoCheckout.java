@@ -16,6 +16,7 @@ import com.mercadopago.hooks.HooksStore;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
+import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.FlowPreference;
@@ -25,6 +26,9 @@ import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.TextUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -75,6 +79,7 @@ public class MercadoPagoCheckout {
         customizePaymentResultReview(paymentResultScreenPreference);
 
         PreferenceStore.getInstance().setDecorationPreference(decorationPreference);
+        CheckoutSessionStore.getInstance().setPaymentMethodPluginList(builder.paymentMethodPluginList);
         HooksStore.getInstance().setCheckoutHooks(builder.checkoutHooks);
 
         //Create flow identifier only for new checkouts
@@ -203,6 +208,7 @@ public class MercadoPagoCheckout {
         private PaymentResult paymentResult;
         private Discount discount;
         private CheckoutHooks checkoutHooks;
+        private List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
 
         public Builder setActivity(Activity activity) {
             this.activity = activity;
@@ -266,6 +272,11 @@ public class MercadoPagoCheckout {
 
         public Builder setCheckoutHooks(@NonNull final CheckoutHooks checkoutHooks) {
             this.checkoutHooks = checkoutHooks;
+            return this;
+        }
+
+        public Builder addPaymentMethodPlugin(@NonNull final PaymentMethodPlugin paymentMethodPlugin) {
+            paymentMethodPluginList.add(paymentMethodPlugin);
             return this;
         }
 

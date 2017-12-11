@@ -341,6 +341,13 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     private void showAvailableOptions() {
 
+//        if (preferences.hayMEDIODEPAGO CUSTOM) {
+//            shownCustomItems.add(...)
+//            getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
+//
+//        }
+
+
         if (mPaymentMethodSearch.hasCustomSearchItems()) {
             List<CustomSearchItem> shownCustomItems;
 
@@ -349,11 +356,18 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             } else {
                 shownCustomItems = getLimitedCustomOptions(mPaymentMethodSearch.getCustomSearchItems(), mMaxSavedCards);
             }
+
+
             getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
         }
 
         if (searchItemsAvailable()) {
             getView().showSearchItems(mPaymentMethodSearch.getGroups(), getPaymentMethodSearchItemSelectionCallback());
+        }
+
+        if (mPaymentMethodSearch.hasPluginItems()) {
+
+            getView().showPluginΩΩΩItems(mPaymentMethodSearch.getPluginItems(), getPaymentMethodSearchItemSelectionCallback());
         }
     }
 
@@ -587,6 +601,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         } else {
             limitedItems = customSearchItems;
         }
+
         return limitedItems;
     }
 
