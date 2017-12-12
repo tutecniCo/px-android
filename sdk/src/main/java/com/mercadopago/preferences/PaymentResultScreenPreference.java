@@ -8,6 +8,7 @@ import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.callbacks.PaymentResultCallback;
 import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.model.Reviewable;
+import com.mercadopago.paymentresult.components.CustomComponent;
 import com.mercadopago.paymentresult.model.Badge;
 
 import java.util.ArrayList;
@@ -328,6 +329,9 @@ public class PaymentResultScreenPreference {
         private Integer secondaryPendingExitResultCode;
         private Integer secondaryRejectedExitResultCode;
 
+        private CustomComponent upCongratsCustomComponent;
+        private CustomComponent downCongratsCustomComponent;
+
         public Builder() {
             this.topCongratsReviewables = new ArrayList<>();
             this.bottomCongratsReviewables = new ArrayList<>();
@@ -423,8 +427,19 @@ public class PaymentResultScreenPreference {
         //
 
         //body
+        @Deprecated
         public Builder addCongratsReviewable(Reviewable customReviewable) {
             addCongratsReviewable(customReviewable, ContentLocation.BOTTOM);
+            return this;
+        }
+
+        public Builder setCongratsCustomComponent(CustomComponent customComponent, boolean upPosition) {
+
+            if (upPosition) {
+                this.upCongratsCustomComponent = customComponent;
+            } else {
+                this.downCongratsCustomComponent = customComponent;
+            }
             return this;
         }
 
