@@ -6,7 +6,7 @@ import com.mercadopago.preferences.DecorationPreference;
 
 public class PreferenceStore {
 
-    private static PreferenceStore INSTANCE;
+    private static final PreferenceStore INSTANCE = new PreferenceStore();
 
     private DecorationPreference decorationPreference;
 
@@ -14,9 +14,6 @@ public class PreferenceStore {
     }
 
     public static PreferenceStore getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new PreferenceStore();
-        }
         return INSTANCE;
     }
 
