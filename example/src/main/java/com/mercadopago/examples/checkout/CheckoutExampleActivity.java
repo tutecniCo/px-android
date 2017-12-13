@@ -98,8 +98,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setDecorationPreference(getCurrentDecorationPreference())
                 .addPaymentMethodPlugin(new PaymentMethodPlugin() {
                     @Override
-                    public PaymentMethodInfo getPaymentMethod() {
-                        return null;
+                    public PaymentMethodInfo getPaymentMethodInfo() {
+                        return new PaymentMethodInfo("Nico", R.drawable.ico_numbers_6);
                     }
 
                     @Override

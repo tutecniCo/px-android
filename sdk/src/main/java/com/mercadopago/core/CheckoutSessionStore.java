@@ -16,6 +16,7 @@ public class CheckoutSessionStore {
 
     private DecorationPreference decorationPreference;
     private List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
+    
 
     private CheckoutSessionStore() {
     }
@@ -41,14 +42,5 @@ public class CheckoutSessionStore {
 
     public void setPaymentMethodPluginList(List<PaymentMethodPlugin> paymentMethodPluginList) {
         this.paymentMethodPluginList = paymentMethodPluginList;
-    }
-
-    public List<PaymentMethodInfo> getPaymentMethodsFromPlugins() {
-        final List<PaymentMethodInfo> paymentMethodsIndo = new ArrayList<>();
-        for (PaymentMethodPlugin plugin : paymentMethodPluginList) {
-            final PaymentMethodInfo info = plugin.getPaymentMethodInfo();
-            paymentMethodsIndo.add(info);
-        }
-        return paymentMethodsIndo;
     }
 }
