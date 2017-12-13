@@ -20,13 +20,11 @@ import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.plugins.PaymentMethodPlugin;
-import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.preferences.PaymentPreference;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +103,7 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     @Override
     public void getPaymentMethodSearch(BigDecimal amount, final PaymentPreference paymentPreference, final Payer payer, Site site, final OnResourcesRetrievedCallback<PaymentMethodSearch> onResourcesRetrievedCallback) {
 
-        final List<PaymentMethodInfo> pluginPaymentMethods = CheckoutSessionStore.getInstance().getPaymentMethodsFromPlugins();
+        final List<PaymentMethodPlugin> paymentMethodPlugins = CheckoutSessionStore.getInstance().getPaymentMethodPluginList();
         final List<String> excludedPaymentTypes = paymentPreference == null ? null : paymentPreference.getExcludedPaymentTypes();
         final List<String> excludedPaymentMethodIds = paymentPreference == null ? null : paymentPreference.getExcludedPaymentMethodIds();
 
@@ -114,7 +112,7 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
             public void success(@NonNull final PaymentMethodSearch paymentMethodSearch) {
 
                 //From payment method pugins
-                paymentMethodSearch.setPluginItems(pluginPaymentMethods);
+                paymentMethodSearch.setPaymentMethodPlugins(paymentMethodPlugins);
 
                 if (!paymentMethodSearch.hasSavedCards() && isMerchantServerCustomerAvailable()) {
                     addCustomerCardsFromMerchantServer(paymentMethodSearch, paymentPreference, onResourcesRetrievedCallback);

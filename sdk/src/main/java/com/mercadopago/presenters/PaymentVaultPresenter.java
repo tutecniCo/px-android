@@ -1,5 +1,8 @@
 package com.mercadopago.presenters;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.constants.PaymentMethods;
@@ -17,6 +20,8 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.plugins.PaymentMethodPlugin;
+import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.providers.PaymentVaultProvider;
@@ -341,12 +346,27 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
     private void showAvailableOptions() {
 
-//        if (preferences.hayMEDIODEPAGO CUSTOM) {
-//            shownCustomItems.add(...)
-//            getView().showCustomOptions(shownCustomItems, getCustomOptionCallback());
-//
-//        }
+        final List<PaymentMethodInfo> pluginUpItems = new ArrayList<>();
+        final List<PaymentMethodInfo> pluginDownItems = new ArrayList<>();
 
+        if (mPaymentMethodSearch.hasPluginItems()) {
+            final List<PaymentMethodPlugin> plugins = mPaymentMethodSearch.getPaymentMethodPlugins();
+            for(int i = 0; i < plugins.size(); i++) {
+                final PaymentMethodPlugin plugin = plugins.get(i);
+                final PaymentMethodInfo info = plugin.getPaymentMethodInfo();
+                if (PaymentMethodPlugin.POSIION_UP.equalsIgnoreCase(plugin.getPosition())) {
+                    if (info != null) {
+                        pluginUpItems.add(info);
+                    }
+                } else if (PaymentMethodPlugin.POSIION_DOWN.equalsIgnoreCase(plugin.getPosition())) {
+                    if (info != null) {
+                        pluginDownItems.add(info);
+                    }
+                }
+            }
+        }
+
+        getView().showPluginOptions(pluginUpItems);
 
         if (mPaymentMethodSearch.hasCustomSearchItems()) {
             List<CustomSearchItem> shownCustomItems;
@@ -365,10 +385,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
             getView().showSearchItems(mPaymentMethodSearch.getGroups(), getPaymentMethodSearchItemSelectionCallback());
         }
 
-        if (mPaymentMethodSearch.hasPluginItems()) {
-
-            getView().showPluginΩΩΩItems(mPaymentMethodSearch.getPluginItems(), getPaymentMethodSearchItemSelectionCallback());
-        }
+        getView().showPluginOptions(pluginDownItems);
     }
 
     private OnSelectedCallback<PaymentMethodSearchItem> getPaymentMethodSearchItemSelectionCallback() {

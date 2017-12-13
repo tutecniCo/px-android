@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,6 +42,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.observers.TimerObserver;
+import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentPreference;
@@ -414,6 +416,29 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         return customViewControllers;
     }
 
+    private List<PaymentMethodSearchViewController> createPluginItemsViewControllers(final List<PaymentMethodInfo> items) {
+        final List<PaymentMethodSearchViewController> controllers = new ArrayList<>();
+        for (final PaymentMethodInfo item : items) {
+
+            final PaymentMethodSearchItem searchItem = new PaymentMethodSearchItem();
+            searchItem.setDescription(item.name);
+            searchItem.setComment("Esta es la mejor opción");
+            searchItem.setId("nico_coin");
+            searchItem.setType("provided");
+            searchItem.setShowIcon(true);
+
+            final PaymentMethodSearchViewController viewController = new PaymentMethodSearchOption(this, searchItem, mDecorationPreference);
+//            viewController.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View v) {
+//                    onSelectedCallback.onSelected(item);
+//                }
+//            });
+            controllers.add(viewController);
+        }
+        return controllers;
+    }
+
     @Override
     public void startSavedCardFlow(Card card, BigDecimal amount) {
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
@@ -712,6 +737,15 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
     @Override
     public void showSearchItems(List<PaymentMethodSearchItem> searchItems, OnSelectedCallback<PaymentMethodSearchItem> paymentMethodSearchItemSelectionCallback) {
         populateSearchList(searchItems, paymentMethodSearchItemSelectionCallback);
+    }
+
+
+    @Override
+    public void showPluginOptions(@NonNull final List<PaymentMethodInfo> items) {
+        final PaymentMethodSearchItemAdapter adapter = (PaymentMethodSearchItemAdapter) mSearchItemsRecyclerView.getAdapter();
+        final List<PaymentMethodSearchViewController> customViewControllers = createPluginItemsViewControllers(items);
+        adapter.addItems(customViewControllers);
+        adapter.notifyItemInserted();
     }
 
     @Override
