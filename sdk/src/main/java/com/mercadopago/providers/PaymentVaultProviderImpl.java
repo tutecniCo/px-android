@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
-import com.mercadopago.core.CheckoutSessionStore;
 import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -19,7 +18,6 @@ import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.Site;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
-import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.TextUtil;
 import com.mercadopago.preferences.PaymentPreference;
@@ -103,17 +101,12 @@ public class PaymentVaultProviderImpl implements PaymentVaultProvider {
     @Override
     public void getPaymentMethodSearch(BigDecimal amount, final PaymentPreference paymentPreference, final Payer payer, Site site, final OnResourcesRetrievedCallback<PaymentMethodSearch> onResourcesRetrievedCallback) {
 
-        final List<PaymentMethodPlugin> paymentMethodPlugins = CheckoutSessionStore.getInstance().getPaymentMethodPluginList();
         final List<String> excludedPaymentTypes = paymentPreference == null ? null : paymentPreference.getExcludedPaymentTypes();
         final List<String> excludedPaymentMethodIds = paymentPreference == null ? null : paymentPreference.getExcludedPaymentMethodIds();
 
         mercadoPago.getPaymentMethodSearch(amount, excludedPaymentTypes, excludedPaymentMethodIds, payer, site, new Callback<PaymentMethodSearch>() {
             @Override
             public void success(@NonNull final PaymentMethodSearch paymentMethodSearch) {
-
-                //From payment method pugins
-                paymentMethodSearch.setPaymentMethodPlugins(paymentMethodPlugins);
-
                 if (!paymentMethodSearch.hasSavedCards() && isMerchantServerCustomerAvailable()) {
                     addCustomerCardsFromMerchantServer(paymentMethodSearch, paymentPreference, onResourcesRetrievedCallback);
                 } else {

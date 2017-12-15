@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -24,6 +25,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Token;
+import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.FlowPreference;
@@ -296,6 +298,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showReviewAndConfirm() {
 
+        final CheckoutStore store = CheckoutStore.getInstance();
+        final PaymentMethodInfo paymentMethodInfo = store.getSelectedPaymentMethod();
+
         MercadoPagoComponents.Activities.ReviewAndConfirmBuilder builder = new MercadoPagoComponents.Activities.ReviewAndConfirmBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
@@ -318,6 +323,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
         if (MercadoPagoUtil.isCard(mCheckoutPresenter.getSelectedPaymentMethod().getPaymentTypeId())) {
             builder.setToken(mCheckoutPresenter.getCreatedToken());
+        } else if (paymentMethodInfo != null) { //Plugin payment method selected
+            builder.setPaymentMethodDescriptionInfo(paymentMethodInfo.name);
+            builder.setPaymentMethodCommentInfo(paymentMethodInfo.description);
         } else if (!PaymentTypes.ACCOUNT_MONEY.equals(mCheckoutPresenter.getSelectedPaymentMethod().getPaymentTypeId())) {
             PaymentMethodSearchItem paymentMethodSearchItem = mCheckoutPresenter.getPaymentMethodSearch().getSearchItemByPaymentMethod(mCheckoutPresenter.getSelectedPaymentMethod());
             String searchItemComment = paymentMethodSearchItem.getComment();

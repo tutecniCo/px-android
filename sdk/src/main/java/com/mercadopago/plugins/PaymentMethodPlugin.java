@@ -1,6 +1,9 @@
 package com.mercadopago.plugins;
 
-import com.mercadopago.components.Component;
+import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.mercadopago.components.ExternalComponent;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**
@@ -9,14 +12,21 @@ import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 public abstract class PaymentMethodPlugin {
 
-    public static final String POSIION_UP = "position_up";
-    public static final String POSIION_DOWN = "position_down";
+    public static final String POSIION_TOP = "position_up";
+    public static final String POSIION_BOTTOM = "position_down";
 
-    public String getPosition() {
-        return POSIION_DOWN;
+    protected Context context;
+
+    public PaymentMethodPlugin(Context context) {
+        this.context = context;
+    }
+
+    public String displayOrder() {
+        return POSIION_TOP;
     }
 
     public abstract PaymentMethodInfo getPaymentMethodInfo();
-    public abstract Component createConfigurationComponent();
+
+    public abstract ExternalComponent createConfigurationComponent();
 
 }

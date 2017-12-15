@@ -3,12 +3,13 @@ package com.mercadopago.presenters;
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.controllers.Timer;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
-import com.mercadopago.hooks.HooksStore;
+import com.mercadopago.hooks.HookHelper;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
@@ -951,8 +952,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public boolean showHook2(final PaymentData paymentData, final int requestCode) {
-        final HooksStore store = HooksStore.getInstance();
-        final Hook hook = store.activateAfterPaymentMethodConfig(paymentData);
+        final Hook hook = HookHelper.activateAfterPaymentMethodConfig(
+                CheckoutStore.getInstance().getCheckoutHooks(), paymentData);
         if (hook != null && getView() != null) {
             getView().showHook(hook, requestCode);
             return true;
@@ -965,8 +966,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public boolean showHook3(final PaymentData paymentData, final int requestCode) {
-        final HooksStore store = HooksStore.getInstance();
-        final Hook hook = store.activateBeforePayment(paymentData);
+        final Hook hook = HookHelper.activateBeforePayment(
+                CheckoutStore.getInstance().getCheckoutHooks(), paymentData);
         if (hook != null && getView() != null) {
             getView().showHook(hook, requestCode);
             return true;
