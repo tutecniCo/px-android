@@ -408,65 +408,12 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
 
     }
 
-    private void getDirectDiscount() {
-        if (isMerchantServerDiscountsAvailable()) {
-            getMerchantDirectDiscount();
-        } else {
-            getMPDirectDiscount();
-        }
-    }
-
-    private Boolean isAmountValid() {
-        return mTransactionAmount != null && mTransactionAmount.compareTo(BigDecimal.ZERO) > 0;
-    }
-
     public void initializeDiscountActivity() {
         getView().startDiscountActivity(mTransactionAmount);
     }
 
     private void initializeDiscountRow() {
         getView().showDiscountRow(mTransactionAmount);
-    }
-
-    private void getMPDirectDiscount() {
-        getResourcesProvider().getMPDirectDiscount(mTransactionAmount.toString(), mPayerEmail, new OnResourcesRetrievedCallback<Discount>() {
-            @Override
-            public void onSuccess(Discount discount) {
-                onDiscountSuccess(discount);
-            }
-
-            @Override
-            public void onFailure(MercadoPagoError error) {
-                onDiscountFailure();
-            }
-        });
-    }
-
-    private void getMerchantDirectDiscount() {
-        String merchantDiscountUrl = getMerchantServerDiscountUrl();
-
-        getResourcesProvider().getDirectDiscountAsync(mTransactionAmount.toString(), mPayerEmail, merchantDiscountUrl, mMerchantGetDiscountUri, mDiscountAdditionalInfo, new OnResourcesRetrievedCallback<Discount>() {
-            @Override
-            public void onSuccess(Discount discount) {
-                onDiscountSuccess(discount);
-            }
-
-            @Override
-            public void onFailure(MercadoPagoError error) {
-                onDiscountFailure();
-            }
-        });
-    }
-
-    private void onDiscountSuccess(Discount discount) {
-        onDiscountReceived(discount);
-        loadPaymentMethods();
-    }
-
-    private void onDiscountFailure() {
-        mDirectDiscountEnabled = false;
-        initializeDiscountRow();
-        loadPaymentMethods();
     }
 
     public void onDiscountReceived(Discount discount) {
