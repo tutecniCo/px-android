@@ -17,7 +17,7 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
     @Override
     public View render() {
         final View bodyErrorView = LayoutInflater.from(context).inflate(R.layout.mpsdk_payment_result_body_error, null, false);
-        final ViewGroup bodyViewGroup = bodyErrorView.findViewById(R.id.mpsdkBodyErrorContainer);
+        final ViewGroup bodyViewGroup = bodyErrorView.findViewById(R.id.bodyErrorContainer);
         final MPTextView titleTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorTitle);
         final MPTextView descriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorDescription);
         final MPTextView actionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorAction);
