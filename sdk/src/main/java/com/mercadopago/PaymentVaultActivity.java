@@ -20,7 +20,9 @@ import com.google.gson.reflect.TypeToken;
 
 import com.mercadopago.adapters.PaymentMethodSearchItemAdapter;
 import com.mercadopago.callbacks.OnSelectedCallback;
+import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.core.MercadoPagoUI;
@@ -42,6 +44,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.observers.TimerObserver;
+import com.mercadopago.plugins.PaymentMethodPluginActivity;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.FlowPreference;
@@ -56,6 +59,7 @@ import com.mercadopago.tracking.tracker.MPTracker;
 import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.uicontrollers.discounts.DiscountRowView;
+import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodInfoController;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchCustomOption;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchOption;
 import com.mercadopago.uicontrollers.paymentmethodsearch.PaymentMethodSearchViewController;
@@ -422,24 +426,39 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         return customViewControllers;
     }
 
-    private List<PaymentMethodSearchViewController> createPluginItemsViewControllers(final List<PaymentMethodInfo> items) {
+    private List<PaymentMethodSearchViewController> createPluginItemsViewControllers(final List<PaymentMethodInfo> infoItems) {
         final List<PaymentMethodSearchViewController> controllers = new ArrayList<>();
-        for (final PaymentMethodInfo item : items) {
+        for (final PaymentMethodInfo infoItem : infoItems) {
 
-            final PaymentMethodSearchItem searchItem = new PaymentMethodSearchItem();
-            searchItem.setDescription(item.name);
-            searchItem.setComment("Esta es la mejor opción");
-            searchItem.setId("nico_coin");
-            searchItem.setType("provided");
-            searchItem.setShowIcon(true);
+            final PaymentMethodSearchViewController viewController =
+                    new PaymentMethodInfoController(this, infoItem, mDecorationPreference);
 
-            final PaymentMethodSearchViewController viewController = new PaymentMethodSearchOption(this, searchItem, mDecorationPreference);
-//            viewController.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(final View v) {
-//                    onSelectedCallback.onSelected(item);
-//                }
-//            });
+            viewController.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+
+                    final String id = String.valueOf(v.getTag());
+                    final PaymentMethodInfo info = CheckoutStore.getInstance().getPaymentMethodPluginInfoById(id);
+
+                    CheckoutStore.getInstance().setSelectedPaymentMethod(info);
+
+                    if (!mPaymentVaultPresenter.showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1)) {
+
+                        finishPaymentMethodSelection(new PaymentMethod(info));
+
+                    } else {
+
+                        startActivityForResult(PaymentMethodPluginActivity
+                                .getIntent(PaymentVaultActivity.this),
+                                    MercadoPagoComponents.Activities.PLUGIN_PAYMENT_METHOD_REQUEST_CODE);
+
+                        overridePendingTransition(
+                            R.anim.mpsdk_slide_left_to_right_out,
+                            R.anim.mpsdk_slide_left_to_right_in
+                        );
+                    }
+                }
+            });
             controllers.add(viewController);
         }
         return controllers;
@@ -496,12 +515,20 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             resolveDiscountRequest(resultCode, data);
         } else if (requestCode == MercadoPagoComponents.Activities.PAYER_INFORMATION_REQUEST_CODE) {
             resolvePayerInformationRequest(resultCode, data);
-        } else if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
-            resolveErrorRequest(resultCode, data);
+        } else if (requestCode == MercadoPagoComponents.Activities.PLUGIN_PAYMENT_METHOD_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+                final PaymentMethodInfo paymentMethodInfo =
+                        CheckoutStore.getInstance().getSelectedPaymentMethod();
+                finishPaymentMethodSelection(new PaymentMethod(paymentMethodInfo));
+            }
+
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1) {
             resolveHook1Request(resultCode);
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1_ACCOUNT_MONEY) {
             resolveHook1AccountMoneyRequest(resultCode);
+        } else if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
+            resolveErrorRequest(resultCode, data);
         }
     }
 

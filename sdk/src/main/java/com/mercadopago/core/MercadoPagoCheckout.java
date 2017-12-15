@@ -12,7 +12,7 @@ import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.hooks.CheckoutHooks;
-import com.mercadopago.hooks.HooksStore;
+import com.mercadopago.hooks.HookHelper;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
@@ -79,8 +79,8 @@ public class MercadoPagoCheckout {
         customizePaymentResultReview(paymentResultScreenPreference);
 
         PreferenceStore.getInstance().setDecorationPreference(decorationPreference);
-        CheckoutSessionStore.getInstance().setPaymentMethodPluginList(builder.paymentMethodPluginList);
-        HooksStore.getInstance().setCheckoutHooks(builder.checkoutHooks);
+        CheckoutStore.getInstance().setPaymentMethodPluginList(builder.paymentMethodPluginList);
+        CheckoutStore.getInstance().setCheckoutHooks(builder.checkoutHooks);
 
         //Create flow identifier only for new checkouts
         if(paymentResult == null && paymentData == null) {

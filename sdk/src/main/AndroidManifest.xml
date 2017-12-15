@@ -123,6 +123,9 @@
         <activity
             android:name=".hooks.HookActivity"
             android:theme="@style/Theme.ProcessMercadoPagoTheme.NoActionbar" />
+        <activity
+            android:name=".plugins.PaymentMethodPluginActivity"
+            android:theme="@style/Theme.ProcessMercadoPagoTheme.NoActionbar" />
 
     </application>
 

@@ -1,7 +1,6 @@
 package com.mercadopago.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.mercadopago.plugins.PaymentMethodPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +14,6 @@ public class PaymentMethodSearch {
 
     @SerializedName("custom_options")
     private List<CustomSearchItem> customSearchItems;
-
-    private List<PaymentMethodPlugin> paymentMethodPlugins = new ArrayList<>();
 
     private List<PaymentMethod> paymentMethods;
 
@@ -138,19 +135,6 @@ public class PaymentMethodSearch {
 
     public boolean hasCustomSearchItems() {
         return customSearchItems != null && !customSearchItems.isEmpty();
-    }
-
-    public boolean hasPluginItems() {
-        return paymentMethodPlugins != null && !paymentMethodPlugins.isEmpty();
-
-    }
-
-    public List<PaymentMethodPlugin> getPaymentMethodPlugins() {
-        return paymentMethodPlugins;
-    }
-
-    public void setPaymentMethodPlugins(List<PaymentMethodPlugin> paymentMethodPlugins) {
-        this.paymentMethodPlugins = paymentMethodPlugins;
     }
 
     public List<Card> getCards() {

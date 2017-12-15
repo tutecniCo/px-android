@@ -1,15 +1,13 @@
 package com.mercadopago.presenters;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.callbacks.OnSelectedCallback;
 import com.mercadopago.constants.PaymentMethods;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.Hook;
-import com.mercadopago.hooks.HooksStore;
+import com.mercadopago.hooks.HookHelper;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CustomSearchItem;
 import com.mercadopago.model.Discount;
@@ -348,17 +346,16 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
 
         final List<PaymentMethodInfo> pluginUpItems = new ArrayList<>();
         final List<PaymentMethodInfo> pluginDownItems = new ArrayList<>();
+        final List<PaymentMethodPlugin> paymentMethodPlugins = CheckoutStore.getInstance().getPaymentMethodPluginList();
 
-        if (mPaymentMethodSearch.hasPluginItems()) {
-            final List<PaymentMethodPlugin> plugins = mPaymentMethodSearch.getPaymentMethodPlugins();
-            for(int i = 0; i < plugins.size(); i++) {
-                final PaymentMethodPlugin plugin = plugins.get(i);
+        if (paymentMethodPlugins != null && !paymentMethodPlugins.isEmpty()) {
+            for (PaymentMethodPlugin plugin : paymentMethodPlugins) {
                 final PaymentMethodInfo info = plugin.getPaymentMethodInfo();
-                if (PaymentMethodPlugin.POSIION_UP.equalsIgnoreCase(plugin.getPosition())) {
+                if (PaymentMethodPlugin.POSIION_TOP.equalsIgnoreCase(plugin.displayOrder())) {
                     if (info != null) {
                         pluginUpItems.add(info);
                     }
-                } else if (PaymentMethodPlugin.POSIION_DOWN.equalsIgnoreCase(plugin.getPosition())) {
+                } else if (PaymentMethodPlugin.POSIION_BOTTOM.equalsIgnoreCase(plugin.displayOrder())) {
                     if (info != null) {
                         pluginDownItems.add(info);
                     }
@@ -641,8 +638,8 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     public boolean showHook1(final String typeId, final int requestCode) {
-        final HooksStore store = HooksStore.getInstance();
-        final Hook hook = store.activateBeforePaymentMethodConfig(typeId);
+        final Hook hook = HookHelper.activateBeforePaymentMethodConfig(
+                CheckoutStore.getInstance().getCheckoutHooks(), typeId, decorationPreference);
         if (resumeItem == null && hook != null && getView() != null) {
             hook1Displayed = true;
             getView().showHook(hook, requestCode);

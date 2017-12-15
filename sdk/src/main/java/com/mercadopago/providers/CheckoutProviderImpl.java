@@ -1,15 +1,13 @@
 package com.mercadopago.providers;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.constants.Sites;
-import com.mercadopago.core.CheckoutSessionStore;
 import com.mercadopago.core.CustomServer;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
 import com.mercadopago.exceptions.CheckoutPreferenceException;
@@ -128,9 +126,6 @@ public class CheckoutProviderImpl implements CheckoutProvider {
         mercadoPagoServicesAdapter.getPaymentMethodSearch(amount, new ArrayList<>(excludedPaymentTypesSet), excludedPaymentMethods, payer, site, new Callback<PaymentMethodSearch>() {
             @Override
             public void success(final PaymentMethodSearch paymentMethodSearch) {
-
-                paymentMethodSearch.setPaymentMethodPlugins(CheckoutSessionStore.getInstance().getPaymentMethodPluginList());
-
                 if (servicePreference != null && servicePreference.hasGetCustomerURL()) {
                     attachCustomerCardsFromMerchantServer(paymentMethodSearch, excludedPaymentTypes, excludedPaymentMethods, onPaymentMethodSearchRetrievedCallback, onCustomerRetrievedCallback);
                 } else {
