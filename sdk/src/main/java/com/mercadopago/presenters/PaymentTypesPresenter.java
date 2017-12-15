@@ -30,10 +30,6 @@ public class PaymentTypesPresenter {
     List<PaymentMethod> mPaymentMethodList;
     List<PaymentType> mPaymentTypeList;
 
-    public PaymentTypesPresenter(Context context) {
-        this.mContext = context;
-    }
-
     public void setView(PaymentTypesActivityView view) {
         this.mView = view;
     }

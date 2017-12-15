@@ -1368,11 +1368,11 @@ public class PaymentVaultPresenterTest {
 
         }
 
-        void simulateItemSelection(int index) {
+        private void simulateItemSelection(int index) {
             itemSelectionCallback.onSelected(searchItemsShown.get(index));
         }
 
-        void simulateCustomItemSelection(int index) {
+        private void simulateCustomItemSelection(int index) {
             customItemSelectionCallback.onSelected(customOptionsShown.get(index));
         }
     }

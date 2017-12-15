@@ -1592,8 +1592,9 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                     return true;
                 }
                 return false;
+            default:
+                return false;
         }
-        return false;
     }
 
     private boolean checkIsEmptyOrValid() {

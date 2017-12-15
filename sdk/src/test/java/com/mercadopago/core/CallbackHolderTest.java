@@ -28,17 +28,14 @@ public class CallbackHolderTest {
         PaymentCallback paymentCallback = new PaymentCallback() {
             @Override
             public void onSuccess(Payment payment) {
-
             }
 
             @Override
             public void onCancel() {
-
             }
 
             @Override
             public void onFailure(MercadoPagoError exception) {
-
             }
         };
 
@@ -52,17 +49,14 @@ public class CallbackHolderTest {
         PaymentDataCallback paymentDataCallback = new PaymentDataCallback() {
             @Override
             public void onSuccess(PaymentData paymentData, boolean paymentMethodChanged) {
-
             }
 
             @Override
             public void onCancel() {
-
             }
 
             @Override
             public void onFailure(MercadoPagoError exception) {
-
             }
         };
 

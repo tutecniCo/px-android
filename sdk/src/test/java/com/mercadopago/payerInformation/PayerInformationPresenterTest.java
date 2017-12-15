@@ -140,7 +140,8 @@ public class PayerInformationPresenterTest {
     }
 
     private Identification getIdentificationCPF() {
-        String type = "CPF", identificationNumber = "89898989898";
+        String type = "CPF";
+        String identificationNumber = "89898989898";
 
         Identification identification = new Identification();
         identification.setNumber(identificationNumber);
@@ -150,7 +151,8 @@ public class PayerInformationPresenterTest {
     }
 
     private Identification getIdentificationWithWrongNumberCPF() {
-        String type = "CPF", identificationNumber = "";
+        String type = "CPF";
+        String identificationNumber = "";
 
         Identification identification = new Identification();
         identification.setNumber(identificationNumber);
@@ -160,7 +162,9 @@ public class PayerInformationPresenterTest {
     }
 
     private IdentificationType getIdentificationTypeCPF() {
-        String type = "number", id = "CPF", name = "CPF";
+        String type = "number";
+        String id = "CPF";
+        String name = "CPF";
 
         IdentificationType identificationType = new IdentificationType();
         identificationType.setType(type);
@@ -172,7 +176,7 @@ public class PayerInformationPresenterTest {
         return identificationType;
     }
 
-    private class MockedView implements PayerInformationView{
+    private class MockedView implements PayerInformationView {
 
         private boolean initializeIdentificationTypes;
         private boolean showError;
@@ -194,7 +198,6 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void setIdentificationNumberRestrictions(String type) {
-
         }
 
         @Override
@@ -209,7 +212,6 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void clearErrorLastName() {
-
         }
 
         @Override
@@ -224,7 +226,6 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void setErrorLastName() {
-
         }
 
         @Override
@@ -240,7 +241,6 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void showInputContainer() {
-
         }
 
         @Override
@@ -251,16 +251,14 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void showProgressBar() {
-
         }
 
         @Override
         public void hideProgressBar() {
-
         }
     }
 
-    private class MockedProvider implements PayerInformationProvider{
+    private class MockedProvider implements PayerInformationProvider {
 
         private boolean shouldFail;
         private MercadoPagoError failedResponse;
