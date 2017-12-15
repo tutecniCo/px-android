@@ -1,9 +1,6 @@
 package com.mercadopago;
 
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -22,13 +19,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mercadopago.adapters.ReviewablesAdapter;
 import com.mercadopago.constants.ReviewKeys;
 import com.mercadopago.constants.Sites;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPTextView;
-
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.Item;
@@ -43,8 +41,8 @@ import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.presenters.ReviewAndConfirmPresenter;
-import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.providers.ReviewAndConfirmProviderImpl;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.tracking.model.ScreenViewEvent;
 import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.uicontrollers.FontCache;

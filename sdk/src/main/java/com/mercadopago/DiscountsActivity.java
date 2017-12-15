@@ -28,11 +28,9 @@ import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPEditText;
 import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.model.Currency;
-
 import com.mercadopago.model.Discount;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
-
 import com.mercadopago.presenters.DiscountsPresenter;
 import com.mercadopago.providers.DiscountProviderImpl;
 import com.mercadopago.util.CurrenciesUtil;

@@ -52,7 +52,6 @@ import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.util.TextUtil;
 
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
