@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPButton;
 import com.mercadopago.examples.R;
@@ -28,6 +29,7 @@ import com.mercadopago.hooks.components.PaymentTypeConfirmRenderer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.plugins.BitcoinPaymentMethodPlugin;
 import com.mercadopago.plugins.NicoPaymentMethodPlugin;
+import com.mercadopago.plugins.NicoPaymentPlugin;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.JsonUtil;
@@ -96,8 +98,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setCheckoutPreference(getCheckoutPreference())
                 .setDecorationPreference(getCurrentDecorationPreference())
                 //Custom payment methods
-                .addPaymentMethodPlugin(new NicoPaymentMethodPlugin(this))
-                .addPaymentMethodPlugin(new BitcoinPaymentMethodPlugin(this));
+                .addPaymentMethodPlugin("nicopay", new NicoPaymentMethodPlugin(this), new NicoPaymentPlugin())
+                .addPaymentMethodPlugin("bitcoin", new BitcoinPaymentMethodPlugin(this), null);
 
         if (mHooksEnabled.isChecked()) {
 

@@ -25,6 +25,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.PaymentRecovery;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Token;
+import com.mercadopago.plugins.PaymentPluginActivity;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
@@ -554,5 +555,10 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showHook(@NonNull final Hook hook, final int requestCode) {
         startActivityForResult(HookActivity.getIntent(this, hook), requestCode);
+    }
+
+    @Override
+    public void showPaymentPlugin() {
+        startActivity(PaymentPluginActivity.getIntent(this));
     }
 }
