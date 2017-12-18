@@ -9,7 +9,9 @@ import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.DecorationPreference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CheckoutStore {
 
@@ -20,6 +22,7 @@ public class CheckoutStore {
     private List<PaymentMethodPlugin> paymentMethodPluginList = new ArrayList<>();
     private CheckoutHooks checkoutHooks;
     private Hook hook;
+    private Map<String, Object> data = new HashMap();
 
     //App state
     private PaymentMethodInfo selectedPaymentMethod;
@@ -89,5 +92,9 @@ public class CheckoutStore {
 
     public void setCheckoutHooks(CheckoutHooks checkoutHooks) {
         this.checkoutHooks = checkoutHooks;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
     }
 }

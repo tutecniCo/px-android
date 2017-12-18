@@ -15,9 +15,12 @@ public class NicoPaymentMethodRenderer extends Renderer<NicoPaymentMethodCompone
     @Override
     public View render() {
         final View view = LayoutInflater.from(context).inflate(R.layout.mpsdk_pmplugin_nicopay_config, null);
-
-        component.next();
-
+        view.findViewById(R.id.logo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                component.next();
+            }
+        });
         return view;
     }
 }

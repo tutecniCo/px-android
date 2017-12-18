@@ -44,6 +44,7 @@ import com.mercadopago.model.PaymentMethodSearchItem;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.observers.TimerObserver;
+import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.plugins.PaymentMethodPluginActivity;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.DecorationPreference;
@@ -439,29 +440,40 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
 
                     final String id = String.valueOf(v.getTag());
                     final PaymentMethodInfo info = CheckoutStore.getInstance().getPaymentMethodPluginInfoById(id);
-
                     CheckoutStore.getInstance().setSelectedPaymentMethod(info);
 
-                    if (!mPaymentVaultPresenter.showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1)) {
-
-                        finishPaymentMethodSelection(new PaymentMethod(info));
-
-                    } else {
-
-                        startActivityForResult(PaymentMethodPluginActivity
-                                .getIntent(PaymentVaultActivity.this),
-                                    MercadoPagoComponents.Activities.PLUGIN_PAYMENT_METHOD_REQUEST_CODE);
-
-                        overridePendingTransition(
-                            R.anim.mpsdk_slide_left_to_right_out,
-                            R.anim.mpsdk_slide_left_to_right_in
-                        );
+                    if (!mPaymentVaultPresenter.showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1_PLUGIN)) {
+                        showPaymentMethodPluginConfiguration();
                     }
                 }
             });
             controllers.add(viewController);
         }
         return controllers;
+    }
+
+    private void showPaymentMethodPluginConfiguration() {
+
+        final PaymentMethodInfo info =  CheckoutStore.getInstance().getSelectedPaymentMethod();
+        final PaymentMethodPlugin plugin =  CheckoutStore.getInstance().getPaymentMethodPluginById(info.id);
+
+        if (plugin.createConfigurationComponent() != null) {
+
+            startActivityForResult(PaymentMethodPluginActivity
+                            .getIntent(PaymentVaultActivity.this),
+                    MercadoPagoComponents.Activities.PLUGIN_PAYMENT_METHOD_REQUEST_CODE);
+
+//            overridePendingTransition(
+//                    R.anim.mpsdk_slide_left_to_right_out,
+//                    R.anim.mpsdk_slide_left_to_right_in
+//            );
+
+        } else {
+
+            final PaymentMethodInfo paymentMethodInfo =
+                    CheckoutStore.getInstance().getSelectedPaymentMethod();
+            finishPaymentMethodSelection(new PaymentMethod(paymentMethodInfo));
+        }
     }
 
     @Override
@@ -524,7 +536,13 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             }
 
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1) {
+
             resolveHook1Request(resultCode);
+
+        } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1_PLUGIN) {
+
+            showPaymentMethodPluginConfiguration();
+
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_1_ACCOUNT_MONEY) {
             resolveHook1AccountMoneyRequest(resultCode);
         } else if (requestCode == ErrorUtil.ERROR_REQUEST_CODE) {
