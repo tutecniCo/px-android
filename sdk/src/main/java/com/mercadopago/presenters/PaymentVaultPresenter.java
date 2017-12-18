@@ -31,6 +31,7 @@ import com.mercadopago.views.PaymentVaultView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, PaymentVaultProvider> {
 
@@ -638,8 +639,11 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     public boolean showHook1(final String typeId, final int requestCode) {
+
+        final Map<String, Object> data = CheckoutStore.getInstance().getData();
         final Hook hook = HookHelper.activateBeforePaymentMethodConfig(
-                CheckoutStore.getInstance().getCheckoutHooks(), typeId, decorationPreference);
+                CheckoutStore.getInstance().getCheckoutHooks(), typeId, data);
+
         if (resumeItem == null && hook != null && getView() != null) {
             hook1Displayed = true;
             getView().showHook(hook, requestCode);

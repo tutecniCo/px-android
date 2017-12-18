@@ -101,6 +101,7 @@ public class MercadoPagoComponents {
 
         public static final int HOOK_1 = 50;
         public static final int HOOK_1_ACCOUNT_MONEY = 51;
+        public static final int HOOK_1_PLUGIN = 52;
 
         public static final int HOOK_2 = 60;
 

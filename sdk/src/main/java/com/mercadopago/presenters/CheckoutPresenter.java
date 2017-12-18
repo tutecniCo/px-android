@@ -43,6 +43,7 @@ import com.mercadopago.views.CheckoutView;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvider> {
 
@@ -952,8 +953,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public boolean showHook2(final PaymentData paymentData, final int requestCode) {
+        final Map<String, Object> data = CheckoutStore.getInstance().getData();
         final Hook hook = HookHelper.activateAfterPaymentMethodConfig(
-                CheckoutStore.getInstance().getCheckoutHooks(), paymentData);
+                CheckoutStore.getInstance().getCheckoutHooks(), paymentData, data);
         if (hook != null && getView() != null) {
             getView().showHook(hook, requestCode);
             return true;
@@ -966,8 +968,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     public boolean showHook3(final PaymentData paymentData, final int requestCode) {
+        final Map<String, Object> data = CheckoutStore.getInstance().getData();
         final Hook hook = HookHelper.activateBeforePayment(
-                CheckoutStore.getInstance().getCheckoutHooks(), paymentData);
+                CheckoutStore.getInstance().getCheckoutHooks(), paymentData, data);
         if (hook != null && getView() != null) {
             getView().showHook(hook, requestCode);
             return true;

@@ -77,7 +77,7 @@ public class MercadoPagoCheckout {
         customizeCheckoutReview(reviewScreenPreference);
         customizePaymentResultReview(paymentResultScreenPreference);
 
-        PreferenceStore.getInstance().setDecorationPreference(decorationPreference);
+        CheckoutStore.getInstance().setDecorationPreference(decorationPreference);
         CheckoutStore.getInstance().setPaymentMethodPluginList(builder.paymentMethodPluginList);
         CheckoutStore.getInstance().setCheckoutHooks(builder.checkoutHooks);
     }

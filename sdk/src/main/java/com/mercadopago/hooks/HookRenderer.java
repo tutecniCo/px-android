@@ -12,12 +12,12 @@ import android.widget.TextView;
 import com.mercadopago.R;
 import com.mercadopago.components.BackAction;
 import com.mercadopago.components.Renderer;
-import com.mercadopago.core.PreferenceStore;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.preferences.DecorationPreference;
 
 public abstract class HookRenderer extends Renderer<HookComponent> {
 
-    private DecorationPreference decorationPreference = PreferenceStore.getInstance().getDecorationPreference();
+    private DecorationPreference decorationPreference = CheckoutStore.getInstance().getDecorationPreference();
 
     @Override
     @CallSuper
