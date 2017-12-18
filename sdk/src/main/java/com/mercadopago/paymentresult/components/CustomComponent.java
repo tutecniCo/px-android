@@ -1,33 +1,14 @@
 package com.mercadopago.paymentresult.components;
-
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-
-import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.Component;
-import com.mercadopago.constants.PaymentTypes;
-import com.mercadopago.paymentresult.PaymentMethodProvider;
-import com.mercadopago.paymentresult.props.PaymentMethodProps;
-import com.mercadopago.paymentresult.props.TotalAmountProps;
 
 /**
  * Created by mromar on 11/22/17.
  */
 
-public class CustomComponent extends Component<PaymentMethodProps> {
+public class CustomComponent extends Component<Object> {
 
-    private PaymentMethodProvider provider;
-
-    public CustomComponent(@NonNull final PaymentMethodProps props,
-                           @NonNull final ActionDispatcher dispatcher,
-                           @NonNull final PaymentMethodProvider provider) {
-        super(props, dispatcher);
-
-        this.provider = provider;
+    public CustomComponent() {
+        //Pass empty object as props, external objects should not have props because are not known from the SDK side.
+        super(new Object());
     }
-
-    public Drawable getImage() {
-        return provider.getImage(props.paymentMethod);
-    }
-
 }

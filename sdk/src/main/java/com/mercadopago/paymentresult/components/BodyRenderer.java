@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
+import com.mercadopago.core.CheckoutSessionStore;
 
 /**
  * Created by vaserber on 10/23/17.
@@ -32,14 +33,44 @@ public class BodyRenderer extends Renderer<Body> {
                 final View paymentId = paymentIdRenderer.render();
                 bodyViewGroup.addView(paymentId);
             }
+
+            if (hasApprovedTopCustomComponent()) {
+                final Renderer customComponentRenderer = RendererFactory.create(context, CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedTopCustomComponent());
+                final View customView = customComponentRenderer.render();
+                bodyViewGroup.addView(customView);
+            }
+
             if (component.hasPaymentMethodDescription()) {
                 final Renderer paymentMethodRenderer = RendererFactory.create(context, component.getPaymentMethodComponent());
                 final View paymentMethod = paymentMethodRenderer.render();
                 bodyViewGroup.addView(paymentMethod);
             }
+
+            if (hasApprovedBottomCustomComponent()) {
+                final Renderer customComponentRenderer = RendererFactory.create(context, CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedBottomCustomComponent());
+                final View customView = customComponentRenderer.render();
+                bodyViewGroup.addView(customView);
+            }
         }
 
         stretchHeight(bodyViewGroup);
         return bodyView;
+    }
+
+    //TODO mover, debería ir en el component?
+    //TODO siempre voy a tener instance de CheckoutSessionStore?
+    private boolean hasApprovedTopCustomComponent() {
+        return hasPaymentResultScreenPreference() && CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedTopCustomComponent() != null;
+    }
+
+    //TODO mover, debería ir en el component?
+    //TODO siempre voy a tener instance de CheckoutSessionStore?
+    private boolean hasApprovedBottomCustomComponent() {
+        return hasPaymentResultScreenPreference() && CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedBottomCustomComponent() != null;
+    }
+
+    //TODO mover, debería ir en el component?
+    private boolean hasPaymentResultScreenPreference() {
+        return CheckoutSessionStore.getInstance().getPaymentResultScreenPreference() != null;
     }
 }

@@ -24,4 +24,8 @@ public class CheckoutSessionStore {
     public void setPaymentResultScreenPreference(PaymentResultScreenPreference paymentResultScreenPreference) {
         this.paymentResultScreenPreference = paymentResultScreenPreference;
     }
+
+    public PaymentResultScreenPreference getPaymentResultScreenPreference() {
+        return this.paymentResultScreenPreference;
+    }
 }

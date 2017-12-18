@@ -10,6 +10,7 @@ import com.mercadopago.components.LinkAction;
 import com.mercadopago.components.ChangePaymentMethodAction;
 import com.mercadopago.components.RecoverPaymentAction;
 import com.mercadopago.components.ResultCodeAction;
+import com.mercadopago.core.CheckoutSessionStore;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Instruction;
 import com.mercadopago.model.Instructions;

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.mercadopago.callbacks.CallbackHolder;
 import com.mercadopago.callbacks.PaymentResultCallback;
 import com.mercadopago.constants.ContentLocation;
+import com.mercadopago.core.CheckoutSessionStore;
 import com.mercadopago.model.Reviewable;
 import com.mercadopago.paymentresult.components.CustomComponent;
 import com.mercadopago.paymentresult.model.Badge;
@@ -27,7 +28,8 @@ public class PaymentResultScreenPreference {
     private String approvedSubtitle;
     private Integer approvedIcon;
     private String approvedLabelText;
-    private @Badge.ApprovedBadges String approvedBadge;
+    private @Badge.ApprovedBadges
+    String approvedBadge;
     private String pendingTitle;
     private String pendingSubtitle;
     private String pendingContentTitle;
@@ -62,6 +64,9 @@ public class PaymentResultScreenPreference {
     private Integer secondaryCongratsExitResultCode;
     private Integer secondaryPendingExitResultCode;
     private Boolean rejectionRetryEnabled;
+
+    private CustomComponent approvedTopCustomComponent;
+    private CustomComponent approvedBottomCustomComponent;
 
     private PaymentResultScreenPreference(Builder builder) {
         this.titleBackgroundColor = builder.titleBackgroundColor;
@@ -109,6 +114,16 @@ public class PaymentResultScreenPreference {
         this.congratsReviewables.put(ContentLocation.BOTTOM, builder.bottomCongratsReviewables);
         this.congratsReviewables.put(ContentLocation.TOP, builder.topCongratsReviewables);
 
+        this.approvedBottomCustomComponent = builder.approvedBottomCustomComponent;
+        this.approvedTopCustomComponent = builder.approvedTopCustomComponent;
+    }
+
+    public CustomComponent getApprovedTopCustomComponent() {
+        return approvedTopCustomComponent;
+    }
+
+    public CustomComponent getApprovedBottomCustomComponent() {
+        return approvedBottomCustomComponent;
     }
 
     public boolean hasCustomCongratsReviewables() {
@@ -148,7 +163,8 @@ public class PaymentResultScreenPreference {
         return approvedLabelText;
     }
 
-    public @Badge.ApprovedBadges String getApprovedBadge() {
+    public @Badge.ApprovedBadges
+    String getApprovedBadge() {
         return approvedBadge;
     }
 
@@ -288,7 +304,8 @@ public class PaymentResultScreenPreference {
 
         private String approvedTitle;
         private String approvedLabelText;
-        private @Badge.ApprovedBadges String approvedBadge;
+        private @Badge.ApprovedBadges
+        String approvedBadge;
 
         private Integer titleBackgroundColor;
         private String approvedSubtitle;
@@ -329,8 +346,8 @@ public class PaymentResultScreenPreference {
         private Integer secondaryPendingExitResultCode;
         private Integer secondaryRejectedExitResultCode;
 
-        private CustomComponent upCongratsCustomComponent;
-        private CustomComponent downCongratsCustomComponent;
+        private CustomComponent approvedTopCustomComponent;
+        private CustomComponent approvedBottomCustomComponent;
 
         public Builder() {
             this.topCongratsReviewables = new ArrayList<>();
@@ -433,13 +450,13 @@ public class PaymentResultScreenPreference {
             return this;
         }
 
-        public Builder setCongratsCustomComponent(CustomComponent customComponent, boolean upPosition) {
+        public Builder setApprovedTopCustomComponent(CustomComponent customComponent) {
+            this.approvedTopCustomComponent = customComponent;
+            return this;
+        }
 
-            if (upPosition) {
-                this.upCongratsCustomComponent = customComponent;
-            } else {
-                this.downCongratsCustomComponent = customComponent;
-            }
+        public Builder setApprovedBottomCustomComponent(CustomComponent customComponent) {
+            this.approvedBottomCustomComponent = customComponent;
             return this;
         }
 
@@ -530,6 +547,7 @@ public class PaymentResultScreenPreference {
             this.enableApprovedAmount = false;
             return this;
         }
+
         //footer
         public Builder setRejectedSecondaryExitButton(String title, @NonNull Integer resultCode) {
             this.secondaryRejectedExitButtonTitle = title;
@@ -598,7 +616,10 @@ public class PaymentResultScreenPreference {
         }
 
         public PaymentResultScreenPreference build() {
-            return new PaymentResultScreenPreference(this);
+            PaymentResultScreenPreference paymentResultScreenPreference = new PaymentResultScreenPreference(this);
+            CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(paymentResultScreenPreference);
+
+            return paymentResultScreenPreference;
         }
     }
 }
