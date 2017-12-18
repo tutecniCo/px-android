@@ -29,6 +29,7 @@ import com.mercadopago.model.PaymentResultAction;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
@@ -486,6 +487,16 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void createPayment() {
+
+        final PaymentMethodInfo paymentMethodInfo =
+                CheckoutStore.getInstance().getSelectedPaymentMethod();
+
+        if (paymentMethodInfo != null
+                && CheckoutStore.getInstance().getPaymentPluginByMethod(paymentMethodInfo.id) != null) {
+            getView().showPaymentPlugin();
+            return;
+        }
+
         final PaymentData paymentData = createPaymentData();
         String transactionId = getTransactionID();
         getResourcesProvider().createPayment(transactionId, mCheckoutPreference, paymentData, mBinaryMode, mCustomerId, new OnResourcesRetrievedCallback<Payment>() {
