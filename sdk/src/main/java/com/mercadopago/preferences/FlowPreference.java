@@ -1,5 +1,7 @@
 package com.mercadopago.preferences;
 
+import com.mercadopago.core.CheckoutStore;
+
 /**
  * Created by mreverter on 1/17/17.
  */
@@ -40,7 +42,6 @@ public class FlowPreference {
         this.congratsDisplayTime = builder.congratsDisplayTime;
         this.checkoutTimer = builder.checkoutTimer;
         this.exitOnPaymentMethodChange = builder.exitOnPaymentMethodChange;
-
     }
 
     public Integer getCongratsDisplayTime() {
@@ -84,7 +85,8 @@ public class FlowPreference {
     }
 
     public boolean isDiscountEnabled() {
-        return this.discountEnabled;
+        return this.discountEnabled
+                && CheckoutStore.getInstance().getPaymentMethodPluginList().isEmpty();
     }
 
     public void disableDiscount() {
