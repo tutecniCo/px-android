@@ -10,7 +10,7 @@ import com.mercadopago.examples.R;
  * Created by nfortuna on 12/13/17.
  */
 
-public class NicoPaymentMethodRenderer extends Renderer<NicoPaymentMethodComponent> {
+public class NicoPaymentMethodRenderer extends Renderer<NicoPaymentMethod> {
 
     @Override
     public View render() {

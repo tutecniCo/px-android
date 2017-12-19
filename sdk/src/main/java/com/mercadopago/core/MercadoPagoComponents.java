@@ -109,6 +109,8 @@ public class MercadoPagoComponents {
 
         public static final int PLUGIN_PAYMENT_METHOD_REQUEST_CODE = 100;
 
+        public static final int PLUGIN_PAYMENT_REQUEST_CODE = 200;
+
         private Activities() {
         }
 

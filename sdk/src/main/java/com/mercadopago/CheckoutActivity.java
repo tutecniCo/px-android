@@ -213,6 +213,18 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             } else {
                 backToReviewAndConfirm();
             }
+
+        } else if (requestCode == MercadoPagoComponents.Activities.PLUGIN_PAYMENT_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+
+                final PaymentResult paymentResult = CheckoutStore.getInstance().getPaymentResult();
+                showPaymentResult(paymentResult);
+
+            } else {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         }
     }
 
@@ -559,6 +571,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
     @Override
     public void showPaymentPlugin() {
-        startActivity(PaymentPluginActivity.getIntent(this));
+        startActivityForResult(PaymentPluginActivity.getIntent(this), MercadoPagoComponents.Activities.PLUGIN_PAYMENT_REQUEST_CODE);
     }
 }

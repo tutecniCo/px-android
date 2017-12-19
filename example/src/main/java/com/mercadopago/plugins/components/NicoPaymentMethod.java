@@ -8,10 +8,10 @@ import com.mercadopago.components.RendererFactory;
  * Created by nfortuna on 12/13/17.
  */
 
-public class NicoPaymentMethodComponent extends ExternalComponent {
+public class NicoPaymentMethod extends ExternalComponent {
 
     static {
-        RendererFactory.register(NicoPaymentMethodComponent.class, NicoPaymentMethodRenderer.class);
+        RendererFactory.register(NicoPaymentMethod.class, NicoPaymentMethodRenderer.class);
     }
 
     public void next() {

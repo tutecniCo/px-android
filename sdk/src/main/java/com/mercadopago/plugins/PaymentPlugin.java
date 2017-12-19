@@ -7,12 +7,5 @@ import com.mercadopago.components.ExternalComponent;
  */
 
 public abstract class PaymentPlugin {
-
-//    protected Context context;
-//
-//    public PaymentPlugin(Context context) {
-//        this.context = context;
-//    }
-
     public abstract ExternalComponent createPaymentComponent();
 }

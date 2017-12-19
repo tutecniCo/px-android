@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.hooks.CheckoutHooks;
 import com.mercadopago.hooks.Hook;
+import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentData;
+import com.mercadopago.model.PaymentResult;
 import com.mercadopago.plugins.PaymentMethodPlugin;
 import com.mercadopago.plugins.PaymentPlugin;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
@@ -28,6 +31,11 @@ public class CheckoutStore {
 
     //App state
     private PaymentMethodInfo selectedPaymentMethod;
+
+    //Payment
+    private PaymentResult paymentResult;
+    private PaymentData paymentData;
+    private Payment payment;
 
 
     private CheckoutStore() {
@@ -110,5 +118,29 @@ public class CheckoutStore {
 
     public void addPaymentPlugins(@NonNull final PaymentPlugin paymentPlugin, @NonNull final String paymentMethod) {
         this.paymentPlugins.put(paymentMethod, paymentPlugin);
+    }
+
+    public PaymentData getPaymentData() {
+        return paymentData;
+    }
+
+    public void setPaymentData(PaymentData paymentData) {
+        this.paymentData = paymentData;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public PaymentResult getPaymentResult() {
+        return paymentResult;
+    }
+
+    public void setPaymentResult(PaymentResult paymentResult) {
+        this.paymentResult = paymentResult;
     }
 }

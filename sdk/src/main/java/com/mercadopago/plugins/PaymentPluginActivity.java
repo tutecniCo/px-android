@@ -9,12 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
-import com.mercadopago.components.BackAction;
-import com.mercadopago.components.Component;
 import com.mercadopago.components.ComponentManager;
 import com.mercadopago.components.ExternalComponent;
-import com.mercadopago.components.NextAction;
 import com.mercadopago.core.CheckoutStore;
+import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentData;
+import com.mercadopago.model.PaymentResult;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**
@@ -59,6 +59,11 @@ public class PaymentPluginActivity extends AppCompatActivity implements ActionDi
 
     @Override
     public void dispatch(final Action action) {
-        //No action on payment
+        if (action instanceof PaymentResultAction) {
+            CheckoutStore.getInstance()
+                    .setPaymentResult(((PaymentResultAction) action).getPaymentResult());
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 }
