@@ -1350,18 +1350,22 @@ public class PaymentVaultPresenterTest {
 
         @Override
         public void trackChildrenScreen() {
+            //Not yet tested
         }
 
         @Override
         public void initializeMPTracker() {
+            //Not yet tested
         }
 
         @Override
         public void showHook(Hook hook, int code) {
+            //Not yet tested
         }
 
         @Override
         public void trackInitialScreen() {
+            //Not yet tested
         }
 
         private void simulateItemSelection(int index) {
