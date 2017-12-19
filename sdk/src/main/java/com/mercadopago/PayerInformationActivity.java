@@ -474,7 +474,6 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
         mIdentificationTypeSpinner.setOnTouchListener(new View.OnTouchListener() {
@@ -629,8 +628,9 @@ public class PayerInformationActivity extends MercadoPagoBaseActivity implements
                     return true;
                 }
                 return false;
+            default:
+                return false;
         }
-        return false;
     }
 
     private boolean checkIsEmptyOrValid() {

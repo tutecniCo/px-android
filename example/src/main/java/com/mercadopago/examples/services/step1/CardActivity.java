@@ -347,10 +347,12 @@ public class CardActivity extends AppCompatActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Do something
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Do something
             }
 
             public void afterTextChanged(Editable edt) {
