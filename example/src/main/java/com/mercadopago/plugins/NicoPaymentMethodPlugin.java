@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.mercadopago.components.ExternalComponent;
 import com.mercadopago.examples.R;
-import com.mercadopago.plugins.components.NicoPaymentMethodComponent;
+import com.mercadopago.plugins.components.NicoPaymentMethod;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**
@@ -34,6 +34,6 @@ public class NicoPaymentMethodPlugin extends PaymentMethodPlugin {
 
     @Override
     public ExternalComponent createConfigurationComponent() {
-        return new NicoPaymentMethodComponent();
+        return new NicoPaymentMethod();
     }
 }

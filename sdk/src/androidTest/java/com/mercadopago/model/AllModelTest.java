@@ -32,7 +32,7 @@ public class AllModelTest extends BaseTest<CheckoutActivity> {
         payment.setCallForAuthorizeId("123");
         payment.setCaptured(false);
         payment.setCard(StaticMock.getCard());
-        payment.setCollectorId("1234567");
+        payment .setCollectorId("1234567");
         payment.setCouponAmount(new BigDecimal("19"));
         payment.setCurrencyId("ARS");
         payment.setDateApproved(getDummyDate("2015-01-01"));
