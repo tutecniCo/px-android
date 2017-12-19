@@ -9,7 +9,7 @@ import com.mercadopago.preferences.PaymentResultScreenPreference;
 public class CheckoutSessionStore {
 
     private static CheckoutSessionStore INSTANCE;
-    private PaymentResultScreenPreference paymentResultScreenPreference;
+    private static PaymentResultScreenPreference paymentResultScreenPreference;
 
     private CheckoutSessionStore() {
     }

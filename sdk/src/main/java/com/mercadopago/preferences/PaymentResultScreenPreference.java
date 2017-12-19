@@ -116,6 +116,8 @@ public class PaymentResultScreenPreference {
 
         this.approvedBottomCustomComponent = builder.approvedBottomCustomComponent;
         this.approvedTopCustomComponent = builder.approvedTopCustomComponent;
+
+        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(this);
     }
 
     public CustomComponent getApprovedTopCustomComponent() {
@@ -617,8 +619,6 @@ public class PaymentResultScreenPreference {
 
         public PaymentResultScreenPreference build() {
             PaymentResultScreenPreference paymentResultScreenPreference = new PaymentResultScreenPreference(this);
-            CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(paymentResultScreenPreference);
-
             return paymentResultScreenPreference;
         }
     }

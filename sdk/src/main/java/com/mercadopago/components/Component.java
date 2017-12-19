@@ -19,6 +19,7 @@ public class Component<T> {
 
     public Component(@NonNull final T props) {
         this.props = props;
+        this.dispatcher = null;
         setProps(props);
     }
 

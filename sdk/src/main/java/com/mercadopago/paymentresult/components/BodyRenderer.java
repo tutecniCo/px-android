@@ -34,7 +34,7 @@ public class BodyRenderer extends Renderer<Body> {
                 bodyViewGroup.addView(paymentId);
             }
 
-            if (hasApprovedTopCustomComponent()) {
+            if (component.hasTopCustomComponent()) {
                 final Renderer customComponentRenderer = RendererFactory.create(context, CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedTopCustomComponent());
                 final View customView = customComponentRenderer.render();
                 bodyViewGroup.addView(customView);
@@ -46,7 +46,7 @@ public class BodyRenderer extends Renderer<Body> {
                 bodyViewGroup.addView(paymentMethod);
             }
 
-            if (hasApprovedBottomCustomComponent()) {
+            if (component.hasBottomCustomComponent()) {
                 final Renderer customComponentRenderer = RendererFactory.create(context, CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedBottomCustomComponent());
                 final View customView = customComponentRenderer.render();
                 bodyViewGroup.addView(customView);
@@ -55,22 +55,5 @@ public class BodyRenderer extends Renderer<Body> {
 
         stretchHeight(bodyViewGroup);
         return bodyView;
-    }
-
-    //TODO mover, debería ir en el component?
-    //TODO siempre voy a tener instance de CheckoutSessionStore?
-    private boolean hasApprovedTopCustomComponent() {
-        return hasPaymentResultScreenPreference() && CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedTopCustomComponent() != null;
-    }
-
-    //TODO mover, debería ir en el component?
-    //TODO siempre voy a tener instance de CheckoutSessionStore?
-    private boolean hasApprovedBottomCustomComponent() {
-        return hasPaymentResultScreenPreference() && CheckoutSessionStore.getInstance().getPaymentResultScreenPreference().getApprovedBottomCustomComponent() != null;
-    }
-
-    //TODO mover, debería ir en el component?
-    private boolean hasPaymentResultScreenPreference() {
-        return CheckoutSessionStore.getInstance().getPaymentResultScreenPreference() != null;
     }
 }

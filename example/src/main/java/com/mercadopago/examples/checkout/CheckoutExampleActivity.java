@@ -19,6 +19,7 @@ import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Payment;
 import com.mercadopago.paymentresult.components.CustomComponent;
+import com.mercadopago.paymentresult.components.TestCustomComponent;
 import com.mercadopago.paymentresult.model.Badge;
 import com.mercadopago.paymentresult.props.PaymentMethodProps;
 import com.mercadopago.preferences.CheckoutPreference;
@@ -75,13 +76,18 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
     private void startMercadoPagoCheckout() {
 
-        CustomComponent testComponent = new CustomComponent();
+        TestCustomComponent testCustomComponent = new TestCustomComponent();
 
+        PaymentResultScreenPreference paymentResultScreenPreference = new PaymentResultScreenPreference.Builder()
+                .setApprovedBottomCustomComponent(testCustomComponent)
+                //.setApprovedTopCustomComponent(testCustomComponent)
+                .build();
 
 
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
+                .setPaymentResultScreenPreference(paymentResultScreenPreference)
                 .setCheckoutPreference(getCheckoutPreference())
                 .setDecorationPreference(getCurrentDecorationPreference())
                 .startForPayment();
