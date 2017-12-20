@@ -90,7 +90,7 @@
     <string name="mpsdk_title_activity_new_card">Ingresa los datos de tu tarjeta</string>
 
     <!-- Congrats -->
-    <string name="mpsdk_title_approved_payment">¡Listo, se acreditó tu pago!</string>
+    <string name="mpsdk_title_approved_payment">¡Listo! Se acreditó tu pago</string>
     <string name="mpsdk_subtitle_action_activity_congrats">Te enviaremos los datos a\n%1$s</string>
     <string name="mpsdk_text_state_acount_activity_congrat">En tu estado de cuenta verás el cargo como\n %1$s</string>
     <string name="mpsdk_payment_id_description">Comprobante</string>

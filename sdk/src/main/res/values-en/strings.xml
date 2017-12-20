@@ -92,7 +92,7 @@
     <string name="mpsdk_exclusion_one_element">You can only pay with %1$s</string>
 
     <!-- Congrats -->
-    <string name="mpsdk_title_approved_payment">Done, your payment was accredited!</string>
+    <string name="mpsdk_title_approved_payment">Done! Your payment was accredited</string>
     <string name="mpsdk_subtitle_action_activity_congrats">We will send you the data to\n%1$s</string>
     <string name="mpsdk_text_state_account_activity_congrats">On your statement you will see the charge as\n %s</string>
     <string name="mpsdk_payment_id_description">Ticket</string>
