@@ -36,13 +36,11 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     private Site site;
     private BigDecimal amount;
     private ServicePreference servicePreference;
-    //private PaymentResultScreenPreference paymentResultScreenPreference;
     private PaymentResultNavigator navigator;
     private FailureRecovery failureRecovery;
 
     public PaymentResultPresenter(@NonNull final PaymentResultNavigator navigator) {
         this.navigator = navigator;
-        //this.paymentResultScreenPreference = new PaymentResultScreenPreference.Builder().build();
     }
 
     public void initialize() {
@@ -131,14 +129,6 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
-
-    /*public void setPaymentResultScreenPreference(final PaymentResultScreenPreference paymentResultScreenPreference) {
-        if (paymentResultScreenPreference != null) {
-            this.paymentResultScreenPreference = paymentResultScreenPreference;
-            getView().setPaymentResultScreenPreference(this.paymentResultScreenPreference);
-            getView().notifyPropsChanged();
-        }
-    }*/
 
     public void setServicePreference(final ServicePreference servicePreference) {
         if (servicePreference != null) {

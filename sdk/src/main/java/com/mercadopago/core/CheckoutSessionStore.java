@@ -26,6 +26,9 @@ public class CheckoutSessionStore {
     }
 
     public PaymentResultScreenPreference getPaymentResultScreenPreference() {
+        if (this.paymentResultScreenPreference == null) {
+            setPaymentResultScreenPreference(new PaymentResultScreenPreference.Builder().build());
+        }
         return this.paymentResultScreenPreference;
     }
 }

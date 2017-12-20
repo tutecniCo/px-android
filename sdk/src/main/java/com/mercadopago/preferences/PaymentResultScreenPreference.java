@@ -9,7 +9,7 @@ import com.mercadopago.callbacks.PaymentResultCallback;
 import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.core.CheckoutSessionStore;
 import com.mercadopago.model.Reviewable;
-import com.mercadopago.paymentresult.components.CustomComponent;
+import com.mercadopago.components.CustomComponent;
 import com.mercadopago.paymentresult.model.Badge;
 
 import java.util.ArrayList;
