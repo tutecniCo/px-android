@@ -3,7 +3,7 @@ package com.mercadopago.plugins.components;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ExternalComponent;
+import com.mercadopago.components.PluginComponent;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.core.CheckoutStore;
@@ -18,7 +18,7 @@ import com.mercadopago.plugins.model.PaymentMethodInfo;
  * Created by nfortuna on 12/13/17.
  */
 
-public class NicoPayment extends ExternalComponent {
+public class NicoPayment extends PluginComponent {
 
     final Handler handler = new Handler();
 

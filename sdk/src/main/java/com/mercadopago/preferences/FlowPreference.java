@@ -85,8 +85,7 @@ public class FlowPreference {
     }
 
     public boolean isDiscountEnabled() {
-        return this.discountEnabled
-                && CheckoutStore.getInstance().getPaymentMethodPluginList().isEmpty();
+        return this.discountEnabled;
     }
 
     public void disableDiscount() {

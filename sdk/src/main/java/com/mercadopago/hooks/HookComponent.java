@@ -4,11 +4,17 @@ import android.support.annotation.NonNull;
 
 import com.mercadopago.components.Component;
 import com.mercadopago.components.NextAction;
+import com.mercadopago.components.RendererFactory;
+import com.mercadopago.components.ToolbarComponent;
 import com.mercadopago.model.PaymentData;
 
 import java.util.Map;
 
 public abstract class HookComponent extends Component<HookComponent.Props> {
+
+    static {
+        RendererFactory.register(HookComponent.class, HookRenderer.class);
+    }
 
     public HookComponent(@NonNull final Props props) {
         super(props);
@@ -75,6 +81,14 @@ public abstract class HookComponent extends Component<HookComponent.Props> {
                 return new Props(this);
             }
         }
+    }
+
+    public ToolbarComponent getToolbarComponent() {
+        final ToolbarComponent.Props props = new ToolbarComponent.Props.Builder()
+                .setToolbarTitle(this.props.toolbarTitle)
+                .setToolbarVisible(this.props.toolbarVisible)
+                .build();
+        return new ToolbarComponent(props);
     }
 
     public void onContinue() {
