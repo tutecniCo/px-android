@@ -12,10 +12,8 @@ import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
-import com.mercadopago.paymentresult.components.Body;
 import com.mercadopago.paymentresult.formatter.BodyAmountFormatter;
 import com.mercadopago.paymentresult.formatter.HeaderTitleFormatter;
-import com.mercadopago.preferences.PaymentResultScreenPreference;
 
 import junit.framework.Assert;
 

@@ -4,7 +4,6 @@ import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.ChangePaymentMethodAction;
 import com.mercadopago.components.RecoverPaymentAction;
-import com.mercadopago.core.CheckoutSessionStore;
 import com.mercadopago.mocks.PaymentResults;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.paymentresult.components.Footer;
@@ -43,7 +42,7 @@ public class FooterContainerTest {
         when(provider.getChangePaymentMethodLabel()).thenReturn(LABEL_CHANGE_PAYMENT_METHOD);
         when(provider.getCancelPayment()).thenReturn(LABEL_CANCEL_PAYMENT);
 
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(new PaymentResultScreenPreference.Builder().build());
+        new PaymentResultScreenPreference.Builder().build();
     }
 
     @Test
@@ -66,10 +65,9 @@ public class FooterContainerTest {
     public void testApprovedExitButtonTitle() {
 
         final PaymentResult paymentResult = PaymentResults.getStatusApprovedPaymentResult();
-        final PaymentResultScreenPreference preference = new PaymentResultScreenPreference.Builder()
+        new PaymentResultScreenPreference.Builder()
                 .setExitButtonTitle(EXIT_TITLE)
                 .build();
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(preference);
 
         final FooterContainer footerContainer = new FooterContainer(
                 new FooterContainer.Props(paymentResult), dispatcher, provider);
@@ -148,10 +146,9 @@ public class FooterContainerTest {
     public void testRejectedDisableSecondaryExitButton() {
 
         final PaymentResult paymentResult = PaymentResults.getStatusRejectedOtherPaymentResult();
-        final PaymentResultScreenPreference preference = new PaymentResultScreenPreference.Builder()
+        new PaymentResultScreenPreference.Builder()
                 .disableRejectedSecondaryExitButton()
                 .build();
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(preference);
         final FooterContainer footerContainer = new FooterContainer(
                 new FooterContainer.Props(paymentResult), dispatcher, provider);
         final Footer footer = footerContainer.getFooter();

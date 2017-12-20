@@ -38,7 +38,7 @@ public class BodyTest {
         paymentResultProvider = mock(PaymentResultProvider.class);
         paymentMethodProvider = mock(PaymentMethodProvider.class);
 
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(new PaymentResultScreenPreference.Builder().build());
+        new PaymentResultScreenPreference.Builder().build();
     }
 
     @Test
@@ -175,10 +175,9 @@ public class BodyTest {
 
     @Test
     public void testBodyHasCustomTopComponent() {
-        final PaymentResultScreenPreference preference = new PaymentResultScreenPreference.Builder()
+        new PaymentResultScreenPreference.Builder()
                 .setApprovedTopCustomComponent(new CustomComponent())
                 .build();
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(preference);
 
         final PaymentResult paymentResult = PaymentResults.getStatusApprovedPaymentResult();
         final Body body = new Body(getBodyPropsForOnPayment(paymentResult),
@@ -190,10 +189,9 @@ public class BodyTest {
 
     @Test
     public void testBodyHasCustomBottomComponent() {
-        final PaymentResultScreenPreference preference = new PaymentResultScreenPreference.Builder()
+        new PaymentResultScreenPreference.Builder()
                 .setApprovedBottomCustomComponent(new CustomComponent())
                 .build();
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(preference);
 
         final PaymentResult paymentResult = PaymentResults.getStatusApprovedPaymentResult();
         final Body body = new Body(getBodyPropsForOnPayment(paymentResult),
@@ -205,11 +203,10 @@ public class BodyTest {
 
     @Test
     public void testBodyHasBothCustomComponent() {
-        final PaymentResultScreenPreference preference = new PaymentResultScreenPreference.Builder()
+        new PaymentResultScreenPreference.Builder()
                 .setApprovedBottomCustomComponent(new CustomComponent())
                 .setApprovedTopCustomComponent(new CustomComponent())
                 .build();
-        CheckoutSessionStore.getInstance().setPaymentResultScreenPreference(preference);
 
         final PaymentResult paymentResult = PaymentResults.getStatusApprovedPaymentResult();
         final Body body = new Body(getBodyPropsForOnPayment(paymentResult),
