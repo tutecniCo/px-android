@@ -124,7 +124,7 @@
     <string name="mpsdk_title_other_reason_rejection">%1$s did not process the payment</string>
     <string name="mpsdk_text_select_other_rejection">Use another card or another payment method</string>
     <string name="mpsdk_title_bad_filled_other">Oops, we could not process your payment</string>
-    <string name="mpsdk_text_some_card_data_is_incorrect">Any datum of your %1$s is incorrect.</string>
+    <string name="mpsdk_text_some_card_data_is_incorrect">Any datum of your %1$s is incorrect</string>
     <string name="mpsdk_text_some_number">Some number of your %1$s is incorrect.</string>
     <string name="mpsdk_text_insufficient_amount">Yours %1$s has insufficient funds</string>
     <string name="mpsdk_subtitle_rejection_insufficient_amount">Don\'t worry! Recharge at any bank or from your electronic banking and try again. Or if you prefer, you can choose another payment method.</string>

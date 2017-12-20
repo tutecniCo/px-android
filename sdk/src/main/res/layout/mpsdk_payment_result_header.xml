@@ -23,7 +23,7 @@
         android:id="@+id/mpsdkHeaderLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/mpsdk_xs_alternative_margin"
+        android:layout_marginTop="@dimen/mpsdk_xxs_margin"
         android:gravity="center_horizontal"
         android:textColor="@color/mpsdk_white"
         android:textSize="@dimen/mpsdk_s_text"

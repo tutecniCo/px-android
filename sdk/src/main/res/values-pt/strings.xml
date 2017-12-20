@@ -123,7 +123,7 @@
     <string name="mpsdk_title_other_reason_rejection">%1$s não processou o pagamento</string>
     <string name="mpsdk_text_select_other_rejection">Use outro cartão ou outro meio de pagamento</string>
     <string name="mpsdk_title_bad_filled_other">Ops! Não foi possível processar o seu pagamento</string>
-    <string name="mpsdk_text_some_card_data_is_incorrect">Qualquer dado de seu %1$s é incorreto.</string>
+    <string name="mpsdk_text_some_card_data_is_incorrect">Qualquer dado de seu %1$s é incorreto</string>
     <string name="mpsdk_text_insufficient_amount">O seu %1$s não possui saldo suficiente</string>
     <string name="mpsdk_subtitle_rejection_insufficient_amount">Não se preocupe! Recarregue-o em qualquer banco ou pelo Internet Banking e tente novamente. Se preferir, você pode escolher outro meio de pagamento.</string>
     <string name="mpsdk_subtitle_rejection_duplicated_payment">Se você precisar pagar novamente, use outro cartão ou outro meio de pagamento.</string>
