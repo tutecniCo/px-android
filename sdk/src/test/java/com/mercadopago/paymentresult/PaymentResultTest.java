@@ -324,11 +324,6 @@ public class PaymentResultTest {
         }
 
         @Override
-        public void setPaymentResultScreenPreference(@NonNull PaymentResultScreenPreference paymentResultScreenPreference) {
-
-        }
-
-        @Override
         public void setPropInstruction(@NonNull Instruction instruction, @NonNull HeaderTitleFormatter amountFormat, boolean showLoading, @NonNull String processingMode) {
 
         }
