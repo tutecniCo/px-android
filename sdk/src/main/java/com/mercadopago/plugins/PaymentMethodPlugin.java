@@ -1,9 +1,8 @@
 package com.mercadopago.plugins;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
-import com.mercadopago.components.ExternalComponent;
+import com.mercadopago.components.PluginComponent;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**
@@ -27,6 +26,6 @@ public abstract class PaymentMethodPlugin {
 
     public abstract PaymentMethodInfo getPaymentMethodInfo();
 
-    public abstract ExternalComponent createConfigurationComponent();
+    public abstract PluginComponent createConfigurationComponent();
 
 }

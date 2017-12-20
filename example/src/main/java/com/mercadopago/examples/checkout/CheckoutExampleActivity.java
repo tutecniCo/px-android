@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPButton;
 import com.mercadopago.examples.R;
@@ -20,12 +19,6 @@ import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.ExampleHooks;
-import com.mercadopago.hooks.components.PaymentConfirm;
-import com.mercadopago.hooks.components.PaymentConfirmRenderer;
-import com.mercadopago.hooks.components.PaymentMethodConfirm;
-import com.mercadopago.hooks.components.PaymentMethodConfirmRenderer;
-import com.mercadopago.hooks.components.PaymentTypeConfirm;
-import com.mercadopago.hooks.components.PaymentTypeConfirmRenderer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.plugins.BitcoinPaymentMethodPlugin;
 import com.mercadopago.plugins.NicoPaymentMethodPlugin;
@@ -102,18 +95,6 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .addPaymentMethodPlugin("bitcoin", new BitcoinPaymentMethodPlugin(this), null);
 
         if (mHooksEnabled.isChecked()) {
-
-            builder.registerComponent(
-                    PaymentMethodConfirm.class,
-                    PaymentMethodConfirmRenderer.class);
-
-            builder.registerComponent(
-                    PaymentTypeConfirm.class,
-                    PaymentTypeConfirmRenderer.class);
-
-            builder.registerComponent(
-                    PaymentConfirm.class,
-                    PaymentConfirmRenderer.class);
 
             builder.setCheckoutHooks(new ExampleHooks());
         }

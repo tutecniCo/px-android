@@ -37,6 +37,7 @@ import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
 import com.mercadopago.core.MercadoPagoUI;
@@ -1894,6 +1895,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
 
     @Override
     public void showDiscountRow(BigDecimal transactionAmount) {
+
         MercadoPagoUI.Views.DiscountRowViewBuilder discountRowBuilder = new MercadoPagoUI.Views.DiscountRowViewBuilder();
 
         discountRowBuilder.setContext(this)
