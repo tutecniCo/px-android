@@ -109,7 +109,7 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         presenter.attachView(mutator);
         presenter.attachResourcesProvider(paymentResultProvider);
 
-        presenter.setPaymentResultScreenPreference(paymentResultScreenPreference);
+        //presenter.setPaymentResultScreenPreference(paymentResultScreenPreference);
 
         componentManager = new ComponentManager(this);
 
@@ -205,7 +205,7 @@ public class PaymentResultActivity extends AppCompatActivity implements PaymentR
         presenter.attachView(mutator);
         presenter.attachResourcesProvider(provider);
 
-        presenter.setPaymentResultScreenPreference(paymentResultScreenPreference);
+        //presenter.setPaymentResultScreenPreference(paymentResultScreenPreference);
         
         super.onRestoreInstanceState(savedInstanceState);
     }

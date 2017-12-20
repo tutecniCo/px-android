@@ -80,7 +80,10 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
         PaymentResultScreenPreference paymentResultScreenPreference = new PaymentResultScreenPreference.Builder()
                 .setApprovedBottomCustomComponent(testCustomComponent)
-                //.setApprovedTopCustomComponent(testCustomComponent)
+                .setApprovedTopCustomComponent(testCustomComponent)
+                .disableApprovedReceipt()
+                .setApprovedLabelText("lilli")
+                .setApprovedTitle("sarasa")
                 .build();
 
 
