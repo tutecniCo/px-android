@@ -44,7 +44,7 @@
         android:layout_marginTop="@dimen/mpsdk_s_margin"
         android:gravity="center"
         android:text="@string/mpsdk_text_continue"
-        android:textColor="@color/mpsdk_background_blue"
+        android:textColor="@color/mpsdk_blue_MP"
         android:textSize="@dimen/mpsdk_s_text" />
 
 </LinearLayout>
