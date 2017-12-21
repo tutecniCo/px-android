@@ -20,6 +20,7 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
         final ViewGroup bodyViewGroup = bodyErrorView.findViewById(R.id.bodyErrorContainer);
         final MPTextView titleTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorTitle);
         final MPTextView descriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorDescription);
+        final MPTextView secondDescriptionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorSecondDescription);
         final MPTextView actionTextView = bodyErrorView.findViewById(R.id.paymentResultBodyErrorAction);
         final View middleDivider = bodyErrorView.findViewById(R.id.bodyErrorMiddleDivider);
         final MPTextView secondaryTitleTextView = bodyErrorView.findViewById(R.id.bodyErrorSecondaryTitle);
@@ -27,6 +28,7 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
 
         setText(titleTextView, component.getTitle());
         setText(descriptionTextView, component.getDescription());
+        setText(secondDescriptionTextView, component.getSecondDescription());
 
         if (component.hasActionForCallForAuth()) {
             actionTextView.setText(component.getActionText());

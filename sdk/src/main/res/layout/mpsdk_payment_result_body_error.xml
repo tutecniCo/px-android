@@ -41,6 +41,17 @@
             tools:text="Description" />
 
         <com.mercadopago.customviews.MPTextView
+            android:id="@+id/paymentResultBodyErrorSecondDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/mpsdk_xs_margin"
+            android:gravity="center_horizontal"
+            android:textColor="@color/mpsdk_brownish_grey"
+            android:textSize="@dimen/mpsdk_s_text"
+            tools:text="Description"/>
+
+        <com.mercadopago.customviews.MPTextView
             android:id="@+id/paymentResultBodyErrorAction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
