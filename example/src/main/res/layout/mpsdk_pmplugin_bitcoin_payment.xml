@@ -12,23 +12,15 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/mpsdk_ic_nicopay"/>
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/mpsdk_ic_bitcoin"/>
 
-        <TextView
-            android:id="@+id/docu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_margin="20dp"
-            android:textSize="16sp"
-            tools:text="721346238764823"/>
-
-        <include layout="@layout/mpsdk_component_loading" />
+        <!--<include layout="@layout/mpsdk_component_loading" />-->
 
     </LinearLayout>
 

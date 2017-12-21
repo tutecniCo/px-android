@@ -1,8 +1,9 @@
 package com.mercadopago.plugins;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.mercadopago.components.PluginComponent;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**
@@ -16,7 +17,7 @@ public abstract class PaymentMethodPlugin {
 
     protected Context context;
 
-    public PaymentMethodPlugin(Context context) {
+    public PaymentMethodPlugin(@NonNull final Context context) {
         this.context = context;
     }
 
@@ -24,8 +25,13 @@ public abstract class PaymentMethodPlugin {
         return POSIION_TOP;
     }
 
+    public boolean hasConfigurationComponent() {
+        final PluginComponent.Props props = new PluginComponent.Props.Builder().build();
+        return createConfigurationComponent(props) != null;
+    }
+
     public abstract PaymentMethodInfo getPaymentMethodInfo();
 
-    public abstract PluginComponent createConfigurationComponent();
+    public abstract PluginComponent createConfigurationComponent(@NonNull final PluginComponent.Props props);
 
 }

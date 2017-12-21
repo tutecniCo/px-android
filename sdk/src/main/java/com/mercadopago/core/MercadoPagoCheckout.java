@@ -12,7 +12,6 @@ import com.mercadopago.constants.ContentLocation;
 import com.mercadopago.controllers.CustomReviewablesHandler;
 import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.hooks.CheckoutHooks;
-import com.mercadopago.hooks.HookHelper;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
@@ -81,8 +80,7 @@ public class MercadoPagoCheckout {
         customizeCheckoutReview(reviewScreenPreference);
         customizePaymentResultReview(paymentResultScreenPreference);
 
-        //TODO: Refactor, dejar la referencia a MercadoPagoCheckout directo en el store, al final
-        // vamos a necesitar todos los datos no es necesario separarlos.
+        CheckoutStore.getInstance().reset();
         CheckoutStore.getInstance().setDecorationPreference(decorationPreference);
         CheckoutStore.getInstance().setPaymentMethodPluginList(builder.paymentMethodPluginList);
         CheckoutStore.getInstance().setPaymentPlugins(builder.paymentPlugins);

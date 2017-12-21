@@ -27,9 +27,9 @@ public class CheckoutStore {
     private Map<String, PaymentPlugin> paymentPlugins = new HashMap<>();
     private CheckoutHooks checkoutHooks;
     private Hook hook;
-    private Map<String, Object> data = new HashMap();
 
     //App state
+    private Map<String, Object> data = new HashMap();
     private PaymentMethodInfo selectedPaymentMethod;
 
     //Payment
@@ -142,5 +142,9 @@ public class CheckoutStore {
 
     public void setPaymentResult(PaymentResult paymentResult) {
         this.paymentResult = paymentResult;
+    }
+
+    public void reset() {
+        data.clear();
     }
 }

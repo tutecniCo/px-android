@@ -457,7 +457,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         final PaymentMethodInfo info =  CheckoutStore.getInstance().getSelectedPaymentMethod();
         final PaymentMethodPlugin plugin =  CheckoutStore.getInstance().getPaymentMethodPluginById(info.id);
 
-        if (plugin.createConfigurationComponent() != null) {
+        if (plugin.hasConfigurationComponent()) {
 
             startActivityForResult(PaymentMethodPluginActivity
                             .getIntent(PaymentVaultActivity.this),
