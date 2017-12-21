@@ -35,10 +35,10 @@ public class ExamplesUtils {
     public static final int CARD_REQUEST_CODE = 13;
 
     // * Preferences
-    public static final String DUMMY_PREFERENCE_ID = "241261708-cd353b1b-940f-493b-b960-10106a24203c";
+    public static final String DUMMY_PREFERENCE_ID = "243966003-d64b4270-10c8-43b2-9600-3009cdfe4fa9";
 
     // * Merchant public key
-    public static final String DUMMY_MERCHANT_PUBLIC_KEY = "APP_USR-2e257493-3b80-4b71-8547-c841d035e8f2";
+    public static final String DUMMY_MERCHANT_PUBLIC_KEY = "TEST-ad365c37-8012-4014-84f5-6c895b3f8e0a";
     public static final String DUMMY_MERCHANT_PUBLIC_KEY_EXAMPLES_SERVICE = "444a9ef5-8a6b-429f-abdf-587639155d88";
     // DUMMY_MERCHANT_PUBLIC_KEY_AR = "444a9ef5-8a6b-429f-abdf-587639155d88";
     // DUMMY_MERCHANT_PUBLIC_KEY_BR = "APP_USR-f163b2d7-7462-4e7b-9bd5-9eae4a7f99c3";

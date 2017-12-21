@@ -20,10 +20,6 @@ import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.ExampleHooks;
 import com.mercadopago.model.Payment;
-import com.mercadopago.plugins.BitcoinPaymentMethodPlugin;
-import com.mercadopago.plugins.BitcoinPaymentPlugin;
-import com.mercadopago.plugins.NicoPaymentMethodPlugin;
-import com.mercadopago.plugins.NicoPaymentPlugin;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.util.JsonUtil;
@@ -90,10 +86,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
                 .setCheckoutPreference(getCheckoutPreference())
-                .setDecorationPreference(getCurrentDecorationPreference())
-                //Custom payment methods
-                .addPaymentMethodPlugin("nicopay", new NicoPaymentMethodPlugin(this), new NicoPaymentPlugin())
-                .addPaymentMethodPlugin("bitcoin", new BitcoinPaymentMethodPlugin(this), new BitcoinPaymentPlugin());
+                .setDecorationPreference(getCurrentDecorationPreference());
 
         if (mHooksEnabled.isChecked()) {
 
