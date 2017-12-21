@@ -18,7 +18,6 @@ import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Payment;
-import com.mercadopago.paymentresult.model.Badge;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
