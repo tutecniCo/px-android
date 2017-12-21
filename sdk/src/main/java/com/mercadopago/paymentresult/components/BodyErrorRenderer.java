@@ -3,6 +3,7 @@ package com.mercadopago.paymentresult.components;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
@@ -29,6 +30,13 @@ public class BodyErrorRenderer extends Renderer<BodyError> {
         setText(titleTextView, component.getTitle());
         setText(descriptionTextView, component.getDescription());
         setText(secondDescriptionTextView, component.getSecondDescription());
+
+        if (component.getTitle().isEmpty()) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            int marginTop = (int) context.getResources().getDimension(R.dimen.mpsdk_l_margin);
+            params.setMargins(0, marginTop , 0, 0);
+            descriptionTextView.setLayoutParams(params);
+        }
 
         if (component.hasActionForCallForAuth()) {
             actionTextView.setText(component.getActionText());
