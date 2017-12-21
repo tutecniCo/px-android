@@ -19,6 +19,12 @@ import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.hooks.ExampleHooks;
+import com.mercadopago.hooks.components.PaymentConfirm;
+import com.mercadopago.hooks.components.PaymentConfirmRenderer;
+import com.mercadopago.hooks.components.PaymentMethodConfirm;
+import com.mercadopago.hooks.components.PaymentMethodConfirmRenderer;
+import com.mercadopago.hooks.components.PaymentTypeConfirm;
+import com.mercadopago.hooks.components.PaymentTypeConfirmRenderer;
 import com.mercadopago.model.Payment;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
@@ -89,7 +95,6 @@ public class CheckoutExampleActivity extends AppCompatActivity {
                 .setDecorationPreference(getCurrentDecorationPreference());
 
         if (mHooksEnabled.isChecked()) {
-
             builder.setCheckoutHooks(new ExampleHooks());
         }
 

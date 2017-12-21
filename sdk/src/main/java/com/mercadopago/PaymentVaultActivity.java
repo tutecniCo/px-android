@@ -463,11 +463,6 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                             .getIntent(PaymentVaultActivity.this),
                     MercadoPagoComponents.Activities.PLUGIN_PAYMENT_METHOD_REQUEST_CODE);
 
-//            overridePendingTransition(
-//                    R.anim.mpsdk_slide_left_to_right_out,
-//                    R.anim.mpsdk_slide_left_to_right_in
-//            );
-
         } else {
 
             final PaymentMethodInfo paymentMethodInfo =
