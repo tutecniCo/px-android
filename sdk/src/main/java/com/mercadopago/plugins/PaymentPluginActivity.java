@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.mercadopago.components.Action;
 import com.mercadopago.components.ActionDispatcher;
 import com.mercadopago.components.ComponentManager;
-import com.mercadopago.components.PluginComponent;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
@@ -42,7 +41,10 @@ public class PaymentPluginActivity extends AppCompatActivity implements ActionDi
             return;
         }
 
-        final PluginComponent component = paymentPlugin.createPaymentComponent();
+        final PluginComponent.Props props = new PluginComponent.Props.Builder()
+                .setData(CheckoutStore.getInstance().getData()).build();
+
+        final PluginComponent component = paymentPlugin.createPaymentComponent(props);
         final ComponentManager componentManager = new ComponentManager(this);
 
         if (component == null) {

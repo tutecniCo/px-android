@@ -1,6 +1,8 @@
 package com.mercadopago.plugins.components;
 
-import com.mercadopago.components.PluginComponent;
+import android.support.annotation.NonNull;
+
+import com.mercadopago.plugins.PluginComponent;
 import com.mercadopago.components.NextAction;
 import com.mercadopago.components.RendererFactory;
 
@@ -14,7 +16,15 @@ public class NicoPaymentMethod extends PluginComponent {
         RendererFactory.register(NicoPaymentMethod.class, NicoPaymentMethodRenderer.class);
     }
 
+    public NicoPaymentMethod(@NonNull final Props props) {
+        super(props);
+    }
+
     public void next() {
         getDispatcher().dispatch(new NextAction());
+    }
+
+    public void setDocument(@NonNull final String document) {
+        props.data.put("docu", document);
     }
 }

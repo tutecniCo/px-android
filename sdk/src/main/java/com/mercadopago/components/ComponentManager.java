@@ -26,7 +26,9 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
 
     private void render() {
         if (renderer != null) {
-            activity.setContentView(renderer.render());
+            if (!activity.isFinishing()) {
+                activity.setContentView(renderer.render());
+            }
         }
     }
 
@@ -39,7 +41,7 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
 
     public void render(@NonNull final Component component, @NonNull final ViewGroup parent) {
         setComponent(component);
-        if (renderer != null) {
+        if (renderer != null && !activity.isFinishing()) {
             parent.addView(renderer.render());
         }
     }

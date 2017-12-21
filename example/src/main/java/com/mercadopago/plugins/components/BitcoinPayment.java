@@ -3,7 +3,6 @@ package com.mercadopago.plugins.components;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import com.mercadopago.plugins.PluginComponent;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.core.CheckoutStore;
@@ -12,23 +11,22 @@ import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.plugins.PaymentResultAction;
+import com.mercadopago.plugins.PluginComponent;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**
  * Created by nfortuna on 12/13/17.
  */
 
-public class NicoPayment extends PluginComponent {
+public class BitcoinPayment extends PluginComponent {
 
     final Handler handler = new Handler();
 
     static {
-        RendererFactory.register(NicoPayment.class, NicoPaymentRenderer.class);
+        RendererFactory.register(BitcoinPayment.class, BitcoinPaymentRenderer.class);
     }
 
-    private String document;
-
-    public NicoPayment(@NonNull final Props props) {
+    public BitcoinPayment(@NonNull final Props props) {
         super(props);
         executePayment();
     }
@@ -47,10 +45,9 @@ public class NicoPayment extends PluginComponent {
                 payment.setMetadata(null);
                 payment.setPaymentMethodId(paymentMethodInfo.id);
                 payment.setPaymentTypeId(PaymentTypes.PLUGIN);
-                payment.setPaymentTypeId(PaymentTypes.PLUGIN);
 
-                payment.setStatus(Payment.StatusCodes.STATUS_REJECTED);
-                payment.setStatusDetail(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_OTHER_REASON);
+                payment.setStatus(Payment.StatusCodes.STATUS_APPROVED);
+//                payment.setStatusDetail(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_OTHER_REASON);
 
                 final PaymentData paymentData = new PaymentData();
                 final PaymentMethod paymentMethod = new PaymentMethod();
@@ -75,9 +72,5 @@ public class NicoPayment extends PluginComponent {
             .setPaymentStatus(payment.getStatus())
             .setPaymentStatusDetail(payment.getStatusDetail())
             .build();
-    }
-
-    public String getDocument() {
-        return (String) props.data.get("docu");
     }
 }

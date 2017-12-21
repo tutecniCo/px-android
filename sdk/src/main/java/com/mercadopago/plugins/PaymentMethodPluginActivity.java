@@ -41,7 +41,11 @@ public class PaymentMethodPluginActivity extends AppCompatActivity implements Ac
             return;
         }
 
-        final Component component = plugin.createConfigurationComponent();
+        final PluginComponent.Props props = new PluginComponent.Props.Builder()
+                .setData(CheckoutStore.getInstance().getData())
+                .build();
+
+        final Component component = plugin.createConfigurationComponent(props);
         final ComponentManager componentManager = new ComponentManager(this);
 
         if (component == null) {

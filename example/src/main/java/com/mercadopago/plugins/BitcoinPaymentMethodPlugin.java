@@ -1,8 +1,8 @@
 package com.mercadopago.plugins;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.mercadopago.components.PluginComponent;
 import com.mercadopago.examples.R;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
@@ -26,7 +26,7 @@ public class BitcoinPaymentMethodPlugin extends PaymentMethodPlugin {
     }
 
     @Override
-    public PluginComponent createConfigurationComponent() {
+    public PluginComponent createConfigurationComponent(@NonNull PluginComponent.Props props) {
         return null;
     }
 }

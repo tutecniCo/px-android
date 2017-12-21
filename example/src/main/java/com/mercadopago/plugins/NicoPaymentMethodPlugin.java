@@ -1,8 +1,9 @@
 package com.mercadopago.plugins;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.mercadopago.components.PluginComponent;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.examples.R;
 import com.mercadopago.plugins.components.NicoPaymentMethod;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
@@ -13,7 +14,7 @@ import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 public class NicoPaymentMethodPlugin extends PaymentMethodPlugin {
 
-    public NicoPaymentMethodPlugin(Context context) {
+    public NicoPaymentMethodPlugin(@NonNull final Context context) {
         super(context);
     }
 
@@ -33,7 +34,12 @@ public class NicoPaymentMethodPlugin extends PaymentMethodPlugin {
     }
 
     @Override
-    public PluginComponent createConfigurationComponent() {
-        return new NicoPaymentMethod();
+    public PluginComponent createConfigurationComponent(@NonNull final PluginComponent.Props props) {
+        return new NicoPaymentMethod(
+            props.toBuilder()
+                .setToolbarTitle("Nico Pago")
+                .setToolbarVisible(true)
+                .build()
+        );
     }
 }
