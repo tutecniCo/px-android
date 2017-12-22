@@ -492,49 +492,50 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private void createPayment() {
 
-        final PaymentMethodInfo paymentMethodInfo =
-                CheckoutStore.getInstance().getSelectedPaymentMethod();
         final PaymentData paymentData = createPaymentData();
 
-        if (paymentMethodInfo != null
-                && CheckoutStore.getInstance().getPaymentPluginByMethod(paymentMethodInfo.id) != null) {
+        if (hasPaymentPlugin()) {
             CheckoutStore.getInstance().setPaymentData(paymentData);
             getView().showPaymentPlugin();
-            return;
-        }
-
-        String transactionId = getTransactionID();
-        getResourcesProvider().createPayment(transactionId, mCheckoutPreference, paymentData, mBinaryMode, mCustomerId, new OnResourcesRetrievedCallback<Payment>() {
-            @Override
-            public void onSuccess(final Payment payment) {
-                mCreatedPayment = payment;
-                PaymentResult paymentResult = createPaymentResult(payment, paymentData);
-                checkStartPaymentResultActivity(paymentResult);
-                cleanTransactionId();
-            }
-
-            @Override
-            public void onFailure(final MercadoPagoError error) {
-
-                if (error.isApiException() && error.getApiException().getStatus().equals(ApiUtil.StatusCodes.BAD_REQUEST)) {
-                    List<Cause> causes = error.getApiException().getCause();
-                    if (causes != null && !causes.isEmpty()) {
-                        Cause cause = causes.get(0);
-                        if (ApiException.ErrorCodes.INVALID_PAYMENT_WITH_ESC.equals(cause.getCode()) &&
-                                paymentData.getToken().getCardId() != null) {
-                            deleteESC(paymentData);
-                            continuePaymentWithoutESC();
-
-                        } else {
-                            recoverCreatePayment(error);
-                        }
-                    }
-                } else {
-                    recoverCreatePayment(error);
+        } else {
+            final String transactionId = getTransactionID();
+            getResourcesProvider().createPayment(transactionId, mCheckoutPreference,
+                    paymentData, mBinaryMode, mCustomerId, new OnResourcesRetrievedCallback<Payment>() {
+                @Override
+                public void onSuccess(final Payment payment) {
+                    mCreatedPayment = payment;
+                    PaymentResult paymentResult = createPaymentResult(payment, paymentData);
+                    checkStartPaymentResultActivity(paymentResult);
+                    cleanTransactionId();
                 }
+                @Override
+                public void onFailure(final MercadoPagoError error) {
+                    if (error.isApiException() && error.getApiException().getStatus().equals(ApiUtil.StatusCodes.BAD_REQUEST)) {
+                        List<Cause> causes = error.getApiException().getCause();
+                        if (causes != null && !causes.isEmpty()) {
+                            Cause cause = causes.get(0);
+                            if (ApiException.ErrorCodes.INVALID_PAYMENT_WITH_ESC.equals(cause.getCode()) &&
+                                    paymentData.getToken().getCardId() != null) {
+                                deleteESC(paymentData);
+                                continuePaymentWithoutESC();
+                            } else {
+                                recoverCreatePayment(error);
+                            }
+                        }
+                    } else {
+                        recoverCreatePayment(error);
+                    }
+                }
+            });
+        }
+    }
 
-            }
-        });
+    private boolean hasPaymentPlugin() {
+        final PaymentMethodInfo paymentMethodInfo = CheckoutStore.getInstance()
+                    .getSelectedPaymentMethod();
+        return paymentMethodInfo != null
+                && CheckoutStore.getInstance()
+                    .getPaymentPluginByMethod(paymentMethodInfo.id) != null;
     }
 
     private void continuePaymentWithoutESC() {
