@@ -3,7 +3,6 @@ package com.mercadopago.plugins;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 
 /**

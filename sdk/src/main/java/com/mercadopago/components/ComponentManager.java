@@ -25,10 +25,8 @@ public class ComponentManager<T> implements ActionDispatcher, MutatorPropsListen
     }
 
     private void render() {
-        if (renderer != null) {
-            if (!activity.isFinishing()) {
-                activity.setContentView(renderer.render());
-            }
+        if (renderer != null && !activity.isFinishing()) {
+            activity.setContentView(renderer.render());
         }
     }
 

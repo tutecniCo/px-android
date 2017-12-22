@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mercadopago.model.PaymentData;
-import com.mercadopago.preferences.DecorationPreference;
 
 import java.util.Map;
 

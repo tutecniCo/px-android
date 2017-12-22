@@ -352,12 +352,10 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
         if (paymentMethodPlugins != null && !paymentMethodPlugins.isEmpty()) {
             for (PaymentMethodPlugin plugin : paymentMethodPlugins) {
                 final PaymentMethodInfo info = plugin.getPaymentMethodInfo();
-                if (PaymentMethodPlugin.POSIION_TOP.equalsIgnoreCase(plugin.displayOrder())) {
-                    if (info != null) {
+                if (info != null) {
+                    if (PaymentMethodPlugin.POSIION_TOP.equalsIgnoreCase(plugin.displayOrder())) {
                         pluginUpItems.add(info);
-                    }
-                } else if (PaymentMethodPlugin.POSIION_BOTTOM.equalsIgnoreCase(plugin.displayOrder())) {
-                    if (info != null) {
+                    } else if (PaymentMethodPlugin.POSIION_BOTTOM.equalsIgnoreCase(plugin.displayOrder())) {
                         pluginDownItems.add(info);
                     }
                 }

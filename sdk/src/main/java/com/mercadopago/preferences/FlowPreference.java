@@ -1,7 +1,5 @@
 package com.mercadopago.preferences;
 
-import com.mercadopago.core.CheckoutStore;
-
 /**
  * Created by mreverter on 1/17/17.
  */

@@ -19,7 +19,6 @@ import com.mercadopago.util.TextUtils;
 public class PaymentMethodInfoController implements PaymentMethodSearchViewController {
 
     private static final int COMMENT_MAX_LENGTH = 75;
-    private static final String TO_TINT_IMAGES_PREFIX = "grey_";
 
     protected PaymentMethodInfo mItem;
     protected Context mContext;

@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import com.mercadopago.R;
 import com.mercadopago.components.Renderer;
 import com.mercadopago.components.RendererFactory;
-import com.mercadopago.hooks.HookComponent;
 
 public abstract class PluginRenderer extends Renderer<PluginComponent> {
 
