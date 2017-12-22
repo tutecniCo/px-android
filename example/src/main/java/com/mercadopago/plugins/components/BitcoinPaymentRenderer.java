@@ -11,7 +11,7 @@ import com.mercadopago.examples.R;
  * Created by nfortuna on 12/13/17.
  */
 
-public class BitcoinPaymentRenderer extends Renderer<NicoPayment> {
+public class BitcoinPaymentRenderer extends Renderer<BitcoinPayment> {
 
     @Override
     public View render() {
