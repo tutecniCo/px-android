@@ -395,10 +395,12 @@ public class NewCardActivity extends AppCompatActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Do something
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Do something
             }
 
             public void afterTextChanged(Editable edt) {
@@ -410,23 +412,18 @@ public class NewCardActivity extends AppCompatActivity {
     }
 
     protected void setSecurityCodeLayout() {
+        if (mPaymentMethod != null && mRequireSecurityCode) {
+            // Set CVV descriptor
+            mCVVDescriptor.setText(MercadoPagoUtil.getCVVDescriptor(this, mPaymentMethod));
 
-        if (mPaymentMethod != null) {
+            // Set CVV image
+            mCVVImage.setImageDrawable(getResources().getDrawable(MercadoPagoUtil.getCVVImageResource(this, mPaymentMethod)));
 
-            if (mRequireSecurityCode) {
+            // Set layout visibility
+            mSecurityCodeLayout.setVisibility(View.VISIBLE);
+            setFormGoButton(mSecurityCode);
 
-                // Set CVV descriptor
-                mCVVDescriptor.setText(MercadoPagoUtil.getCVVDescriptor(this, mPaymentMethod));
-
-                // Set CVV image
-                mCVVImage.setImageDrawable(getResources().getDrawable(MercadoPagoUtil.getCVVImageResource(this, mPaymentMethod)));
-
-                // Set layout visibility
-                mSecurityCodeLayout.setVisibility(View.VISIBLE);
-                setFormGoButton(mSecurityCode);
-
-                return;
-            }
+            return;
         }
         mSecurityCodeLayout.setVisibility(View.GONE);
     }

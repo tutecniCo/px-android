@@ -67,7 +67,7 @@ public abstract class MercadoPagoActivity extends MercadoPagoBaseActivity {
     protected abstract void onInvalidStart(String message);
 
     protected void initializeFragments(Bundle savedInstanceState) {
-
+        //Do something
     }
 
     private void getDecorationPreference() {

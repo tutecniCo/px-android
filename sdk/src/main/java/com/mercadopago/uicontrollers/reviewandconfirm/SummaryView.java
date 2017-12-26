@@ -123,6 +123,7 @@ public class SummaryView extends Reviewable {
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        //Do something
                     }
                 }));
     }
@@ -228,6 +229,7 @@ public class SummaryView extends Reviewable {
         return new OnSelectedCallback<Integer>() {
             @Override
             public void onSelected(Integer position) {
+                //Do something
             }
         };
     }

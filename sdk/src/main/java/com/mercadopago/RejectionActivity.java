@@ -459,7 +459,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
     }
 
     private boolean isCardPaymentTypeCreditCard() {
-        return !mPaymentTypeId.isEmpty() && mPaymentTypeId.equals("credit_card");
+        return mPaymentTypeId != null && !mPaymentTypeId.isEmpty() && mPaymentTypeId.equals("credit_card");
     }
 
     @Override

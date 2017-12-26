@@ -189,11 +189,9 @@ public class InstructionsActivity extends MercadoPagoBaseActivity {
     private void initializePaymentData() {
         mPaymentId = mPaymentResult.getPaymentId();
         PaymentData paymentData = mPaymentResult.getPaymentData();
-        if (paymentData != null) {
-            if (paymentData.getPaymentMethod() != null) {
-                mPaymentTypeId = paymentData.getPaymentMethod().getPaymentTypeId();
-                mPaymentMethodId = paymentData.getPaymentMethod().getId();
-            }
+        if (paymentData != null && paymentData.getPaymentMethod() != null) {
+            mPaymentTypeId = paymentData.getPaymentMethod().getPaymentTypeId();
+            mPaymentMethodId = paymentData.getPaymentMethod().getId();
         }
         if (mSite != null) {
             mCurrencyId = mSite.getCurrencyId();

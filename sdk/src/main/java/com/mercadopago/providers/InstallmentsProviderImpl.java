@@ -30,8 +30,6 @@ public class InstallmentsProviderImpl implements InstallmentsProvider {
     private final String merchantGetDiscountUri;
     private final Map<String, String> mDiscountAdditionalInfo;
 
-    private ServicePreference servicePreference;
-
     public InstallmentsProviderImpl(Context context, String publicKey, String privateKey, String merchantBaseUrl,
                                     String merchantDiscountBaseUrl, String merchantGetDiscountUri, Map<String, String> discountAdditionalInfo) {
         this.context = context;
@@ -39,7 +37,6 @@ public class InstallmentsProviderImpl implements InstallmentsProvider {
         this.merchantDiscountBaseUrl = merchantDiscountBaseUrl;
         this.merchantGetDiscountUri = merchantGetDiscountUri;
         this.mDiscountAdditionalInfo = discountAdditionalInfo;
-        this.servicePreference = CustomServicesHandler.getInstance().getServicePreference();
 
         this.mercadoPago = new MercadoPagoServicesAdapter.Builder()
                 .setContext(context)

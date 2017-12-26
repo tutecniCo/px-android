@@ -63,7 +63,7 @@ public class ReviewAndConfirmTest {
 
         @Override
         public void initializeControls() {
-
+            //Do something
         }
 
         @Override
