@@ -12,17 +12,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercadopago.constants.Sites;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.examples.R;
 import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.Discount;
+import com.mercadopago.model.Item;
 import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentData;
+import com.mercadopago.model.PaymentResult;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
-import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+
+import java.math.BigDecimal;
 
 public class CheckoutExampleActivity extends AppCompatActivity {
 
@@ -72,17 +78,60 @@ public class CheckoutExampleActivity extends AppCompatActivity {
 
     private void startMercadoPagoCheckout() {
 
+        Discount discount = new Discount();
+        discount.setCurrencyId("ARS");
+        discount.setId(77L);
+        discount.setCouponAmount(new BigDecimal(20));
+        discount.setAmountOff(new BigDecimal(20));
+
+
+        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
+                .setPayerAccessToken("TEST-2278197349568462-091320-a1b4f0d7c18f4655a0cf620c4bc2e693__LD_LA__-207100706")
+                .enableAccountMoney()
+                .setSite(Sites.ARGENTINA)
+                .addItem(new Item("lalal", 1, new BigDecimal(1000)))
+                .build();
+
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
-                .setCheckoutPreference(getCheckoutPreference())
+                .setDiscount(discount)
+                .setCheckoutPreference(checkoutPreference)
                 .setDecorationPreference(getCurrentDecorationPreference())
-                .startForPayment();
+                .startForPaymentData();
     }
 
+    private void showCongrats(PaymentData paymentData) {
+        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
+                .setPayerAccessToken("TEST-2278197349568462-091320-a1b4f0d7c18f4655a0cf620c4bc2e693__LD_LA__-207100706")
+                .enableAccountMoney()
+                .setSite(Sites.ARGENTINA)
+                .addItem(new Item("lalal", 1, new BigDecimal(1000)))
+                .build();
 
-    private CheckoutPreference getCheckoutPreference() {
-        return new CheckoutPreference(mCheckoutPreferenceId);
+        Discount discount = new Discount();
+        discount.setCurrencyId("ARS");
+        discount.setId(77L);
+        discount.setCouponAmount(new BigDecimal(20));
+        discount.setAmountOff(new BigDecimal(20));
+
+        paymentData.setDiscount(discount);
+
+        PaymentResult paymentResult = new PaymentResult.Builder()
+                .setPaymentData(paymentData)
+                .setPaymentId(1234L)
+                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_ACCREDITED)
+                .setPayerEmail("sarasa@gmail.com")
+                .setStatementDescription("mercado pago")
+                .build();
+
+        new MercadoPagoCheckout.Builder()
+                .setActivity(this)
+                .setPublicKey(mPublicKey)
+                .setPaymentResult(paymentResult)
+                .setCheckoutPreference(checkoutPreference)
+                .startForPaymentData();
     }
 
     @Override
@@ -93,7 +142,11 @@ public class CheckoutExampleActivity extends AppCompatActivity {
             if (resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
                 Payment payment = JsonUtil.getInstance().fromJson(data.getStringExtra("payment"), Payment.class);
                 Toast.makeText(mActivity, "Pago con status: " + payment.getStatus(), Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
+            } else if (resultCode == MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE) {
+                PaymentData paymentData = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentData"), PaymentData.class);
+                showCongrats(paymentData);
+            }
+            else if (resultCode == RESULT_CANCELED) {
                 if (data != null && data.getStringExtra("mercadoPagoError") != null) {
                     MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
                     Toast.makeText(mActivity, "Error: " + mercadoPagoError.getMessage(), Toast.LENGTH_SHORT).show();

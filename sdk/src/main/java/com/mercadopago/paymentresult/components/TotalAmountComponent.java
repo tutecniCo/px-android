@@ -28,6 +28,8 @@ public class TotalAmountComponent extends Component<TotalAmountProps> {
 
         if (hasPayerCost() && props.payerCost.getInstallments() > 1) {
             amountTitle = props.payerCost.getInstallments() + "x " + props.amountFormatter.formatNumber(props.payerCost.getInstallmentAmount(), props.amountFormatter.getCurrencyId());
+        } else if (hasPayerCost() && props.payerCost.getInstallments() == 1) {
+            amountTitle = props.amountFormatter.formatNumber(props.payerCost.getTotalAmount(), props.amountFormatter.getCurrencyId());
         } else {
             amountTitle = props.amountFormatter.formatNumber(props.amountFormatter.getAmount(), props.amountFormatter.getCurrencyId());
         }
