@@ -57,6 +57,7 @@ public class BitcoinPayment extends PluginComponent {
                 paymentData.setPaymentMethod(paymentMethod);
 
                 onPaymentResult(createPaymentResult(payment, paymentData));
+
             }
         }, 2500);
     }

@@ -8,15 +8,17 @@ import android.widget.EditText;
 
 import com.mercadopago.components.Renderer;
 import com.mercadopago.examples.R;
+import com.mercadopago.plugins.PluginRenderer;
 
 /**
  * Created by nfortuna on 12/13/17.
  */
 
-public class NicoPaymentMethodRenderer extends Renderer<NicoPaymentMethod> {
+public class NicoPaymentMethodRenderer extends PluginRenderer<NicoPaymentMethod> {
 
     @Override
-    public View render() {
+    public View renderContents() {
+
         final View view = LayoutInflater.from(context).inflate(R.layout.mpsdk_pmplugin_nicopay_config, null);
 
         view.findViewById(R.id.button_continue).setOnClickListener(new View.OnClickListener() {

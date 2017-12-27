@@ -3,6 +3,7 @@ package com.mercadopago.plugins;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.components.Component;
+import com.mercadopago.components.NextAction;
 import com.mercadopago.components.RendererFactory;
 import com.mercadopago.components.ToolbarComponent;
 import com.mercadopago.model.PaymentData;
@@ -78,6 +79,10 @@ public abstract class PluginComponent extends Component<PluginComponent.Props> {
                 return new PluginComponent.Props(this);
             }
         }
+    }
+
+    public void next() {
+        getDispatcher().dispatch(new NextAction());
     }
 
     public ToolbarComponent getToolbarComponent() {
