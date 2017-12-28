@@ -83,8 +83,7 @@ public class CheckoutExampleActivity extends AppCompatActivity {
         discount.setId(77L);
         discount.setCouponAmount(new BigDecimal(20));
         discount.setAmountOff(new BigDecimal(20));
-
-
+        
         CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
                 .setPayerAccessToken("TEST-2278197349568462-091320-a1b4f0d7c18f4655a0cf620c4bc2e693__LD_LA__-207100706")
                 .enableAccountMoney()
