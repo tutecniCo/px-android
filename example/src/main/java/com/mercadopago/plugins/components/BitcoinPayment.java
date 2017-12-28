@@ -47,7 +47,7 @@ public class BitcoinPayment extends PluginComponent {
                 payment.setPaymentTypeId(PaymentTypes.PLUGIN);
 
                 payment.setStatus(Payment.StatusCodes.STATUS_APPROVED);
-//                payment.setStatusDetail(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_OTHER_REASON);
+                payment.setStatusDetail(Payment.StatusCodes.STATUS_APPROVED);
 
                 final PaymentData paymentData = new PaymentData();
                 final PaymentMethod paymentMethod = new PaymentMethod();

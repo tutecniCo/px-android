@@ -52,7 +52,9 @@ public class Body extends Component<PaymentResultBodyProps> {
     }
 
     private boolean isPaymentTypeOn(final PaymentMethod paymentMethod) {
-        return isCardType(paymentMethod) || isAccountMoney(paymentMethod);
+        return isCardType(paymentMethod)
+                || isAccountMoney(paymentMethod)
+                || isPluginType(paymentMethod);
     }
 
     private boolean isCardType(final PaymentMethod paymentMethod) {
@@ -60,6 +62,10 @@ public class Body extends Component<PaymentResultBodyProps> {
                 paymentMethod.getPaymentTypeId().equals(PaymentTypes.CREDIT_CARD) ||
                 paymentMethod.getPaymentTypeId().equals(PaymentTypes.DEBIT_CARD) ||
                 paymentMethod.getPaymentTypeId().equals(PaymentTypes.PREPAID_CARD);
+    }
+
+    private boolean isPluginType(final PaymentMethod paymentMethod) {
+        return PaymentTypes.PLUGIN.equalsIgnoreCase(paymentMethod.getPaymentTypeId());
     }
 
     private boolean isAccountMoney(final PaymentMethod paymentMethod) {
@@ -118,7 +124,7 @@ public class Body extends Component<PaymentResultBodyProps> {
 
     public boolean hasReceipt() {
         return props.paymentId != null && props.isReceiptEnabled() && props.paymentData != null
-                && isStatusApproved() && isPaymentTypeOn(props.paymentData.getPaymentMethod());
+                && isStatusApproved() && isPaymentTypeOn(props.paymentData.getPaymentMethod() );
     }
 
     public Receipt getReceiptComponent() {
