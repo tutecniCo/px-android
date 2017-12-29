@@ -69,9 +69,4 @@
     <!-- HOOKS -->
     <string name="enable_hooks">Habilitar hooks</string>
 
-    <!-- PAyment MEthod Plugins -->
-    <string name="nicopay_name">Nico Pago</string>
-    <string name="nicopay_description">Por favor dame plata</string>
-    <string name="bitcoin_name">Bitcoin</string>
-
 </resources>
