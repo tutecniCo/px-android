@@ -11,6 +11,7 @@ public class ExceptionHandler {
 
     public static String getErrorMessage(Context context, CheckoutPreferenceException exception) {
         String errorMessage;
+
         switch (exception.getErrorCode()) {
             case CheckoutPreferenceException.INVALID_ITEM:
                 errorMessage = context.getString(R.string.mpsdk_error_message_invalid_item);
@@ -41,7 +42,8 @@ public class ExceptionHandler {
     }
 
     public static String getErrorMessage(Context context, CardTokenException exception) {
-        String errorMessage = "";
+        String errorMessage;
+
         switch (exception.getErrorCode()) {
             case CardTokenException.INVALID_EMPTY_CARD:
                 errorMessage = context.getString(R.string.mpsdk_invalid_empty_card);
@@ -74,6 +76,8 @@ public class ExceptionHandler {
             case CardTokenException.INVALID_PAYMENT_METHOD:
                 errorMessage = context.getString(R.string.mpsdk_invalid_payment_method);
                 break;
+            default:
+                errorMessage = "";
         }
         return errorMessage;
     }

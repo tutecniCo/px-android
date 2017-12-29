@@ -9,7 +9,6 @@ import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.providers.PayerInformationProvider;
 import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.PayerInformationView;
 
 import java.util.ArrayList;

@@ -198,6 +198,7 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void setIdentificationNumberRestrictions(String type) {
+            //Add test
         }
 
         @Override
@@ -212,6 +213,7 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void clearErrorLastName() {
+            //Add test
         }
 
         @Override
@@ -226,6 +228,7 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void setErrorLastName() {
+            //Add test
         }
 
         @Override
@@ -241,6 +244,7 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void showInputContainer() {
+            //Add test
         }
 
         @Override
@@ -251,10 +255,12 @@ public class PayerInformationPresenterTest {
 
         @Override
         public void showProgressBar() {
+            //Add test
         }
 
         @Override
         public void hideProgressBar() {
+            //Add test
         }
     }
 

@@ -43,8 +43,6 @@ import com.mercadopago.providers.CheckoutProvider;
 import com.mercadopago.util.TextUtils;
 import com.mercadopago.views.CheckoutView;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -823,7 +821,7 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-        assertTrue(!view.showingPaymentMethodSelection);
+        assertFalse(view.showingPaymentMethodSelection);
         assertTrue(view.showingReviewAndConfirm);
     }
 
@@ -906,8 +904,8 @@ public class CheckoutPresenterTest {
 
         presenter.initialize();
 
-        assertTrue(!view.showingPaymentMethodSelection);
-        assertTrue(!view.showingReviewAndConfirm);
+        assertFalse(view.showingPaymentMethodSelection);
+        assertFalse(view.showingReviewAndConfirm);
         assertTrue(view.showingPaymentResult);
     }
 
@@ -1215,7 +1213,7 @@ public class CheckoutPresenterTest {
         presenter.onPaymentConfirmation();
 
         assertTrue(provider.paymentRequested);
-        assertTrue(!TextUtils.isEmpty(provider.transactionId));
+        assertFalse(TextUtils.isEmpty(provider.transactionId));
     }
 
     @Test
@@ -1249,7 +1247,7 @@ public class CheckoutPresenterTest {
         presenter.onPaymentConfirmation();
 
         assertTrue(provider.paymentRequested);
-        assertTrue(!TextUtils.isEmpty(provider.paymentCustomerId));
+        assertFalse(TextUtils.isEmpty(provider.paymentCustomerId));
     }
 
     //Timer tests

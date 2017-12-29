@@ -358,10 +358,8 @@ public class ComponentsExampleActivity extends AppCompatActivity {
             PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class);
             showResult(paymentMethod, null, null, null);
         } else {
-            if ((data != null) &&
-                    (data.getStringExtra("mpException") != null)) {
-                MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
-
+            if ((data != null) && (data.getStringExtra("mpException") != null)) {
+                //MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
             }
         }
     }

@@ -257,11 +257,11 @@ public class VaultActivity extends AppCompatActivity {
     public void refreshLayout(View view) {
 
         // Retry method call
-        if (mExceptionOnMethod.equals("getCustomerCardsAsync")) {
+        if ("getCustomerCardsAsync".equals(mExceptionOnMethod)) {
             getCustomerCardsAsync();
-        } else if (mExceptionOnMethod.equals("getInstallmentsAsync")) {
+        } else if ("getInstallmentsAsync".equals(mExceptionOnMethod)) {
             getInstallmentsAsync();
-        } else if (mExceptionOnMethod.equals("getCreateTokenCallback")) {
+        } else if ("getCreateTokenCallback".equals(mExceptionOnMethod)) {
             if (mSelectedCard != null) {
                 createSavedCardToken();
             } else if (mCardToken != null) {
@@ -598,21 +598,17 @@ public class VaultActivity extends AppCompatActivity {
 
     protected void showSecurityCodeCard(PaymentMethod paymentMethod) {
 
-        if (paymentMethod != null) {
+        if (paymentMethod != null && isSecurityCodeRequired()) {
+            // Set CVV descriptor
+            mCVVDescriptor.setText(MercadoPagoUtil.getCVVDescriptor(this, paymentMethod));
 
-            if (isSecurityCodeRequired()) {
+            // Set CVV image
+            mCVVImage.setImageDrawable(getResources().getDrawable(MercadoPagoUtil.getCVVImageResource(this, paymentMethod)));
 
-                // Set CVV descriptor
-                mCVVDescriptor.setText(MercadoPagoUtil.getCVVDescriptor(this, paymentMethod));
+            // Set cards visibility
+            mSecurityCodeCard.setVisibility(View.VISIBLE);
 
-                // Set CVV image
-                mCVVImage.setImageDrawable(getResources().getDrawable(MercadoPagoUtil.getCVVImageResource(this, paymentMethod)));
-
-                // Set cards visibility
-                mSecurityCodeCard.setVisibility(View.VISIBLE);
-
-                return;
-            }
+            return;
         }
         mSecurityCodeCard.setVisibility(View.GONE);
     }

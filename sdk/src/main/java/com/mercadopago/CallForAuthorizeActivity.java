@@ -23,7 +23,6 @@ import com.mercadopago.tracking.utils.TrackingUtil;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TextUtils;
 
 import java.math.BigDecimal;
 
