@@ -221,8 +221,6 @@ public class GuessingCardPresenter extends MvpPresenter<GuessingCardActivityView
 
     public void setSecurityCodeRequired(boolean required) {
         this.mIsSecurityCodeRequired = required;
-        if (required) {
-        }
     }
 
     public void setSecurityCodeLength(int securityCodeLength) {

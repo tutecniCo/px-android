@@ -24,8 +24,6 @@ import com.mercadopago.providers.PaymentVaultProvider;
 import com.mercadopago.utils.Discounts;
 import com.mercadopago.views.PaymentVaultView;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -560,7 +558,7 @@ public class PaymentVaultPresenterTest {
 
         presenter.initialize(true);
 
-        Assert.assertEquals(paymentMethodSearch.getCustomSearchItems().size(), mockedView.customOptionsShown.size());
+        assertEquals(paymentMethodSearch.getCustomSearchItems().size(), mockedView.customOptionsShown.size());
     }
 
     @Test
@@ -582,7 +580,7 @@ public class PaymentVaultPresenterTest {
         presenter.initialize(true);
 
         //Account money + 1 card
-        Assert.assertEquals(2, mockedView.customOptionsShown.size());
+        assertEquals(2, mockedView.customOptionsShown.size());
     }
 
     //Discounts
@@ -728,7 +726,7 @@ public class PaymentVaultPresenterTest {
 
         presenter.initialize(true);
 
-        Assert.assertTrue(mockedView.errorShown.getApiException().equals(mercadoPagoError.getApiException()));
+        assertTrue(mockedView.errorShown.getApiException().equals(mercadoPagoError.getApiException()));
     }
 
     @Test
@@ -756,7 +754,7 @@ public class PaymentVaultPresenterTest {
         provider.setResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         presenter.recoverFromFailure();
 
-        Assert.assertFalse(mockedView.searchItemsShown.isEmpty());
+        assertFalse(mockedView.searchItemsShown.isEmpty());
     }
 
     @Test
@@ -784,7 +782,7 @@ public class PaymentVaultPresenterTest {
         provider.setResponse(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA());
         presenter.recoverFromFailure();
 
-        Assert.assertTrue(mockedView.searchItemsShown == null);
+        assertTrue(mockedView.searchItemsShown == null);
     }
 
     @Test
@@ -813,7 +811,7 @@ public class PaymentVaultPresenterTest {
         discount.setCouponAmount(new BigDecimal("10"));
         presenter.onDiscountReceived(discount);
 
-        Assert.assertTrue(mockedView.showedDiscountRow);
+        assertTrue(mockedView.showedDiscountRow);
     }
 
     @Test
@@ -848,7 +846,7 @@ public class PaymentVaultPresenterTest {
         discount.setCouponAmount(new BigDecimal("10"));
         presenter.onDiscountReceived(discount);
 
-        Assert.assertTrue(mockedView.searchItemsShown.size() != originalPaymentMethodSearch.getGroups().size());
+        assertTrue(mockedView.searchItemsShown.size() != originalPaymentMethodSearch.getGroups().size());
     }
 
     @Test

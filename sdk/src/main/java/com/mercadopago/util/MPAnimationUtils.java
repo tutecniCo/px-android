@@ -96,7 +96,7 @@ public class MPAnimationUtils {
 
             @Override
             public void run() {
-                final Animation mAnimFadeIn = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.mpsdk_fade_in);
+                final Animation mAnimFadeIn = AnimationUtils.loadAnimation(context, R.anim.mpsdk_fade_in);
                 mAnimFadeIn.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -124,7 +124,7 @@ public class MPAnimationUtils {
 
             @Override
             public void run() {
-                Animation mAnimFadeOut = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.mpsdk_fade_out);
+                Animation mAnimFadeOut = AnimationUtils.loadAnimation(context, R.anim.mpsdk_fade_out);
                 mAnimFadeOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {

@@ -980,7 +980,7 @@ public class GuessingCardPresenterTest {
         GuessingCardPresenter presenter = new GuessingCardPresenter();
 
         boolean shouldAskPaymentType = presenter.shouldAskPaymentType(paymentMethodList);
-        Assert.assertFalse(shouldAskPaymentType);
+        assertFalse(shouldAskPaymentType);
     }
 
     @Test

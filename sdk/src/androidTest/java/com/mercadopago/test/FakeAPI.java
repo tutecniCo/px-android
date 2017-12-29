@@ -68,7 +68,7 @@ public class FakeAPI {
 
     private OkHttpClient createClient() {
 
-        okhttp3.OkHttpClient.Builder okHttpClientBuilder = new okhttp3.OkHttpClient.Builder()
+        OkHttpClient.Builder okHttpClientBuilder = new okhttp3.OkHttpClient.Builder()
                 .addInterceptor(getFakeInterceptor());
 
         return okHttpClientBuilder.build();

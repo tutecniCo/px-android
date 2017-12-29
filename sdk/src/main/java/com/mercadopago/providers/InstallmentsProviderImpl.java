@@ -4,13 +4,11 @@ import android.content.Context;
 
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
-import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.core.MercadoPagoServicesAdapter;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Installment;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
-import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.util.ApiUtil;
 
 import java.math.BigDecimal;

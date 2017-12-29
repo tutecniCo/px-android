@@ -73,7 +73,7 @@ public class CallForAuthorizeActivity extends MercadoPagoBaseActivity implements
     }
 
     private void customizeViews() {
-        if (mPaymentResultScreenPreference != null && !TextUtils.isEmpty(mPaymentResultScreenPreference.getExitButtonTitle())) {
+        if (mPaymentResultScreenPreference != null && !isEmpty(mPaymentResultScreenPreference.getExitButtonTitle())) {
             mKeepBuyingButton.setText(mPaymentResultScreenPreference.getExitButtonTitle());
         }
     }

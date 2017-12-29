@@ -1734,12 +1734,12 @@ public class CheckoutPresenterTest {
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, collectedPayer);
         presenter.onPaymentConfirmation();
 
-        Assert.assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
-        Assert.assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
-        Assert.assertEquals(provider.payerPosted.getFirstName(), firstName);
-        Assert.assertEquals(provider.payerPosted.getLastName(), lastName);
-        Assert.assertEquals(provider.payerPosted.getIdentification().getType(), identification.getType());
-        Assert.assertEquals(provider.payerPosted.getIdentification().getNumber(), identification.getNumber());
+        assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
+        assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
+        assertEquals(provider.payerPosted.getFirstName(), firstName);
+        assertEquals(provider.payerPosted.getLastName(), lastName);
+        assertEquals(provider.payerPosted.getIdentification().getType(), identification.getType());
+        assertEquals(provider.payerPosted.getIdentification().getNumber(), identification.getNumber());
     }
 
     @Test
@@ -1770,8 +1770,8 @@ public class CheckoutPresenterTest {
         presenter.onPaymentMethodSelectionResponse(PaymentMethods.getPaymentMethodOff(), null, null, null, null, null, null);
         presenter.onPaymentConfirmation();
 
-        Assert.assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
-        Assert.assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
+        assertEquals(provider.payerPosted.getEmail(), preferencePayer.getEmail());
+        assertEquals(provider.payerPosted.getAccessToken(), preferencePayer.getAccessToken());
     }
 
     @Test
