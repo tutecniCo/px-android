@@ -21,20 +21,6 @@ public class PaymentMethodProps {
     public final String disclaimer;
     public final BodyAmountFormatter amountFormatter;
 
-    public PaymentMethodProps(@NonNull final PaymentMethod paymentMethod,
-                              @NonNull final PayerCost payerCost,
-                              @NonNull final Issuer issuer,
-                              @NonNull final Token token,
-                              @NonNull final String disclaimer,
-                              @NonNull final BodyAmountFormatter amountFormatter) {
-        this.paymentMethod = paymentMethod;
-        this.payerCost = payerCost;
-        this.issuer = issuer;
-        this.token = token;
-        this.disclaimer = disclaimer;
-        this.amountFormatter = amountFormatter;
-    }
-
     public PaymentMethodProps(@NonNull final Builder builder) {
         this.paymentMethod = builder.paymentMethod;
         this.payerCost = builder.payerCost;

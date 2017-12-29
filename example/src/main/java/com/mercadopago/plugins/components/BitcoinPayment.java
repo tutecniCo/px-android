@@ -4,15 +4,12 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.mercadopago.components.RendererFactory;
-import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.model.Payment;
-import com.mercadopago.model.PaymentData;
-import com.mercadopago.model.PaymentMethod;
-import com.mercadopago.model.PaymentResult;
-import com.mercadopago.plugins.PaymentResultAction;
 import com.mercadopago.plugins.PluginComponent;
+import com.mercadopago.plugins.PluginPaymentResultAction;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
+import com.mercadopago.plugins.model.PluginPaymentResult;
 
 /**
  * Created by nfortuna on 12/13/17.
@@ -40,38 +37,15 @@ public class BitcoinPayment extends PluginComponent {
                 final PaymentMethodInfo paymentMethodInfo =
                         CheckoutStore.getInstance().getSelectedPaymentMethod();
 
-                final Payment payment = new Payment();
-                payment.setId(Long.parseLong("123456"));
-                payment.setMetadata(null);
-                payment.setPaymentMethodId(paymentMethodInfo.id);
-                payment.setPaymentTypeId(PaymentTypes.PLUGIN);
+                final PluginPaymentResult result = new PluginPaymentResult(
+                        1241231234l,
+                        Payment.StatusCodes.STATUS_APPROVED,
+                        Payment.StatusCodes.STATUS_APPROVED,
+                        paymentMethodInfo);
 
-                payment.setStatus(Payment.StatusCodes.STATUS_APPROVED);
-                payment.setStatusDetail(Payment.StatusCodes.STATUS_APPROVED);
-
-                final PaymentData paymentData = new PaymentData();
-                final PaymentMethod paymentMethod = new PaymentMethod();
-                paymentMethod.setId(paymentMethodInfo.id);
-                paymentMethod.setName(paymentMethodInfo.name);
-                paymentMethod.setPaymentTypeId(PaymentTypes.PLUGIN);
-                paymentData.setPaymentMethod(paymentMethod);
-
-                onPaymentResult(createPaymentResult(payment, paymentData));
+                getDispatcher().dispatch(new PluginPaymentResultAction(result));
 
             }
         }, 2500);
-    }
-
-    public void onPaymentResult(@NonNull final PaymentResult result) {
-        getDispatcher().dispatch(new PaymentResultAction(result));
-    }
-
-    private PaymentResult createPaymentResult(final Payment payment, final PaymentData paymentData) {
-        return new PaymentResult.Builder()
-            .setPaymentData(paymentData)
-            .setPaymentId(payment.getId())
-            .setPaymentStatus(payment.getStatus())
-            .setPaymentStatusDetail(payment.getStatusDetail())
-            .build();
     }
 }

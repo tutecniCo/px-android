@@ -122,8 +122,9 @@ public class Body extends Component<PaymentResultBodyProps> {
     }
 
     public boolean hasReceipt() {
+        final PaymentMethod paymentMethod = props.paymentData.getPaymentMethod();
         return props.paymentId != null && props.isReceiptEnabled() && props.paymentData != null
-                && isStatusApproved() && isPaymentTypeOn(props.paymentData.getPaymentMethod() );
+                && isStatusApproved() && !isPluginType(paymentMethod) && isPaymentTypeOn(paymentMethod);
     }
 
     public Receipt getReceiptComponent() {
