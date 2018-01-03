@@ -205,7 +205,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             } else {
                 cancelCheckout();
             }
-
         } else if (requestCode == MercadoPagoComponents.Activities.HOOK_3) {
 
             if (resultCode == RESULT_OK) {
@@ -213,9 +212,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             } else {
                 backToReviewAndConfirm();
             }
-
         } else if (requestCode == MercadoPagoComponents.Activities.PLUGIN_PAYMENT_REQUEST_CODE) {
-
             if (resultCode == RESULT_OK) {
 
                 final PaymentResult paymentResult = CheckoutStore.getInstance().getPaymentResult();
@@ -562,6 +559,11 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
     @Override
     public void showProgress() {
         LayoutUtil.showProgressLayout(this);
+    }
+
+    @Override
+    public void hideProgress() {
+        LayoutUtil.hideProgressLayout(this);
     }
 
     @Override

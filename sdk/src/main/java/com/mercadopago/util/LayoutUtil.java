@@ -32,6 +32,14 @@ public class LayoutUtil {
         showLayout(activity, true, false, false);
     }
 
+    public static void hideProgressLayout(Activity activity) {
+        final View progress = activity.findViewById(R.id.mpsdkProgressLayout);
+
+        if (progress != null) {
+            progress.setVisibility(View.GONE);
+        }
+    }
+
     public static void showRegularLayout(Activity activity) {
         showLayout(activity, false, true, false);
     }

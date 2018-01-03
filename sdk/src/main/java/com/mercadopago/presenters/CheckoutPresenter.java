@@ -491,10 +491,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private void createPayment() {
-
         final PaymentData paymentData = createPaymentData();
 
         if (hasPaymentPlugin()) {
+            getView().hideProgress();
             CheckoutStore.getInstance().setPaymentData(paymentData);
             getView().showPaymentPlugin();
         } else {

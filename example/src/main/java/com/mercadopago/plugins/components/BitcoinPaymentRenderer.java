@@ -15,8 +15,7 @@ public class BitcoinPaymentRenderer extends Renderer<BitcoinPayment> {
 
     @Override
     public View render() {
-        final View view = LayoutInflater.from(context)
-                .inflate(R.layout.mpsdk_pmplugin_bitcoin_payment, null);
+        final View view = LayoutInflater.from(context).inflate(R.layout.mpsdk_pmplugin_bitcoin_payment, null);
         view.findViewById(R.id.logo).startAnimation(AnimationUtils.loadAnimation(context, R.anim.rotate) );
         return view;
     }

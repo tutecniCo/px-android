@@ -77,6 +77,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
         } else {
             bodyAmountFormatter = new BodyAmountFormatter(site.getCurrencyId(), amount);
         }
+
         boolean showLoading = false;
         if (hasToAskForInstructions()) {
             showLoading = true;
@@ -179,6 +180,7 @@ public class PaymentResultPresenter extends MvpPresenter<PaymentResultPropsView,
     private boolean isPaymentMethodOff() {
         final String paymentStatus = paymentResult.getPaymentStatus();
         final String paymentStatusDetail = paymentResult.getPaymentStatusDetail();
+
         return paymentStatus.equals(Payment.StatusCodes.STATUS_PENDING)
                 && paymentStatusDetail.equals(Payment.StatusCodes.STATUS_DETAIL_PENDING_WAITING_PAYMENT);
     }
