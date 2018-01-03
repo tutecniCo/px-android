@@ -23,7 +23,7 @@ import com.mercadopago.PaymentTypesActivity;
 import com.mercadopago.PaymentVaultActivity;
 import com.mercadopago.PendingActivity;
 import com.mercadopago.RejectionActivity;
-import com.mercadopago.ReviewAndConfirmActivity;
+import com.mercadopago.review.ReviewAndConfirmActivity;
 import com.mercadopago.ReviewPaymentMethodsActivity;
 import com.mercadopago.SecurityCodeActivity;
 import com.mercadopago.callbacks.OnConfirmPaymentCallback;

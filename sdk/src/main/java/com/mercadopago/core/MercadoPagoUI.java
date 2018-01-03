@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.mercadopago.CustomerCardsActivity;
-import com.mercadopago.ReviewAndConfirmActivity;
+import com.mercadopago.review.ReviewAndConfirmActivity;
 import com.mercadopago.callbacks.OnReviewChange;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;

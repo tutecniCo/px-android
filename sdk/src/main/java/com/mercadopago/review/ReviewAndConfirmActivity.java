@@ -1,4 +1,4 @@
-package com.mercadopago;
+package com.mercadopago.review;
 
 
 import com.google.gson.Gson;
@@ -22,10 +22,16 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.mercadopago.BuildConfig;
+import com.mercadopago.MercadoPagoBaseActivity;
+import com.mercadopago.R;
+import com.mercadopago.TermsAndConditionsActivity;
 import com.mercadopago.adapters.ReviewablesAdapter;
+import com.mercadopago.components.ComponentManager;
 import com.mercadopago.constants.ReviewKeys;
 import com.mercadopago.constants.Sites;
 import com.mercadopago.controllers.CheckoutTimer;
+import com.mercadopago.core.CheckoutStore;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.customviews.MPTextView;
 
@@ -40,9 +46,11 @@ import com.mercadopago.model.Reviewable;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
 import com.mercadopago.observers.TimerObserver;
+import com.mercadopago.plugins.PluginComponent;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.presenters.ReviewAndConfirmPresenter;
+import com.mercadopago.review.components.ReviewContainer;
 import com.mercadopago.tracker.FlowHandler;
 import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.providers.ReviewAndConfirmProviderImpl;
@@ -97,24 +105,40 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getUIPreferences();
-        createPresenter();
-        getActivityParameters();
-        mPresenter.attachView(this);
-        mPresenter.attachResourcesProvider(new ReviewAndConfirmProviderImpl(this, mReviewScreenPreference));
 
-        if (mDecorationPreference != null && mDecorationPreference.hasColors()) {
-            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
+//        getUIPreferences();
+//        createPresenter();
+//        getActivityParameters();
+//        mPresenter.attachView(this);
+//        mPresenter.attachResourcesProvider(new ReviewAndConfirmProviderImpl(this, mReviewScreenPreference));
+//
+//        if (mDecorationPreference != null && mDecorationPreference.hasColors()) {
+//            setTheme(R.style.Theme_MercadoPagoTheme_NoActionBar);
+//        }
+//
+//        setContentView(R.layout.mpsdk_activity_review_confirm);
+//        initializeControls();
+//        showTimer();
+//        setListeners();
+//
+//        initializeReviewablesRecyclerView();
+//
+//        mPresenter.initialize();
+
+
+        final ReviewContainer.Props props = new ReviewContainer.Props.Builder()
+                .setData(CheckoutStore.getInstance().getData()).build();
+
+        final PluginComponent component = paymentPlugin.createPaymentComponent(props);
+        final ComponentManager componentManager = new ComponentManager(this);
+
+        if (component == null) {
+            finish();
+            return;
         }
 
-        setContentView(R.layout.mpsdk_activity_review_confirm);
-        initializeControls();
-        showTimer();
-        setListeners();
-
-        initializeReviewablesRecyclerView();
-
-        mPresenter.initialize();
+        component.setDispatcher(this);
+        componentManager.render(component);
     }
 
     private void setListeners() {
@@ -164,6 +188,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
     }
 
     private void getActivityParameters() {
+
         mPublicKey = getIntent().getStringExtra("merchantPublicKey");
         mSite = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("site"), Site.class);
         mIssuer = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("issuer"), Issuer.class);

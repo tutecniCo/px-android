@@ -107,7 +107,7 @@
             android:name=".DiscountsActivity"
             android:theme="@style/Theme.ProcessMercadoPagoTheme.NoActionbar" />
         <activity
-            android:name=".ReviewAndConfirmActivity"
+            android:name=".review.ReviewAndConfirmActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ReviewConfirmMercadoPagoTheme.NoActionbar" />
         <activity
