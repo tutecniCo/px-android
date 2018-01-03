@@ -404,6 +404,11 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             viewController.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    final String id = String.valueOf(v.getTag());
+                    final PaymentMethodInfo info = new PaymentMethodInfo(id);
+                    CheckoutStore.getInstance().setSelectedPaymentMethod(info);
+
                     onSelectedCallback.onSelected(item);
                 }
             });
@@ -419,6 +424,11 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
             viewController.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    final String id = String.valueOf(v.getTag());
+                    final PaymentMethodInfo info = new PaymentMethodInfo(id);
+                    CheckoutStore.getInstance().setSelectedPaymentMethod(info);
+
                     onSelectedCallback.onSelected(item);
                 }
             });
@@ -442,14 +452,21 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                     final PaymentMethodInfo info = CheckoutStore.getInstance().getPaymentMethodPluginInfoById(id);
                     CheckoutStore.getInstance().setSelectedPaymentMethod(info);
 
-                    if (!mPaymentVaultPresenter.showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1_PLUGIN)) {
-                        showPaymentMethodPluginConfiguration();
-                    }
+//                    if (!mPaymentVaultPresenter.showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1_PLUGIN)) {
+//                        showPaymentMethodPluginConfiguration();
+//                    }
+                    onItemClicked();
                 }
             });
             controllers.add(viewController);
         }
         return controllers;
+    }
+
+    private void onItemClicked() {
+        if (!mPaymentVaultPresenter.showHook1(PaymentTypes.PLUGIN, MercadoPagoComponents.Activities.HOOK_1_PLUGIN)) {
+            showPaymentMethodPluginConfiguration();
+        }
     }
 
     private void showPaymentMethodPluginConfiguration() {

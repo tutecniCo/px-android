@@ -7,5 +7,8 @@ import android.support.annotation.NonNull;
  */
 
 public abstract class PaymentPlugin {
+
+    public static final String PLUGIN_PAYMENT = "plugin_payment";
+
     public abstract PluginComponent createPaymentComponent(@NonNull final PluginComponent.Props props);
 }

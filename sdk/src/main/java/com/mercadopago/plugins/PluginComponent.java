@@ -28,18 +28,21 @@ public abstract class PluginComponent extends Component<PluginComponent.Props> {
         public final Map<String, Object> data;
         public final String toolbarTitle;
         public final boolean toolbarVisible;
+        public final PaymentData paymentData;
 
         public Props(@NonNull final PluginComponent.Props.Builder builder) {
             this.data = builder.data;
             this.toolbarTitle = builder.toolbarTitle;
             this.toolbarVisible = builder.toolbarVisible;
+            this.paymentData = builder.paymentData;
         }
 
         public PluginComponent.Props.Builder toBuilder() {
-            return new PluginComponent.Props.Builder()
+            return new Builder()
                     .setData(this.data)
                     .setToolbarTitle(this.toolbarTitle)
-                    .setToolbarVisible(this.toolbarVisible);
+                    .setToolbarVisible(this.toolbarVisible)
+                    .setPaymentData(this.paymentData);
         }
 
         public static class Builder {

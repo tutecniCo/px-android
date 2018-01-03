@@ -116,6 +116,10 @@ public class CheckoutStore {
         return paymentPlugins.get(paymentMethod);
     }
 
+    public boolean containsPaymentPluginByMethod(@NonNull final String paymentMethod) {
+        return paymentPlugins.containsKey(paymentMethod);
+    }
+
     public void addPaymentPlugins(@NonNull final PaymentPlugin paymentPlugin, @NonNull final String paymentMethod) {
         this.paymentPlugins.put(paymentMethod, paymentPlugin);
     }

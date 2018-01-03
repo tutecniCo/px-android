@@ -28,6 +28,7 @@ import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.MvpPresenter;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
+import com.mercadopago.plugins.PaymentPlugin;
 import com.mercadopago.plugins.PaymentResultAction;
 import com.mercadopago.plugins.model.PaymentMethodInfo;
 import com.mercadopago.preferences.CheckoutPreference;
@@ -536,8 +537,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         final PaymentMethodInfo paymentMethodInfo = CheckoutStore.getInstance()
                     .getSelectedPaymentMethod();
         return paymentMethodInfo != null
-                && CheckoutStore.getInstance()
-                    .getPaymentPluginByMethod(paymentMethodInfo.id) != null;
+                && (CheckoutStore.getInstance()
+                    .containsPaymentPluginByMethod(paymentMethodInfo.id)
+                || CheckoutStore.getInstance()
+                    .containsPaymentPluginByMethod(PaymentPlugin.PLUGIN_PAYMENT));
     }
 
     private void continuePaymentWithoutESC() {

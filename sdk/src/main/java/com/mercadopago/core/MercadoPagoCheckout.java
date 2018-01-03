@@ -288,13 +288,14 @@ public class MercadoPagoCheckout {
             return this;
         }
 
-        public Builder addPaymentPlugin(@NonNull final PaymentPlugin plugin, @NonNull final String paymentMethod) {
-            paymentPlugins.put(paymentMethod, plugin);
+        public Builder addPaymentPlugin(@NonNull final PaymentPlugin plugin) {
+            addPaymentPlugin(plugin, PaymentPlugin.PLUGIN_PAYMENT);
             return this;
         }
 
-        public void registerComponent(@NonNull final Class component, @NonNull final Class renderer) {
-            RendererFactory.register(component, renderer);
+        private Builder addPaymentPlugin(@NonNull final PaymentPlugin plugin, @NonNull final String paymentMethod) {
+            paymentPlugins.put(paymentMethod, plugin);
+            return this;
         }
 
         public void startForPaymentData() {

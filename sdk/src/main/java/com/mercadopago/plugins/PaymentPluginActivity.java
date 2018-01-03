@@ -42,7 +42,9 @@ public class PaymentPluginActivity extends AppCompatActivity implements ActionDi
         }
 
         final PluginComponent.Props props = new PluginComponent.Props.Builder()
-                .setData(CheckoutStore.getInstance().getData()).build();
+                .setData(CheckoutStore.getInstance().getData())
+                .setPaymentData(CheckoutStore.getInstance().getPaymentData())
+                .build();
 
         final PluginComponent component = paymentPlugin.createPaymentComponent(props);
         final ComponentManager componentManager = new ComponentManager(this);
